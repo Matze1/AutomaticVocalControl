@@ -1,6 +1,8 @@
 import scipy.io.wavfile as wave
+from scipy.fftpack import fft, fftfreq
 import numpy as np
 import matplotlib.pyplot as plt
+from Filter import Filter
 
 br = 16
 inputData = []
@@ -40,6 +42,7 @@ def readFile(name):
         plt.ylim(-1,1)
         plt.xlim(0)
     plt.savefig("1_I.png")
+
     return rate, data
 
 def writeFile(name, data, rate, bitrate):
@@ -106,6 +109,30 @@ def writeFile(name, data, rate, bitrate):
         data = data.astype(np.int32)
     wave.write(name, rate, data)            # ausgabe des neuen wav files
 
+
+def fftPlot(rate, data):
+    N = data.size
+    if (data.ndim == 1):
+        N2 = N
+    elif (data.ndim == 2):
+        N2 = N / 2
+    T = 1 / rate
+    xf = fftfreq(int(N2), T)
+    #xf = np.linspace(0., 0.5 * rate, N2 / 2)
+    dataf = fft(data)
+    plt.figure(4)
+    #plt.xscale('log')
+    plt.plot(xf[:N//2], 2.0 / N * np.abs(dataf[:N2 // 2]))
+    plt.xlim(10,20000)
+    plt.grid(True)
+    plt.show()
+
+def getSineWave(rate, length, freq):
+    T = 1 / rate
+    x = np.linspace(0., length * T, length)
+    data = np.sin(freq * 2. * np.pi * x)
+    return data
+
 def useAlgorithmOn(data):
     gain = 0.8
     i = 0
@@ -113,6 +140,19 @@ def useAlgorithmOn(data):
         data[i] = sample * gain
         i += 1
     return data
+
+def getLvl(data, unit="lin"):
+    sum = 0
+    for sample in data:
+        sum += sample*sample
+    lvl2 = sum/data.size
+    if unit == "dB":
+        if lvl2 == 0:
+            return -100.
+        else:
+            return 10 * np.log10(lvl2)
+    else:
+        return np.sqrt(lvl2)
 
 #rmsSquare = (1 - avCo) * rmsSquare + avCo * sample**2  # aktueller rms Wert wird berechnet
 #ampSquare = rmsSquare
@@ -123,7 +163,43 @@ def getTimeConstant(ms, rate):              # errechnet Zeit-Konstante für ms a
     else:
         return 1
 
-r,d = readFile("OHTest.wav")
+#r,d = readFile("OHTest.wav")
 #r,d = readFile("cello.wav")
-newData = useAlgorithmOn(d)
-writeFile("Output.wav",newData,r,br)
+#fftPlot(r, d)
+#whiteNoise = np.random.uniform(-1, 1, 50*44100)
+#fftPlot(44100, whiteNoise)
+lowcut = Filter()
+cutoff = 150
+lowcut.set_coefficients("lowcut", cutoff, 44100)
+#i = 0
+#for sample in whiteNoise:
+#    whiteNoise[i] = lowcut.process(sample)
+#    i += 1
+x = 2000.
+r = 44100
+start = 0
+i = start;
+step = 10
+lvls = np.arange(x/step)
+count = np.arange(x/step) * step
+while i < x:
+    lowcut.reset_timeBuffer()
+    data = getSineWave(r,r,i)
+    j = 0
+    for sample in data:
+        data[j] = lowcut.process(sample)
+        j += 1
+    lvl = getLvl(data, "dB")
+    fl = int(i/step)
+    lvls[fl] = lvl
+    i += step
+plt.xscale('log')
+plt.plot(count, lvls)
+plt.axvline(x=cutoff, color='red')
+plt.ylim(-60, 0)
+plt.xlim(0., count.max())
+plt.grid(True)
+plt.show()
+#fftPlot(44100, whiteNoise)
+#newData = useAlgorithmOn(d)
+#writeFile("Output.wav",newData,r,br)
