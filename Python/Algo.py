@@ -134,6 +134,8 @@ def getSineWave(rate, length, freq):
     return data
 
 def useAlgorithmOn(rate, data):
+    if (data.ndim > 2): #GEHT NUR FÜR MONO UND STEREO!!!
+        return data
     lowcut = Filter()
     highshelf = Filter()
     cutoff = 38.
@@ -141,28 +143,32 @@ def useAlgorithmOn(rate, data):
     lowcut.set_coefficients("lowcut", cutoff, rate, (1. / 2.))
     highshelf.set_coefficients_shelf("highshelf", cutoff_hs, rate, 4.)
     avCo = getTimeConstant(400, rate)
-    rms = 0.
-    rmsArray = []
+    rms = [0., 0.]
+    rmsArray = [[], []]
     if (data.ndim == 1):
-        i = 0
-        s = 0.
-        for sample in data:
-            s = lowcut.process(sample)
-            s = highshelf.process(s)
-            rms = getRMS(avCo, rms, s)
+        dataC = np.array([data, []])
+        rmsArray = [[], np.zeros(int(data.size / 100))]
+    i = 0
+    s = [0., 0.]
+    for dim in range(dataC.ndim):
+        for sample in dataC[dim]:
+            s[dim] = lowcut.process(sample)
+            s[dim] = highshelf.process(s[dim])
+            rms[dim] = getRMS(avCo, rms[dim], s[dim])
             if (i + 1) % 100 == 0:
-                rmsArray = np.append(rmsArray, [rms])
+                rmsArray[dim] = np.append(rmsArray[dim], [rms[dim]])
             i += 1
-        rmsArray = np.delete(rmsArray, np.s_[:3]) # erste 3 Werte löschen
-        rmsArray = np.subtract(10 * np.log10(rmsArray), 0.691) # zu dB und - 0.691
-        rmsArray = rmsArray[rmsArray > -70] # gate > -70
-        l1 = np.sum(rmsArray) / rmsArray.size
-        cut2 = l1 - 10.
-        rmsArray = rmsArray[rmsArray > cut2] # gate > -cut2
-        l2 = np.sum(rmsArray) / rmsArray.size
-        print ('l1 = ' + repr(l1))
-        print ('l2 = ' + repr(l2))
-        print ('cut2 = ' + repr(cut2))
+    rmsArray = np.delete(rmsArray, np.s_[:3], 1) # erste 3 Werte löschen
+    rmsArray = np.add(rmsArray[0], rmsArray[1])
+    rmsArray = np.subtract(10 * np.log10(rmsArray), 0.691) # zu dB und - 0.691
+    rmsArray = rmsArray[rmsArray > -70] # gate > -70
+    l1 = np.sum(rmsArray) / rmsArray.size
+    cut2 = l1 - 10.
+    rmsArray = rmsArray[rmsArray > cut2] # gate > -cut2
+    l2 = np.sum(rmsArray) / rmsArray.size
+    print ('l1 = ' + repr(l1))
+    print ('l2 = ' + repr(l2))
+    print ('cut2 = ' + repr(cut2))
     return data
 
 def getRMS(avCo, rms, sample):
