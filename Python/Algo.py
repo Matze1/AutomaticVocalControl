@@ -133,13 +133,40 @@ def getSineWave(rate, length, freq):
     data = np.sin(freq * 2. * np.pi * x)
     return data
 
-def useAlgorithmOn(data):
-    gain = 0.8
-    i = 0
-    for sample in data:
-        data[i] = sample * gain
-        i += 1
+def useAlgorithmOn(rate, data):
+    lowcut = Filter()
+    highshelf = Filter()
+    cutoff = 38.
+    cutoff_hs = 1681.
+    lowcut.set_coefficients("lowcut", cutoff, rate, (1. / 2.))
+    highshelf.set_coefficients_shelf("highshelf", cutoff_hs, rate, 4.)
+    avCo = getTimeConstant(400, rate)
+    rms = 0.
+    rmsArray = []
+    if (data.ndim == 1):
+        i = 0
+        s = 0.
+        for sample in data:
+            s = lowcut.process(sample)
+            s = highshelf.process(s)
+            rms = getRMS(avCo, rms, s)
+            if (i + 1) % 100 == 0:
+                rmsArray = np.append(rmsArray, [rms])
+            i += 1
+        rmsArray = np.delete(rmsArray, np.s_[:3]) # erste 3 Werte löschen
+        rmsArray = np.subtract(10 * np.log10(rmsArray), 0.691) # zu dB und - 0.691
+        rmsArray = rmsArray[rmsArray > -70] # gate > -70
+        l1 = np.sum(rmsArray) / rmsArray.size
+        cut2 = l1 - 10.
+        rmsArray = rmsArray[rmsArray > cut2] # gate > -cut2
+        l2 = np.sum(rmsArray) / rmsArray.size
+        print ('l1 = ' + repr(l1))
+        print ('l2 = ' + repr(l2))
+        print ('cut2 = ' + repr(cut2))
     return data
+
+def getRMS(avCo, rms, sample):
+    return (1 - avCo) * rms + avCo * sample**2
 
 def getLvl(data, unit="lin"):
     sum = 0
@@ -165,95 +192,97 @@ def getAmp(data, unit="lin"):
     else:
         return amp
 
-#rmsSquare = (1 - avCo) * rmsSquare + avCo * sample**2  # aktueller rms Wert wird berechnet
-#ampSquare = rmsSquare
-
 def getTimeConstant(ms, rate):              # errechnet Zeit-Konstante für ms abhängig von Sample Abstand
     if(ms > 0):
         return 1 - np.exp(-2.2*(1/rate)/(ms/1000))
     else:
         return 1
 
+def filterTest():
+    lowcut = Filter()
+    highshelf = Filter()
+    cutoff = 38.
+    cutoff_hs = 1681.
+    r = 48000
+    lowcut.set_coefficients("lowcut", cutoff, r, (1. / 2.))
+    highshelf.set_coefficients_shelf("highshelf", cutoff_hs, r, 4.)
+    #lowcut.set_coefficients_d(1., -2., 1., -1.99004745483398, 0.99007225036621)
+    lowcut.print_coefficients()
+    x = 1000.
+    x2 = 5000.
+    x3 = 20000.
+    start = 0.
+    step = 10.
+    step2 = 100.
+    step3 = 1000.
+    i = start
+    i2 = x
+    i3 = x2
+    lvls1 = np.arange(x/step)
+    lvls2 = np.arange(x,x2,step2)
+    lvls3 = np.arange(x2,x3,step3)
+    count1 = np.arange(x/step) * step
+    count2 = np.arange(x,x2,step2)
+    count3 = np.arange(x2,x3,step3)
+    while i < x:
+        lowcut.reset_timeBuffer()
+        data = getSineWave(r,r,i)
+        j = 0
+        for sample in data:
+            data[j] = lowcut.process(sample)
+            data[j] = highshelf.process(data[j])
+            j += 1
+        lvl = getAmp(data, "dB")
+        fl = int(i/step)
+        lvls1[fl] = lvl
+        i += step
+    while i2 < x2:
+        lowcut.reset_timeBuffer()
+        data = getSineWave(r,r,i2)
+        j = 0
+        for sample in data:
+            data[j] = lowcut.process(sample)
+            data[j] = highshelf.process(data[j])
+            j += 1
+        lvl = getAmp(data, "dB")
+        fl = int((i2 - x)/step2)
+        lvls2[fl] = lvl
+        i2 += step2
+    while i3 < x3:
+        lowcut.reset_timeBuffer()
+        data = getSineWave(r,r,i2)
+        j = 0
+        for sample in data:
+            #gitdata[j] = lowcut.process(sample)
+            data[j] = highshelf.process(data[j])
+            j += 1
+        lvl = getAmp(data, "dB")
+        fl = int((i3 - x2)/step3)
+        lvls3[fl] = lvl
+        i3 += step3
+    plt.xscale('log')
+    count = np.append(np.append(count1, count2), count3)
+    lvls = np.append(np.append(lvls1, lvls2), lvls3)
+    plt.plot(count, lvls)
+    plt.axvline(x=cutoff, color='red')
+    plt.axvline(x=cutoff_hs, color='yellow')
+    plt.ylim(-30, 5)
+    plt.xlim(0., count.max())
+    plt.grid(True)
+    plt.show()
+
+#filterTest()
+
 #r,d = readFile("OHTest.wav")
-#r,d = readFile("cello.wav")
+r,d = readFile("testFiles/1770-2_Comp_18LKFS_FrequencySweep.wav")
+useAlgorithmOn(r, d)
 #fftPlot(r, d)
 #whiteNoise = np.random.uniform(-1, 1, 50*44100)
 #fftPlot(44100, whiteNoise)
-lowcut = Filter()
-highshelf = Filter()
-cutoff = 38.
-cutoff_hs = 1681.
-r = 48000
-lowcut.set_coefficients("lowcut", cutoff, r, (1. / 2.))
-highshelf.set_coefficients_shelf("highshelf", cutoff_hs, r, 4.)
-#lowcut.set_coefficients_d(1., -2., 1., -1.99004745483398, 0.99007225036621)
-lowcut.print_coefficients()
 #i = 0
 #for sample in whiteNoise:
 #    whiteNoise[i] = lowcut.process(sample)
 #    i += 1
-x = 1000.
-x2 = 5000.
-x3 = 20000.
-start = 0.
-step = 10.
-step2 = 100.
-step3 = 1000.
-i = start
-i2 = x
-i3 = x2
-lvls1 = np.arange(x/step)
-lvls2 = np.arange(x,x2,step2)
-lvls3 = np.arange(x2,x3,step3)
-count1 = np.arange(x/step) * step
-count2 = np.arange(x,x2,step2)
-count3 = np.arange(x2,x3,step3)
-while i < x:
-    lowcut.reset_timeBuffer()
-    data = getSineWave(r,r,i)
-    j = 0
-    for sample in data:
-        data[j] = lowcut.process(sample)
-        data[j] = highshelf.process(data[j])
-        j += 1
-    lvl = getAmp(data, "dB")
-    fl = int(i/step)
-    lvls1[fl] = lvl
-    i += step
-while i2 < x2:
-    lowcut.reset_timeBuffer()
-    data = getSineWave(r,r,i2)
-    j = 0
-    for sample in data:
-        data[j] = lowcut.process(sample)
-        data[j] = highshelf.process(data[j])
-        j += 1
-    lvl = getAmp(data, "dB")
-    fl = int((i2 - x)/step2)
-    lvls2[fl] = lvl
-    i2 += step2
-while i3 < x3:
-    lowcut.reset_timeBuffer()
-    data = getSineWave(r,r,i2)
-    j = 0
-    for sample in data:
-        #gitdata[j] = lowcut.process(sample)
-        data[j] = highshelf.process(data[j])
-        j += 1
-    lvl = getAmp(data, "dB")
-    fl = int((i3 - x2)/step3)
-    lvls3[fl] = lvl
-    i3 += step3
-plt.xscale('log')
-count = np.append(np.append(count1, count2), count3)
-lvls = np.append(np.append(lvls1, lvls2), lvls3)
-plt.plot(count, lvls)
-plt.axvline(x=cutoff, color='red')
-plt.axvline(x=cutoff_hs, color='yellow')
-plt.ylim(-30, 5)
-plt.xlim(0., count.max())
-plt.grid(True)
-plt.show()
 #fftPlot(44100, whiteNoise)
 #newData = useAlgorithmOn(d)
 #writeFile("Output.wav",newData,r,br)
