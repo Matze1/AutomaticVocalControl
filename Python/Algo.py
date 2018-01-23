@@ -135,6 +135,7 @@ def getSineWave(rate, length, freq):
 
 def useAlgorithmOn(rate, data):
     if (data.ndim > 2): #GEHT NUR FÜR MONO UND STEREO!!!
+        print ("only mono or stereo files pls")
         return data
     lowcut = Filter()
     highshelf = Filter()
@@ -148,9 +149,12 @@ def useAlgorithmOn(rate, data):
     if (data.ndim == 1):
         dataC = np.array([data, []])
         rmsArray = [[], np.zeros(int(data.size / 100))]
+    else:
+        dataC = np.swapaxes(data, 0, 1)
     i = 0
     s = [0., 0.]
     for dim in range(dataC.ndim):
+        print('...calculating channel ' + repr(dim + 1))
         for sample in dataC[dim]:
             s[dim] = lowcut.process(sample)
             s[dim] = highshelf.process(s[dim])
@@ -158,17 +162,25 @@ def useAlgorithmOn(rate, data):
             if (i + 1) % 100 == 0:
                 rmsArray[dim] = np.append(rmsArray[dim], [rms[dim]])
             i += 1
+    print('...calculating loudness')
     rmsArray = np.delete(rmsArray, np.s_[:3], 1) # erste 3 Werte löschen
     rmsArray = np.add(rmsArray[0], rmsArray[1])
-    rmsArray = np.subtract(10 * np.log10(rmsArray), 0.691) # zu dB und - 0.691
+    rmsArray = 10 * np.log10(rmsArray) # zu dB
+    rmsArray = np.subtract(rmsArray, 0.691) # und - 0.691
     rmsArray = rmsArray[rmsArray > -70] # gate > -70
-    l1 = np.sum(rmsArray) / rmsArray.size
+    rmsArray = np.add(rmsArray, 0.691) # und + 0.691
+    rmsArray = 10**(rmsArray/10) # zurück
+    l1 = 10 * np.log10(np.sum(rmsArray) / rmsArray.size) - 0.691
     cut2 = l1 - 10.
+    rmsArray = 10 * np.log10(rmsArray) # zu dB
+    rmsArray = np.subtract(rmsArray, 0.691) # und - 0.691
     rmsArray = rmsArray[rmsArray > cut2] # gate > -cut2
-    l2 = np.sum(rmsArray) / rmsArray.size
-    print ('l1 = ' + repr(l1))
+    rmsArray = np.add(rmsArray, 0.691) # und + 0.691
+    rmsArray = 10**(rmsArray/10) # zurück
+    l2 = 10 * np.log10(np.sum(rmsArray) / rmsArray.size) - 0.691
+    #print ('l1 = ' + repr(l1))
+    #print ('cut2 = ' + repr(cut2))
     print ('l2 = ' + repr(l2))
-    print ('cut2 = ' + repr(cut2))
     return data
 
 def getRMS(avCo, rms, sample):
@@ -280,7 +292,12 @@ def filterTest():
 #filterTest()
 
 #r,d = readFile("OHTest.wav")
-r,d = readFile("testFiles/1770-2_Comp_18LKFS_FrequencySweep.wav")
+r,d = readFile("testFiles/1770-2_Comp_23LKFS_2000Hz_2ch.wav")
+#r,d = readFile("testFiles/1770-2_Comp_18LKFS_FrequencySweep.wav")
+#r,d = readFile("testFiles/1770-2_Comp_AbsGateTest.wav")
+#r,d = readFile("testFiles/1770-2_Comp_RelGateTest.wav")
+#r,d = readFile("testFiles/1770-2_Conf_Stereo_VinL+R-24LKFS.wav")
+#r,d = readFile("testFiles/1770-2_Conf_Mono_Voice+Music-23LKFS.wav")
 useAlgorithmOn(r, d)
 #fftPlot(r, d)
 #whiteNoise = np.random.uniform(-1, 1, 50*44100)
