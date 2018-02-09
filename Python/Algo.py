@@ -137,7 +137,7 @@ def getAvWindow(ms, rate):
     return int(rate / 1000 * ms)
     #return ms
 
-def useAlgorithmOn(rate, data):
+def useAlgorithmOn(rate, data, goal):
     if (data.ndim > 2): #GEHT NUR FÜR MONO UND STEREO!!!
         print ("only mono or stereo files pls")
         return data
@@ -152,6 +152,10 @@ def useAlgorithmOn(rate, data):
     #print(avWindow)
     rms = [0., 0.]
     rmsArray = [[], []]
+    gatedRmsArray = [[], []]
+    gate = 10**(-70/20)
+    gainArray = [[], []]
+    setGain = False
     if (data.ndim == 1):
         dataC = np.array([data, []])
         rmsArray = [[], np.zeros(int(data.size / avWindow))]
@@ -167,6 +171,15 @@ def useAlgorithmOn(rate, data):
             rms[dim] = getRMS(avCo, rms[dim], s[dim])
             if (i + 1) % avWindow == 0:
                 rmsArray[dim] = np.append(rmsArray[dim], [rms[dim]])
+                if rms[dim] > gate:
+                    setGain = True
+                    gain = 10**((goal - 10 * np.log10(rms[dim]))/20)
+                    gainArray[dim] = np.append(gainArray[dim], [gain])
+                else:
+                    setGain = False
+                    gainArray[dim] = np.append(gainArray[dim], [0])
+            if setGain:
+                dataC[dim][i] = gain * sample
             i += 1
     print('...calculating loudness')
     rmsArray = np.delete(rmsArray, np.s_[:3], 1) # erste 3 Werte löschen
@@ -187,7 +200,7 @@ def useAlgorithmOn(rate, data):
     #print ('l1 = ' + repr(l1))
     #print ('cut2 = ' + repr(cut2))
     print ('l2 = ' + repr(l2))
-    return data
+    return np.swapaxes(dataC, 0, 1)
 
 def getRMS(avCo, rms, sample):
     return (1 - avCo) * rms + avCo * sample**2
@@ -297,14 +310,14 @@ def filterTest():
 
 #filterTest()
 
-#r,d = readFile("OHTest.wav")
+r,d = readFile("OHTest.wav")
 #r,d = readFile("testFiles/1770-2_Comp_23LKFS_2000Hz_2ch.wav")
 #r,d = readFile("testFiles/1770-2_Comp_18LKFS_FrequencySweep.wav")
 #r,d = readFile("testFiles/1770-2_Comp_AbsGateTest.wav")
 #r,d = readFile("testFiles/1770-2_Comp_RelGateTest.wav")
 #r,d = readFile("testFiles/1770-2_Conf_Stereo_VinL+R-24LKFS.wav")
-r,d = readFile("testFiles/1770-2_Conf_Mono_Voice+Music-23LKFS.wav")
-useAlgorithmOn(r, d)
+#r,d = readFile("testFiles/1770-2_Conf_Mono_Voice+Music-23LKFS.wav")
+d = useAlgorithmOn(r, d, -20)
 #fftPlot(r, d)
 #whiteNoise = np.random.uniform(-1, 1, 50*44100)
 #fftPlot(44100, whiteNoise)
@@ -314,4 +327,4 @@ useAlgorithmOn(r, d)
 #    i += 1
 #fftPlot(44100, whiteNoise)
 #newData = useAlgorithmOn(d)
-#writeFile("Output.wav",newData,r,br)
+writeFile("Output.wav",d,r,br)
