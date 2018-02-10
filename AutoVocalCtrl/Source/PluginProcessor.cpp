@@ -10,6 +10,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include <iostream>
 
 
 //==============================================================================
@@ -26,12 +27,12 @@ AutoVocalCtrlAudioProcessor::AutoVocalCtrlAudioProcessor()
 #endif
 {
     addParameter(rmsWindow = new AudioParameterFloat ("rmsWindow", "RMSWindow", 10.0f, 500.0f, 60.0f));
-    addParameter(expandTime = new AudioParameterFloat ("expandTime", "ExpandTime", 1.0f, 1000.0f, 100.0f));
-    addParameter(compressTime = new AudioParameterFloat ("compressTime", "CompressTime", 1.0f, 1000.0f, 20.0f));
-    addParameter(loudnessGoal = new AudioParameterFloat ("loudnessGoal", "LoudnessGoal", -60.0f, 0.0f, -25.0f));
+    addParameter(expandTime = new AudioParameterFloat ("expandTime", "ExpandTime", 1.0f, 1000.0f, 500.0f));
+    addParameter(compressTime = new AudioParameterFloat ("compressTime", "CompressTime", 1.0f, 1000.0f, 300.0f));
+    addParameter(loudnessGoal = new AudioParameterFloat ("loudnessGoal", "LoudnessGoal", -60.0f, 0.0f, -23.0f));
     addParameter(gainRange = new AudioParameterFloat ("gainRange", "GainRange", 0.0f, 10.0f, 6.0f));
-    addParameter(maxIdleTime = new AudioParameterFloat ("maxIdleTime", "MaxIdleTime", 0.0f, 500.0f, 60.0f));
-    addParameter(gate1 = new AudioParameterFloat ("gate1", "Gate1", -100.0f, -10.0f, -70.0f));
+    addParameter(maxIdleTime = new AudioParameterFloat ("maxIdleTime", "MaxIdleTime", 0.0f, 500.0f, 0.0f));
+    addParameter(gate1 = new AudioParameterFloat ("gate1", "Gate1", -100.0f, -10.0f, -35.0f));
     clipRange = Range<double>(-*gainRange, *gainRange);
 }
 
@@ -176,6 +177,8 @@ void AutoVocalCtrlAudioProcessor::prepareToPlay (double sampleRate, int samplesP
     currentSampleRate = sampleRate;
     updatePrivateParameter();
     updateVectors();
+    lowcut.setCoefficients(38.0, sampleRate, (1.0/2.0));
+    highshelf.setCoefficientsShelf(1681.0, sampleRate, 4.0);
 }
 
 void AutoVocalCtrlAudioProcessor::releaseResources()
@@ -210,7 +213,7 @@ bool AutoVocalCtrlAudioProcessor::isBusesLayoutSupported (const BusesLayout& lay
 
 void AutoVocalCtrlAudioProcessor::updateFilterSample(double sample, int channel)
 {
-    filterSample[channel] = sample; //Implementieren!!!
+    filterSample[channel] = highshelf.process(lowcut.process(sample));
 }
 
 void AutoVocalCtrlAudioProcessor::updateRMS(int channel)

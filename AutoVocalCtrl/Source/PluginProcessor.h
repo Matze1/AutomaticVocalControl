@@ -11,6 +11,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "Filter.h"
 
 
 //==============================================================================
@@ -92,6 +93,8 @@ public:
 
 private:
     //==============================================================================
+    AutoVocalCtrlFilter lowcut;
+    AutoVocalCtrlFilter highshelf;
     Range<double> clipRange;
     double currentSampleRate;
     double rmsCo;

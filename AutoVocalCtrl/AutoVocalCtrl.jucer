@@ -14,6 +14,8 @@
               jucerVersion="5.2.1">
   <MAINGROUP id="MJg5P8" name="AutoVocalCtrl">
     <GROUP id="{FD4AE781-8684-6C46-6B8C-F6F811085896}" name="Source">
+      <FILE id="XV65rl" name="Filter.cpp" compile="1" resource="0" file="Source/Filter.cpp"/>
+      <FILE id="yw9v4Z" name="Filter.h" compile="0" resource="0" file="Source/Filter.h"/>
       <FILE id="Ua424m" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="Ixr06c" name="PluginProcessor.h" compile="0" resource="0"

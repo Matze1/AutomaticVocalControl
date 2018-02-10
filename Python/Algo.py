@@ -310,14 +310,14 @@ def filterTest():
 
 #filterTest()
 
-r,d = readFile("OHTest.wav")
+#r,d = readFile("OHTest.wav")
 #r,d = readFile("testFiles/1770-2_Comp_23LKFS_2000Hz_2ch.wav")
 #r,d = readFile("testFiles/1770-2_Comp_18LKFS_FrequencySweep.wav")
 #r,d = readFile("testFiles/1770-2_Comp_AbsGateTest.wav")
 #r,d = readFile("testFiles/1770-2_Comp_RelGateTest.wav")
 #r,d = readFile("testFiles/1770-2_Conf_Stereo_VinL+R-24LKFS.wav")
 #r,d = readFile("testFiles/1770-2_Conf_Mono_Voice+Music-23LKFS.wav")
-d = useAlgorithmOn(r, d, -20)
+#d = useAlgorithmOn(r, d, -20)
 #fftPlot(r, d)
 #whiteNoise = np.random.uniform(-1, 1, 50*44100)
 #fftPlot(44100, whiteNoise)
@@ -327,4 +327,13 @@ d = useAlgorithmOn(r, d, -20)
 #    i += 1
 #fftPlot(44100, whiteNoise)
 #newData = useAlgorithmOn(d)
-writeFile("Output.wav",d,r,br)
+#writeFile("Output.wav",d,r,br)
+
+
+#lowcut = Filter()
+#highshelf = Filter()
+#cutoff = 38.
+#cutoff_hs = 1681.
+#lowcut.set_coefficients("lowcut", cutoff, 44100, (1. / 2.))
+#highshelf.set_coefficients_shelf("highshelf", cutoff_hs, 44100, 4.)
+
