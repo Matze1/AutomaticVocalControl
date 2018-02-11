@@ -18,7 +18,7 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (900, 300);
+    setSize (1000, 300);
     
     rmsSlider.setRange(processor.rmsWindow->range.start, processor.rmsWindow->range.end, 1.0f);
     rmsSlider.setSliderStyle(Slider::LinearBarVertical);
@@ -38,11 +38,17 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     compressTimeSlider.setValue(processor.compressTime->get());
     compressTimeSlider.addListener(this);
     
-    maxIdleTimeSlider.setRange(processor.maxIdleTime->range.start, processor.maxIdleTime->range.end, 1.0f);
+    maxIdleTimeSlider.setRange(processor.maxIdleTime->range.start, 0.0f, 1.0f); // zurzeit aus
     maxIdleTimeSlider.setSliderStyle(Slider::LinearBarVertical);
     maxIdleTimeSlider.setTextValueSuffix(" ms");
     maxIdleTimeSlider.setValue(processor.maxIdleTime->get());
     maxIdleTimeSlider.addListener(this);
+    
+    delaySlider.setRange(processor.delayLength->range.start, processor.delayLength->range.end, 1.0f);
+    delaySlider.setSliderStyle(Slider::LinearBarVertical);
+    delaySlider.setTextValueSuffix(" ms");
+    delaySlider.setValue(processor.delayLength->get());
+    delaySlider.addListener(this);
     
     loudnessGoalSlider.setRange(processor.loudnessGoal->range.start, processor.loudnessGoal->range.end, 0.1f);
     loudnessGoalSlider.setSliderStyle(Slider::LinearBarVertical);
@@ -81,6 +87,9 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     maxIdleTimeLabel.setText ("max. Idle Time", dontSendNotification);
     maxIdleTimeLabel.attachToComponent(&maxIdleTimeSlider, false);
     
+    delayLabel.setText ("Lookahead", dontSendNotification);
+    delayLabel.attachToComponent(&delaySlider, false);
+    
     loudnessGoalLabel.setText ("Loudness Goal", dontSendNotification);
     loudnessGoalLabel.attachToComponent(&loudnessGoalSlider, false);
     
@@ -102,6 +111,8 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     addAndMakeVisible(compressTimeLabel);
     addAndMakeVisible(maxIdleTimeSlider);
     addAndMakeVisible(maxIdleTimeLabel);
+    addAndMakeVisible(delaySlider);
+    addAndMakeVisible(delayLabel);
     addAndMakeVisible(loudnessGoalSlider);
     addAndMakeVisible(loudnessGoalLabel);
     addAndMakeVisible(gainRangeSlider);
@@ -138,11 +149,12 @@ void AutoVocalCtrlAudioProcessorEditor::resized()
     expandTimeSlider.setBounds(140, 50, 80, 200);
     compressTimeSlider.setBounds(240, 50, 80, 200);
     maxIdleTimeSlider.setBounds(340, 50, 80, 200);
-    loudnessGoalSlider.setBounds(440, 50, 80, 200);
-    gainRangeSlider.setBounds(540, 50, 80, 200);
-    gateSlider.setBounds(640, 50, 80, 200);
+    delaySlider.setBounds(440, 50, 80, 200);
+    loudnessGoalSlider.setBounds(540, 50, 80, 200);
+    gainRangeSlider.setBounds(640, 50, 80, 200);
+    gateSlider.setBounds(740, 50, 80, 200);
     
-    gainControlSlider.setBounds(780, 50, 80, 200);
+    gainControlSlider.setBounds(880, 50, 80, 200);
 }
 
 void AutoVocalCtrlAudioProcessorEditor::sliderValueChanged (Slider* slider)
@@ -166,6 +178,11 @@ void AutoVocalCtrlAudioProcessorEditor::sliderValueChanged (Slider* slider)
     {
         processor.maxIdleTime->operator=(maxIdleTimeSlider.getValue());
         processor.updateMaxIdleSamples();
+    }
+    else if (slider == &delaySlider)
+    {
+        processor.delayLength->operator=(delaySlider.getValue());
+        processor.updateDelay();
     }
     else if (slider == &loudnessGoalSlider)
     {

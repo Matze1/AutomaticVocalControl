@@ -43,6 +43,7 @@ private:
     Slider maxIdleTimeSlider;
     Slider gainControlSlider;
     Slider gateSlider;
+    Slider delaySlider;
     
     Label rmsLabel;
     Label expandTimeLabel;
@@ -52,6 +53,7 @@ private:
     Label maxIdleTimeLabel;
     Label gainControlLabel;
     Label gateLabel;
+    Label delayLabel;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AutoVocalCtrlAudioProcessorEditor)
 };

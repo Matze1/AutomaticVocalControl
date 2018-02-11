@@ -33,7 +33,11 @@ AutoVocalCtrlAudioProcessor::AutoVocalCtrlAudioProcessor()
     addParameter(gainRange = new AudioParameterFloat ("gainRange", "GainRange", 0.0f, 10.0f, 6.0f));
     addParameter(maxIdleTime = new AudioParameterFloat ("maxIdleTime", "MaxIdleTime", 0.0f, 500.0f, 0.0f));
     addParameter(gate1 = new AudioParameterFloat ("gate1", "Gate1", -100.0f, -10.0f, -35.0f));
+    addParameter(delayLength = new AudioParameterFloat ("delayLength", "DelayLength", 0.0f, (maxDelayInSec * 1000.0f) - 1.0f, 100.0f));
     clipRange = Range<double>(-*gainRange, *gainRange);
+    delayBufferLength = 1;
+    delayReadPos = 0;
+    delayWritePos = 0;
 }
 
 AutoVocalCtrlAudioProcessor::~AutoVocalCtrlAudioProcessor()
@@ -171,6 +175,13 @@ void AutoVocalCtrlAudioProcessor::numChannelsChanged()
     updateVectors();
 }
 
+void AutoVocalCtrlAudioProcessor::updateDelay()
+{
+    int delayInSamples = msToSamples(*delayLength);
+    delayReadPos = (int)(delayWritePos - delayInSamples + delayBufferLength) % delayBufferLength;
+    setLatencySamples(delayInSamples);
+}
+
 //==============================================================================
 void AutoVocalCtrlAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
@@ -179,6 +190,12 @@ void AutoVocalCtrlAudioProcessor::prepareToPlay (double sampleRate, int samplesP
     updateVectors();
     lowcut.setCoefficients(38.0, sampleRate, (1.0/2.0));
     highshelf.setCoefficientsShelf(1681.0, sampleRate, 4.0);
+    delayBufferLength = (int)(maxDelayInSec*sampleRate);
+    if(delayBufferLength < 1)
+        delayBufferLength = 1;
+    delayBuffer.setSize(2, delayBufferLength);
+    delayBuffer.clear();
+    updateDelay();
 }
 
 void AutoVocalCtrlAudioProcessor::releaseResources()
@@ -258,11 +275,15 @@ void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
     for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
+    int channel, dpr, dpw;
     // This is the place where you'd normally do the guts of your plugin's
     // audio processing...
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
+    for (channel = 0; channel < totalNumInputChannels; ++channel)
     {
         float* channelData = buffer.getWritePointer (channel);
+        float* delayData = delayBuffer.getWritePointer(jmin(channel, delayBuffer.getNumChannels() - 1));
+        dpr = delayReadPos;
+        dpw = delayWritePos;
         
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample) {
             updateFilterSample(channelData[sample], channel);
@@ -270,9 +291,18 @@ void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
             updateMLS(channel);
             updateGain(channel);
             const double g = pow(10, gain[channel]/20);
-            channelData[sample] = channelData[sample] * g;
+            delayData[dpw] = channelData[sample]; //kann andersrum also erst read dann write falls immer mit lookahead (fest?) nur damit 0 geht 
+            channelData[sample] = delayData[dpr] * g;
+            
+            if (++dpr >= delayBufferLength)
+                dpr = 0;
+            if (++dpw >= delayBufferLength)
+                dpw = 0;
         }
     }
+    
+    delayReadPos = dpr;
+    delayWritePos = dpw;
 }
 
 //==============================================================================

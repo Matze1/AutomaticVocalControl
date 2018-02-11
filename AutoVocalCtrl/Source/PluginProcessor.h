@@ -65,6 +65,7 @@ public:
     void updateMaxIdleSamples();
     void updateVectors();
     void updateClipRange();
+    void updateDelay();
 
     //==============================================================================
     void getStateInformation (MemoryBlock& destData) override;
@@ -90,9 +91,15 @@ public:
     AudioParameterFloat* gainRange;
     AudioParameterFloat* maxIdleTime;
     AudioParameterFloat* gate1;
+    AudioParameterFloat* delayLength;
 
 private:
     //==============================================================================
+    AudioSampleBuffer delayBuffer;
+    int delayBufferLength;
+    int delayReadPos, delayWritePos;
+    double maxDelayInSec = 1.0; // kann dann später auch weg ;-) wenn nicht mehr änderbar
+    
     AutoVocalCtrlFilter lowcut;
     AutoVocalCtrlFilter highshelf;
     Range<double> clipRange;
