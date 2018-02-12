@@ -156,7 +156,7 @@ void AutoVocalCtrlAudioProcessor::updatePrivateParameter()
 
 void AutoVocalCtrlAudioProcessor::updateVectors()
 {
-    for (int diff = getTotalNumInputChannels() - lastNumInputChannels; diff > 0; --diff) {
+    for (int diff = getTotalNumInputChannels() - lastNumInputChannels; diff > 0; --diff) { //vector größe benutzen statt last num inoutksdll
         filterSample.push_back(0.0);
         rms.push_back(0.0);
         mls.push_back(0.0);
