@@ -34,6 +34,7 @@ AutoVocalCtrlAudioProcessor::AutoVocalCtrlAudioProcessor()
     addParameter(maxIdleTime = new AudioParameterFloat ("maxIdleTime", "MaxIdleTime", 0.0f, 500.0f, 0.0f));
     addParameter(gate1 = new AudioParameterFloat ("gate1", "Gate1", -100.0f, -10.0f, -35.0f));
     addParameter(delayLength = new AudioParameterFloat ("delayLength", "DelayLength", 0.0f, (maxDelayInSec * 1000.0f) - 1.0f, 100.0f));
+    addParameter(alpha = new AudioParameterFloat ("alpha", "Alpha", 0.0f, 1.0f, 1.0f));
     clipRange = Range<double>(-*gainRange, *gainRange);
     delayBufferLength = 1;
     delayReadPos = 0;
@@ -161,6 +162,7 @@ void AutoVocalCtrlAudioProcessor::updateVectors()
         rms.push_back(0.0);
         mls.push_back(0.0);
         gain.push_back(0.0);
+        alphaGain.push_back(0.0);
     }
 }
 
@@ -243,21 +245,24 @@ void AutoVocalCtrlAudioProcessor::updateMLS(int channel)
 {
     const double currentRMS = 10 * std::log10(rms[channel]);
     if (currentRMS < *gate1) { // gate
-        if (idleCount > maxIdleSamples) {
-            mls[channel] = *loudnessGoal;
-            idleCount = 0;
-        } else {
-            ++idleCount;
-        }
+        mls[channel] = *loudnessGoal;
+//        if (idleCount > maxIdleSamples) {
+//            mls[channel] = *loudnessGoal;
+//            idleCount = 0;
+//        } else {
+//            ++idleCount;
+//        }
     } else
         mls[channel] = currentRMS;
 }
 
 void AutoVocalCtrlAudioProcessor::updateGain(int channel)
 {
-    const float g = *loudnessGoal - mls[channel];
-    const float co = g < gain[channel] ? compressTCo:expandTCo;
+    const double prevGain = gain[channel];
+    const double g = *loudnessGoal - mls[channel];
+    const double co = g < gain[channel] ? compressTCo:expandTCo;
     gain[channel] = clipRange.clipValue((1 - co) * gain[channel] + co * g);
+    alphaGain[channel] = *alpha * gain[channel] + (1 - *alpha) * prevGain; // was mache ich damit?
 }
 
 void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)

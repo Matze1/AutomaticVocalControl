@@ -92,6 +92,7 @@ public:
     AudioParameterFloat* maxIdleTime;
     AudioParameterFloat* gate1;
     AudioParameterFloat* delayLength;
+    AudioParameterFloat* alpha;
 
 private:
     //==============================================================================
@@ -114,6 +115,7 @@ private:
     std::vector<double> rms;
     std::vector<double> mls;
     std::vector<double> gain;
+    std::vector<double> alphaGain;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AutoVocalCtrlAudioProcessor)
 };

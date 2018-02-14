@@ -74,6 +74,12 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     gateSlider.setValue(processor.gate1->get());
     gateSlider.addListener(this);
     
+    alphaSlider.setRange(processor.alpha->range.start, processor.alpha->range.end, 0.01f);
+    alphaSlider.setSliderStyle(Slider::LinearBarVertical);
+    alphaSlider.setTextValueSuffix(CharPointer_UTF8(" \u03B1"));
+    alphaSlider.setValue(processor.alpha->get());
+    alphaSlider.addListener(this);
+    
 
     rmsLabel.setText ("RMS Window", dontSendNotification);
     rmsLabel.attachToComponent(&rmsSlider, false);
@@ -102,6 +108,9 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     gateLabel.setText ("MLS Gate", dontSendNotification);
     gateLabel.attachToComponent(&gateSlider, false);
     
+    alphaLabel.setText ("Alpha", dontSendNotification);
+    alphaLabel.attachToComponent(&alphaSlider, false);
+    
     
     addAndMakeVisible(rmsSlider);
     addAndMakeVisible(rmsLabel);
@@ -109,8 +118,8 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     addAndMakeVisible(expandTimeLabel);
     addAndMakeVisible(compressTimeSlider);
     addAndMakeVisible(compressTimeLabel);
-    addAndMakeVisible(maxIdleTimeSlider);
-    addAndMakeVisible(maxIdleTimeLabel);
+//    addAndMakeVisible(maxIdleTimeSlider);
+//    addAndMakeVisible(maxIdleTimeLabel);
     addAndMakeVisible(delaySlider);
     addAndMakeVisible(delayLabel);
     addAndMakeVisible(loudnessGoalSlider);
@@ -121,6 +130,8 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     addAndMakeVisible(gainControlLabel);
     addAndMakeVisible(gateSlider);
     addAndMakeVisible(gateLabel);
+    addAndMakeVisible(alphaSlider);
+    addAndMakeVisible(alphaLabel);
     
     startTimer(40);
 }
@@ -148,11 +159,12 @@ void AutoVocalCtrlAudioProcessorEditor::resized()
     rmsSlider.setBounds(40, 50, 80, 200);
     expandTimeSlider.setBounds(140, 50, 80, 200);
     compressTimeSlider.setBounds(240, 50, 80, 200);
-    maxIdleTimeSlider.setBounds(340, 50, 80, 200);
-    delaySlider.setBounds(440, 50, 80, 200);
-    loudnessGoalSlider.setBounds(540, 50, 80, 200);
-    gainRangeSlider.setBounds(640, 50, 80, 200);
-    gateSlider.setBounds(740, 50, 80, 200);
+    //maxIdleTimeSlider.setBounds(340, 50, 80, 200);
+    delaySlider.setBounds(340, 50, 80, 200);
+    loudnessGoalSlider.setBounds(440, 50, 80, 200);
+    gainRangeSlider.setBounds(540, 50, 80, 200);
+    gateSlider.setBounds(640, 50, 80, 200);
+    alphaSlider.setBounds(740, 50, 80, 200);
     
     gainControlSlider.setBounds(880, 50, 80, 200);
 }
@@ -198,8 +210,10 @@ void AutoVocalCtrlAudioProcessorEditor::sliderValueChanged (Slider* slider)
     {
         processor.gate1->operator=(gateSlider.getValue());
     }
-    
-    //Logger::getCurrentLogger()->writeToLog (m);
+    else if (slider == &alphaSlider)
+    {
+        processor.alpha->operator=(alphaSlider.getValue());
+    }
 }
 
 void AutoVocalCtrlAudioProcessorEditor::timerCallback()
