@@ -66,6 +66,8 @@ public:
     void updateVectors();
     void updateClipRange();
     void updateDelay();
+    void updateAutomation();
+    void automateCurrentGain();
 
     //==============================================================================
     void getStateInformation (MemoryBlock& destData) override;
@@ -93,6 +95,8 @@ public:
     AudioParameterFloat* gate1;
     AudioParameterFloat* delayLength;
     AudioParameterFloat* alpha;
+    AudioParameterFloat* currentGain;
+    AudioParameterBool* read;
 
 private:
     //==============================================================================
@@ -101,6 +105,9 @@ private:
     int delayReadPos, delayWritePos;
     double maxDelayInSec = 1.0; // kann dann später auch weg ;-) wenn nicht mehr änderbar
     
+    bool upBefore;
+    double lastGain;
+    double gainAtPoint;
     AutoVocalCtrlFilter lowcut;
     AutoVocalCtrlFilter highshelf;
     Range<double> clipRange;

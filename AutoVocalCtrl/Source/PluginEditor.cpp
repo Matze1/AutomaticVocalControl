@@ -18,7 +18,7 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (1000, 300);
+    setSize (1000, 400);
     
     rmsSlider.setRange(processor.rmsWindow->range.start, processor.rmsWindow->range.end, 1.0f);
     rmsSlider.setSliderStyle(Slider::LinearBarVertical);
@@ -111,6 +111,11 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     alphaLabel.setText ("Alpha", dontSendNotification);
     alphaLabel.attachToComponent(&alphaSlider, false);
     
+    readButton.addListener(this);
+    readButton.setButtonText("Write");
+    readButton.setToggleState(processor.read->get(), dontSendNotification);
+    
+    addAndMakeVisible(readButton);
     
     addAndMakeVisible(rmsSlider);
     addAndMakeVisible(rmsLabel);
@@ -156,6 +161,8 @@ void AutoVocalCtrlAudioProcessorEditor::resized()
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
     
+    readButton.setBounds(40, 290, 180, 40);
+    
     rmsSlider.setBounds(40, 50, 80, 200);
     expandTimeSlider.setBounds(140, 50, 80, 200);
     compressTimeSlider.setBounds(240, 50, 80, 200);
@@ -167,6 +174,17 @@ void AutoVocalCtrlAudioProcessorEditor::resized()
     alphaSlider.setBounds(740, 50, 80, 200);
     
     gainControlSlider.setBounds(880, 50, 80, 200);
+}
+
+void AutoVocalCtrlAudioProcessorEditor::buttonClicked(Button* button)
+{
+    if (button == &readButton) {
+        const bool value = processor.read->get();
+        processor.read->operator=(!value);
+        readButton.setToggleState(!value, dontSendNotification);
+        String buttonLabel = !value ? "Read":"Write";
+        readButton.setButtonText(buttonLabel);
+    }
 }
 
 void AutoVocalCtrlAudioProcessorEditor::sliderValueChanged (Slider* slider)

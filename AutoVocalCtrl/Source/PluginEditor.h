@@ -17,7 +17,7 @@
 //==============================================================================
 /**
 */
-class AutoVocalCtrlAudioProcessorEditor  : public AudioProcessorEditor, public Slider::Listener, private Timer
+class AutoVocalCtrlAudioProcessorEditor  : public AudioProcessorEditor, public Slider::Listener, private Timer, public Button::Listener
 {
 public:
     AutoVocalCtrlAudioProcessorEditor (AutoVocalCtrlAudioProcessor&);
@@ -33,6 +33,7 @@ private:
     AutoVocalCtrlAudioProcessor& processor;
     
     void sliderValueChanged (Slider* slider) override;
+    void buttonClicked(Button* button) override;
     void timerCallback() override;
     
     Slider rmsSlider;
@@ -45,6 +46,8 @@ private:
     Slider gateSlider;
     Slider delaySlider;
     Slider alphaSlider;
+    
+    TextButton readButton;
     
     Label rmsLabel;
     Label expandTimeLabel;

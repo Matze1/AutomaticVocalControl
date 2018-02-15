@@ -35,10 +35,13 @@ AutoVocalCtrlAudioProcessor::AutoVocalCtrlAudioProcessor()
     addParameter(gate1 = new AudioParameterFloat ("gate1", "Gate1", -100.0f, -10.0f, -35.0f));
     addParameter(delayLength = new AudioParameterFloat ("delayLength", "DelayLength", 0.0f, (maxDelayInSec * 1000.0f) - 1.0f, 100.0f));
     addParameter(alpha = new AudioParameterFloat ("alpha", "Alpha", 0.0f, 1.0f, 1.0f));
+    addParameter(currentGain = new AudioParameterFloat ("currentGain", "CurrentGain", -10.0f, 10.0f, 0.0f));
+    addParameter(read = new AudioParameterBool("read","Read",false));
     clipRange = Range<double>(-*gainRange, *gainRange);
     delayBufferLength = 1;
     delayReadPos = 0;
     delayWritePos = 0;
+    upBefore = false;
 }
 
 AutoVocalCtrlAudioProcessor::~AutoVocalCtrlAudioProcessor()
@@ -256,12 +259,34 @@ void AutoVocalCtrlAudioProcessor::updateMLS(int channel)
         mls[channel] = currentRMS;
 }
 
+void AutoVocalCtrlAudioProcessor::automateCurrentGain()
+{
+    *currentGain = getCurrentGainControl();
+    beginParameterChangeGesture(currentGain->getParameterIndex());
+    endParameterChangeGesture(currentGain->getParameterIndex());
+}
+
+void AutoVocalCtrlAudioProcessor::updateAutomation()
+{
+    const double currGain = getCurrentGainControl();
+    const bool up = lastGain < currGain;
+    const bool dChange = up != upBefore;
+    const bool jump = 1.0 < abs(gainAtPoint - currGain);
+    if (dChange || jump) {
+        automateCurrentGain();
+        upBefore = up;
+        gainAtPoint = currGain;
+    }
+    lastGain = currGain;
+}
+
 void AutoVocalCtrlAudioProcessor::updateGain(int channel)
 {
     const double prevGain = gain[channel];
     const double g = *loudnessGoal - mls[channel];
     const double co = g < gain[channel] ? compressTCo:expandTCo;
     gain[channel] = clipRange.clipValue((1 - co) * gain[channel] + co * g);
+    updateAutomation();
     alphaGain[channel] = *alpha * gain[channel] + (1 - *alpha) * prevGain; // was mache ich damit?
 }
 
@@ -291,18 +316,24 @@ void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
         dpw = delayWritePos;
         
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample) {
-            updateFilterSample(channelData[sample], channel);
-            updateRMS(channel);
-            updateMLS(channel);
-            updateGain(channel);
-            const double g = pow(10, gain[channel]/20);
-            delayData[dpw] = channelData[sample]; //kann andersrum also erst read dann write falls immer mit lookahead (fest?) nur damit 0 geht 
-            channelData[sample] = delayData[dpr] * g;
-            
-            if (++dpr >= delayBufferLength)
-                dpr = 0;
-            if (++dpw >= delayBufferLength)
-                dpw = 0;
+            if (*read) {
+                gain[channel] = *currentGain;
+                const double g = pow(10, gain[channel]/20);
+                channelData[sample] = channelData[sample] * g;
+            } else {
+                updateFilterSample(channelData[sample], channel);
+                updateRMS(channel);
+                updateMLS(channel);
+                updateGain(channel);
+                const double g = pow(10, gain[channel]/20);
+                delayData[dpw] = channelData[sample]; //kann andersrum also erst read dann write falls immer mit lookahead (fest?) nur damit 0 geht
+                channelData[sample] = delayData[dpr] * g;
+                
+                if (++dpr >= delayBufferLength)
+                    dpr = 0;
+                if (++dpw >= delayBufferLength)
+                    dpw = 0;
+            }
         }
     }
     
@@ -344,5 +375,8 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 
 double AutoVocalCtrlAudioProcessor::getCurrentGainControl()
 {
-    return gain[0];
+    if (getTotalNumInputChannels() > 1)
+        return (gain[0] + gain[1]) / 2;
+    else
+        return gain[0];
 }

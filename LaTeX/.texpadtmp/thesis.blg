@@ -1,0 +1,51 @@
+This is BibTeX, Version 0.99d (TeX Live 2016)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: /Users/konstantinkobs/Dropbox/Studium/Masterarbeit/Masterarbeit/.texpadtmp/thesis.aux
+The style file: unsrt.bst
+Database file #1: ../references.bib
+Repeated entry---line 153 of file ../references.bib
+ : @inproceedings{sundermann2003vtln
+ :                                  ,
+I'm skipping whatever remains of this entry
+You've used 58 entries,
+            1791 wiz_defined-function locations,
+            756 strings with 14272 characters,
+and the built_in function-call counts, 16057 in all, are:
+= -- 1514
+> -- 654
+< -- 21
++ -- 242
+- -- 184
+* -- 1038
+:= -- 2365
+add.period$ -- 184
+call.type$ -- 58
+change.case$ -- 50
+chr.to.int$ -- 0
+cite$ -- 58
+duplicate$ -- 763
+empty$ -- 1547
+format.name$ -- 184
+if$ -- 3701
+int.to.chr$ -- 0
+int.to.str$ -- 58
+missing$ -- 66
+newline$ -- 293
+num.names$ -- 58
+pop$ -- 204
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 427
+stack$ -- 0
+substring$ -- 1242
+swap$ -- 264
+text.length$ -- 21
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 161
+width$ -- 60
+write$ -- 639
+(There was 1 error message)

@@ -1,0 +1,363 @@
+\begin{thebibliography}{10}
+
+\bibitem{catford2001practical}
+J.C. Catford.
+\newblock {\em A Practical Introduction to Phonetics}.
+\newblock Oxford linguistics. Oxford University Press, 2001.
+
+\bibitem{abe1990voice}
+Masanobu Abe, Satoshi Nakamura, Kiyohiro Shikano, and Hisao Kuwabara.
+\newblock Voice conversion through vector quantization.
+\newblock {\em Journal of the Acoustical Society of Japan (E)}, 11(2):71--76,
+  1990.
+
+\bibitem{toda2016voice}
+Tomoki Toda, Ling-Hui Chen, Daisuke Saito, Fernando Villavicencio, Mirjam
+  Wester, Zhizheng Wu, and Junichi Yamagishi.
+\newblock The voice conversion challenge 2016.
+\newblock In {\em INTERSPEECH}, pages 1632--1636, 2016.
+
+\bibitem{takashima2013exemplar}
+Ryoichi Takashima, Tetsuya Takiguchi, and Yasuo Ariki.
+\newblock Exemplar-based voice conversion using sparse representation in noisy
+  environments.
+\newblock {\em IEICE Transactions on Fundamentals of Electronics,
+  Communications and Computer Sciences}, 96(10):1946--1953, 2013.
+
+\bibitem{toda2007voice}
+Tomoki Toda, Alan~W Black, and Keiichi Tokuda.
+\newblock Voice conversion based on maximum-likelihood estimation of spectral
+  parameter trajectory.
+\newblock {\em IEEE Transactions on Audio, Speech, and Language Processing},
+  15(8):2222--2235, 2007.
+
+\bibitem{stylianou1998continuous}
+Yannis Stylianou, Olivier Capp{\'e}, and Eric Moulines.
+\newblock Continuous probabilistic transform for voice conversion.
+\newblock {\em IEEE Transactions on speech and audio processing},
+  6(2):131--142, 1998.
+
+\bibitem{nakashika2014voice}
+Toru Nakashika, Tetsuya Takiguchi, and Yasuo Ariki.
+\newblock Voice conversion based on speaker-dependent restricted boltzmann
+  machines.
+\newblock {\em IEICE TRANSACTIONS on Information and Systems},
+  97(6):1403--1410, 2014.
+
+\bibitem{chen2014voice}
+Ling-Hui Chen, Zhen-Hua Ling, Li-Juan Liu, and Li-Rong Dai.
+\newblock Voice conversion using deep neural networks with layer-wise
+  generative training.
+\newblock {\em IEEE/ACM Transactions on Audio, Speech and Language Processing
+  (TASLP)}, 22(12):1859--1872, 2014.
+
+\bibitem{nakashika2016non}
+Toru Nakashika, Tetsuya Takiguchi, and Yasuhiro Minami.
+\newblock Non-parallel training in voice conversion using an adaptive
+  restricted boltzmann machine.
+\newblock {\em IEEE/ACM Transactions on Audio, Speech, and Language
+  Processing}, 24(11):2032--2045, 2016.
+
+\bibitem{desai2010spectral}
+Srinivas Desai, Alan~W Black, B~Yegnanarayana, and Kishore Prahallad.
+\newblock Spectral mapping using artificial neural networks for voice
+  conversion.
+\newblock {\em IEEE Transactions on Audio, Speech, and Language Processing},
+  18(5):954--964, 2010.
+
+\bibitem{kaneko2017sequence}
+Takuhiro Kaneko, Hirokazu Kameoka, Kaoru Hiramatsu, and Kunio Kashino.
+\newblock Sequence-to-sequence voice conversion with similarity metric learned
+  using generative adversarial networks.
+\newblock {\em Proc. Interspeech 2017}, pages 1283--1287, 2017.
+
+\bibitem{sundermann2003vtln}
+David Sundermann and Hermann Ney.
+\newblock Vtln-based voice conversion.
+\newblock In {\em Signal Processing and Information Technology, 2003. ISSPIT
+  2003. Proceedings of the 3rd IEEE International Symposium on}, pages
+  556--559. IEEE, 2003.
+
+\bibitem{wu2014exemplar}
+Zhizheng Wu, Tuomas Virtanen, Eng~Siong Chng, and Haizhou Li.
+\newblock Exemplar-based sparse representation with residual compensation for
+  voice conversion.
+\newblock {\em IEEE/ACM Transactions on Audio, Speech and Language Processing
+  (TASLP)}, 22(10):1506--1521, 2014.
+
+\bibitem{hsu2016voice}
+Chin-Cheng Hsu, Hsin-Te Hwang, Yi-Chiao Wu, Yu~Tsao, and Hsin-Min Wang.
+\newblock Voice conversion from non-parallel corpora using variational
+  auto-encoder.
+\newblock In {\em Signal and Information Processing Association Annual Summit
+  and Conference (APSIPA), 2016 Asia-Pacific}, pages 1--6. IEEE, 2016.
+
+\bibitem{sun2015voice}
+Lifa Sun, Shiyin Kang, Kun Li, and Helen Meng.
+\newblock Voice conversion using deep bidirectional long short-term memory
+  based recurrent neural networks.
+\newblock In {\em Acoustics, Speech and Signal Processing (ICASSP), 2015 IEEE
+  International Conference on}, pages 4869--4873. IEEE, 2015.
+
+\bibitem{sun2016phonetic}
+Lifa Sun, Kun Li, Hao Wang, Shiyin Kang, and Helen Meng.
+\newblock Phonetic posteriorgrams for many-to-one voice conversion without
+  parallel data training.
+\newblock In {\em Multimedia and Expo (ICME), 2016 IEEE International
+  Conference on}, pages 1--6. IEEE, 2016.
+
+\bibitem{erro2010inca}
+Daniel Erro, Asunci{\'o}n Moreno, and Antonio Bonafonte.
+\newblock Inca algorithm for training voice conversion systems from nonparallel
+  corpora.
+\newblock {\em IEEE Transactions on Audio, Speech, and Language Processing},
+  18(5):944--953, 2010.
+
+\bibitem{tao2010supervisory}
+Jianhua Tao, Meng Zhang, Jani Nurminen, Jilei Tian, and Xia Wang.
+\newblock Supervisory data alignment for text-independent voice conversion.
+\newblock {\em IEEE Transactions on Audio, Speech, and Language Processing},
+  18(5):932--943, 2010.
+
+\bibitem{aryal2015articulatory}
+Sandesh Aryal and Ricardo Gutierrez-Osuna.
+\newblock Articulatory-based conversion of foreign accents with deep neural
+  networks.
+\newblock In {\em Sixteenth Annual Conference of the International Speech
+  Communication Association}, 2015.
+
+\bibitem{hsu2017voice}
+Chin-Cheng Hsu, Hsin-Te Hwang, Yi-Chiao Wu, Yu~Tsao, and Hsin-Min Wang.
+\newblock Voice conversion from unaligned corpora using variational
+  autoencoding wasserstein generative adversarial networks.
+\newblock {\em arXiv preprint arXiv:1704.00849}, 2017.
+
+\bibitem{vary2006digital}
+Peter Vary and Rainer Martin.
+\newblock {\em Digital speech transmission: Enhancement, coding and error
+  concealment}.
+\newblock John Wiley \& Sons, 2006.
+
+\bibitem{o1988linear}
+Douglas O'Shaughnessy.
+\newblock Linear predictive coding.
+\newblock {\em IEEE potentials}, 7(1):29--32, 1988.
+
+\bibitem{erro2014harmonics}
+Daniel Erro, Inaki Sainz, Eva Navas, and Inma Hernaez.
+\newblock Harmonics plus noise model based vocoder for statistical parametric
+  speech synthesis.
+\newblock {\em IEEE Journal of Selected Topics in Signal Processing},
+  8(2):184--194, 2014.
+
+\bibitem{kawahara2008tandem}
+Hideki Kawahara, Masanori Morise, Toru Takahashi, Ryuichi Nisimura, Toshio
+  Irino, and Hideki Banno.
+\newblock Tandem-straight: A temporally stable power spectral representation
+  for periodic signals and applications to interference-free spectrum, f0, and
+  aperiodicity estimation.
+\newblock In {\em Acoustics, Speech and Signal Processing, 2008. ICASSP 2008.
+  IEEE International Conference on}, pages 3933--3936. IEEE, 2008.
+
+\bibitem{morise2016world}
+Masanori Morise, Fumiya Yokomori, and Kenji Ozawa.
+\newblock World: A vocoder-based high-quality speech synthesis system for
+  real-time applications.
+\newblock {\em IEICE TRANSACTIONS on Information and Systems},
+  99(7):1877--1884, 2016.
+
+\bibitem{morise2016d4c}
+Masanori Morise.
+\newblock D4c, a band-aperiodicity estimator for high-quality speech synthesis.
+\newblock {\em Speech Communication}, 84:57--65, 2016.
+
+\bibitem{morise2010rapid}
+M~Morise, H~Kawahara, and T~Nishiura.
+\newblock Rapid f0 estimation for high-snr speech based on fundamental
+  component extraction.
+\newblock {\em IEICE Trans. Inf. \& Syst.(Japanese Edition)}, 93:109--117,
+  2010.
+
+\bibitem{morise2013attempt}
+Masanori Morise.
+\newblock An attempt to develop a singing synthesizer by collaborative
+  creation.
+\newblock In {\em Proc. SMAC}, pages 287--292, 2013.
+
+\bibitem{morise2015cheaptrick}
+Masanori Morise.
+\newblock Cheaptrick, a spectral envelope estimator for high-quality speech
+  synthesis.
+\newblock {\em Speech Communication}, 67:1--7, 2015.
+
+\bibitem{bishop2006pattern}
+Christopher~M Bishop.
+\newblock {\em Pattern recognition and machine learning}.
+\newblock springer, 2006.
+
+\bibitem{yu2014automatic}
+Dong Yu and Li~Deng.
+\newblock {\em Automatic speech recognition: A deep learning approach}.
+\newblock Springer, 2014.
+
+\bibitem{goodfellow2014generative}
+Ian Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley,
+  Sherjil Ozair, Aaron Courville, and Yoshua Bengio.
+\newblock Generative adversarial nets.
+\newblock In {\em Advances in neural information processing systems}, pages
+  2672--2680, 2014.
+
+\bibitem{goodfellow2016nips}
+Ian Goodfellow.
+\newblock Nips 2016 tutorial: Generative adversarial networks.
+\newblock {\em arXiv preprint arXiv:1701.00160}, 2016.
+
+\bibitem{hornik1989multilayer}
+Kurt Hornik, Maxwell Stinchcombe, and Halbert White.
+\newblock Multilayer feedforward networks are universal approximators.
+\newblock {\em Neural networks}, 2(5):359--366, 1989.
+
+\bibitem{lotter2015unsupervised}
+William Lotter, Gabriel Kreiman, and David Cox.
+\newblock Unsupervised learning of visual structure using predictive generative
+  networks.
+\newblock {\em arXiv preprint arXiv:1511.06380}, 2015.
+
+\bibitem{cohen1995vocal}
+Jordan Cohen, Terri Kamm, and Andreas~G Andreou.
+\newblock Vocal tract normalization in speech recognition: Compensating for
+  systematic speaker variability.
+\newblock {\em The Journal of the Acoustical Society of America},
+  97(5):3246--3247, 1995.
+
+\bibitem{eide1996parametric}
+Ellen Eide and Herbert Gish.
+\newblock A parametric approach to vocal tract length normalization.
+\newblock In {\em Acoustics, Speech, and Signal Processing, 1996. ICASSP-96.
+  Conference Proceedings., 1996 IEEE International Conference on}, volume~1,
+  pages 346--348. IEEE, 1996.
+
+\bibitem{lyon_2017}
+Richard~F. Lyon.
+\newblock {\em On Logarithmic and Power-Law Hearing}, page 33–45.
+\newblock Cambridge University Press, 2017.
+
+\bibitem{sundermann2003vtln2}
+David Sundermann and Hermann Ney.
+\newblock Vtln-based voice conversion.
+\newblock In {\em Signal Processing and Information Technology, 2003. ISSPIT
+  2003. Proceedings of the 3rd IEEE International Symposium on}, pages
+  556--559. IEEE, 2003.
+
+\bibitem{sundermann2004time}
+D~Sundermann, Antonio Bonafonte, Hermann Ney, and H~Hoge.
+\newblock Time domain vocal tract length normalization.
+\newblock In {\em Signal Processing and Information Technology, 2004.
+  Proceedings of the Fourth IEEE International Symposium on}, pages 191--194.
+  IEEE, 2004.
+
+\bibitem{sundermann2005evaluation}
+David S{\"u}ndermann, Guntram Strecha, Antonio Bonafonte, Harald H{\"o}ge, and
+  Hermann Ney.
+\newblock Evaluation of vtln-based voice conversion for embedded speech
+  synthesis.
+\newblock In {\em Interspeech}, pages 2593--2596, 2005.
+
+\bibitem{starkes1993cognitive}
+J~Starkes and Fran Allard.
+\newblock {\em Cognitive issues in motor expertise}, volume 102.
+\newblock Elsevier, 1993.
+
+\bibitem{blevins1998phonics}
+Wiley Blevins.
+\newblock {\em Phonics from A to Z: A practical guide}.
+\newblock Scholastic Inc., 1998.
+
+\bibitem{hochreiter2017elu}
+Djork{-}Arn{\'{e}} Clevert, Thomas Unterthiner, and Sepp Hochreiter.
+\newblock Fast and accurate deep network learning by exponential linear units
+  (elus).
+\newblock {\em CoRR}, abs/1511.07289, 2015.
+
+\bibitem{kingma2014adam}
+Diederik~P. Kingma and Jimmy Ba.
+\newblock Adam: {A} method for stochastic optimization.
+\newblock {\em CoRR}, abs/1412.6980, 2014.
+
+\bibitem{mysore2015can}
+Gautham~J Mysore.
+\newblock Can we automatically transform speech recorded on common consumer
+  devices in real-world environments into professional production quality
+  speech?—a dataset, insights, and challenges.
+\newblock {\em IEEE Signal Processing Letters}, 22(8):1006--1010, 2015.
+
+\bibitem{wester2016analysis}
+Mirjam Wester, Zhizheng Wu, and Junichi Yamagishi.
+\newblock Analysis of the voice conversion challenge 2016 evaluation results.
+\newblock In {\em INTERSPEECH}, pages 1637--1641, 2016.
+
+\bibitem{wu2016anti}
+Zhizheng Wu, Phillip~L De~Leon, Cenk Demiroglu, Ali Khodabakhsh, Simon King,
+  Zhen-Hua Ling, Daisuke Saito, Bryan Stewart, Tomoki Toda, Mirjam Wester,
+  et~al.
+\newblock Anti-spoofing for text-independent speaker verification: An initial
+  database, comparison of countermeasures, and human performance.
+\newblock {\em IEEE/ACM Transactions on Audio, Speech, and Language
+  Processing}, 24(4):768--783, 2016.
+
+\bibitem{zue1990speech}
+Victor Zue, Stephanie Seneff, and James Glass.
+\newblock Speech database development at mit: Timit and beyond.
+\newblock {\em Speech Communication}, 9(4):351--356, 1990.
+
+\bibitem{logan2000mel}
+Beth Logan et~al.
+\newblock Mel frequency cepstral coefficients for music modeling.
+\newblock In {\em ISMIR}, 2000.
+
+\bibitem{graves2013hybrid}
+Alex Graves, Navdeep Jaitly, and Abdel-rahman Mohamed.
+\newblock Hybrid speech recognition with deep bidirectional lstm.
+\newblock In {\em Automatic Speech Recognition and Understanding (ASRU), 2013
+  IEEE Workshop on}, pages 273--278. IEEE, 2013.
+
+\bibitem{wilcoxon1945individual}
+Frank Wilcoxon.
+\newblock Individual comparisons by ranking methods.
+\newblock {\em Biometrics bulletin}, 1(6):80--83, 1945.
+
+\bibitem{lowry2004vassarstats}
+Richard Lowry.
+\newblock {\em VassarStats: Website for statistical computation}.
+\newblock Vassar College, 2004.
+
+\bibitem{dunn1958estimation}
+Olive~Jean Dunn.
+\newblock Estimation of the means of dependent variables.
+\newblock {\em The Annals of Mathematical Statistics}, pages 1095--1111, 1958.
+
+\bibitem{dunn1961multiple}
+Olive~Jean Dunn.
+\newblock Multiple comparisons among means.
+\newblock {\em Journal of the American Statistical Association},
+  56(293):52--64, 1961.
+
+\bibitem{hosaka2016voice}
+Naoki Hosaka, Kei Hashimoto, Keiichiro Oura, Yoshihiko Nankaku, and Keiichi
+  Tokuda.
+\newblock Voice conversion based on trajectory model training of neural
+  networks considering global variance.
+\newblock In {\em INTERSPEECH}, pages 307--311, 2016.
+
+\bibitem{oord2016wavenet}
+Aaron van~den Oord, Sander Dieleman, Heiga Zen, Karen Simonyan, Oriol Vinyals,
+  Alex Graves, Nal Kalchbrenner, Andrew Senior, and Koray Kavukcuoglu.
+\newblock Wavenet: A generative model for raw audio.
+\newblock {\em arXiv preprint arXiv:1609.03499}, 2016.
+
+\bibitem{kobayashi2017statistical}
+Kazuhiro Kobayashi, Tomoki Hayashi, Akira Tamamori, and Tomoki Toda.
+\newblock Statistical voice conversion with wavenet-based waveform generation.
+\newblock {\em Proc. Interspeech 2017}, pages 1138--1142, 2017.
+
+\end{thebibliography}
