@@ -60,6 +60,8 @@ public:
     void updateRmsCo();
     void updateExpandTCo();
     void updateCompressTCo();
+    void updateAlphaCo();
+    void updateBetaCo();
     void updateTimeConstants();
     void updatePrivateParameter();
     void updateMaxIdleSamples();
@@ -67,6 +69,7 @@ public:
     void updateClipRange();
     void updateDelay();
     void updateAutomation();
+    void updateLoudnessGoal();
     void automateCurrentGain();
 
     //==============================================================================
@@ -97,6 +100,7 @@ public:
     AudioParameterFloat* alpha;
     AudioParameterFloat* currentGain;
     AudioParameterBool* read;
+    double newLoudness;
 
 private:
     //==============================================================================
@@ -105,6 +109,8 @@ private:
     int delayReadPos, delayWritePos;
     double maxDelayInSec = 1.0; // kann dann später auch weg ;-) wenn nicht mehr änderbar
     
+    int count;
+    int count2;
     bool upBefore;
     double lastGain;
     double gainAtPoint;
@@ -115,6 +121,8 @@ private:
     double rmsCo;
     double expandTCo;
     double compressTCo;
+    double alphaCo;
+    double betaCo;
     int lastNumInputChannels = 0;
     int maxIdleSamples;
     int idleCount = 0;

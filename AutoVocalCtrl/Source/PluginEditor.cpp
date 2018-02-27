@@ -50,7 +50,7 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     delaySlider.setValue(processor.delayLength->get());
     delaySlider.addListener(this);
     
-    loudnessGoalSlider.setRange(processor.loudnessGoal->range.start, processor.loudnessGoal->range.end, 0.1f);
+    loudnessGoalSlider.setRange(processor.loudnessGoal->range.start, processor.loudnessGoal->range.end, 1.0f);
     loudnessGoalSlider.setSliderStyle(Slider::LinearBarVertical);
     loudnessGoalSlider.setTextValueSuffix(" dB");
     loudnessGoalSlider.setValue(processor.loudnessGoal->get());
@@ -74,7 +74,7 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     gateSlider.setValue(processor.gate1->get());
     gateSlider.addListener(this);
     
-    alphaSlider.setRange(processor.alpha->range.start, processor.alpha->range.end, 0.01f);
+    alphaSlider.setRange(processor.alpha->range.start, processor.alpha->range.end, 1.0f);
     alphaSlider.setSliderStyle(Slider::LinearBarVertical);
     alphaSlider.setTextValueSuffix(CharPointer_UTF8(" \u03B1"));
     alphaSlider.setValue(processor.alpha->get());
@@ -216,8 +216,9 @@ void AutoVocalCtrlAudioProcessorEditor::sliderValueChanged (Slider* slider)
     }
     else if (slider == &loudnessGoalSlider)
     {
-        processor.loudnessGoal->operator=(loudnessGoalSlider.getValue());
-        
+        double loudness = loudnessGoalSlider.getValue();
+        processor.loudnessGoal->operator=(loudness);
+        processor.newLoudness = loudness;
     }
     else if (slider == &gainRangeSlider)
     {
@@ -231,10 +232,13 @@ void AutoVocalCtrlAudioProcessorEditor::sliderValueChanged (Slider* slider)
     else if (slider == &alphaSlider)
     {
         processor.alpha->operator=(alphaSlider.getValue());
+        processor.updateAlphaCo();
+        processor.updateBetaCo();
     }
 }
 
 void AutoVocalCtrlAudioProcessorEditor::timerCallback()
 {
     gainControlSlider.setValue(processor.getCurrentGainControl());
+    loudnessGoalSlider.setValue(processor.loudnessGoal->get());
 }

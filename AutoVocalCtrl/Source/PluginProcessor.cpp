@@ -34,14 +34,16 @@ AutoVocalCtrlAudioProcessor::AutoVocalCtrlAudioProcessor()
     addParameter(maxIdleTime = new AudioParameterFloat ("maxIdleTime", "MaxIdleTime", 0.0f, 500.0f, 0.0f));
     addParameter(gate1 = new AudioParameterFloat ("gate1", "Gate1", -100.0f, -10.0f, -35.0f));
     addParameter(delayLength = new AudioParameterFloat ("delayLength", "DelayLength", 0.0f, (maxDelayInSec * 1000.0f) - 1.0f, 100.0f));
-    addParameter(alpha = new AudioParameterFloat ("alpha", "Alpha", 0.0f, 1.0f, 1.0f));
+    addParameter(alpha = new AudioParameterFloat ("alpha", "Alpha", 100.0f, 2000.0f, 1000.0f));
     addParameter(currentGain = new AudioParameterFloat ("currentGain", "CurrentGain", -10.0f, 10.0f, 0.0f));
     addParameter(read = new AudioParameterBool("read","Read",false));
     clipRange = Range<double>(-*gainRange, *gainRange);
     delayBufferLength = 1;
     delayReadPos = 0;
     delayWritePos = 0;
+    count = 0;
     upBefore = false;
+    newLoudness = *loudnessGoal;
 }
 
 AutoVocalCtrlAudioProcessor::~AutoVocalCtrlAudioProcessor()
@@ -140,11 +142,24 @@ void AutoVocalCtrlAudioProcessor::updateRmsCo()
     rmsCo = getTimeConstant(*rmsWindow);
 }
 
+void AutoVocalCtrlAudioProcessor::updateAlphaCo()
+{
+    alphaCo = getTimeConstant(*alpha);
+}
+
+void AutoVocalCtrlAudioProcessor::updateBetaCo()
+{
+    double sec = (*alpha / 1000.);
+    betaCo = 1.f - exp(-2.2*(1./sec)/5.);
+}
+
 void AutoVocalCtrlAudioProcessor::updateTimeConstants()
 {
     updateRmsCo();
     updateExpandTCo();
     updateCompressTCo();
+    updateAlphaCo();
+    updateBetaCo();
 }
 
 void AutoVocalCtrlAudioProcessor::updateMaxIdleSamples()
@@ -160,13 +175,26 @@ void AutoVocalCtrlAudioProcessor::updatePrivateParameter()
 
 void AutoVocalCtrlAudioProcessor::updateVectors()
 {
-    for (int diff = getTotalNumInputChannels() - lastNumInputChannels; diff > 0; --diff) { //vector größe benutzen statt last num inoutksdll
-        filterSample.push_back(0.0);
-        rms.push_back(0.0);
-        mls.push_back(0.0);
-        gain.push_back(0.0);
-        alphaGain.push_back(0.0);
+    int diff = getTotalNumInputChannels() - lastNumInputChannels;
+    if (diff > 0) {
+        for (diff = diff; diff > 0; --diff) {
+            filterSample.push_back(0.0);
+            rms.push_back(0.0);
+            mls.push_back(0.0);
+            gain.push_back(0.0);
+            alphaGain.push_back(0.0);
+        }
+    } else if (diff < 0) {
+        for (diff = diff; diff < 0; ++diff) {
+            filterSample.pop_back();
+            rms.pop_back();
+            mls.pop_back();
+            gain.pop_back();
+            alphaGain.pop_back();
+        }
+        
     }
+    lastNumInputChannels = getTotalNumInputChannels();
 }
 
 void AutoVocalCtrlAudioProcessor::updateClipRange()
@@ -269,25 +297,50 @@ void AutoVocalCtrlAudioProcessor::automateCurrentGain()
 void AutoVocalCtrlAudioProcessor::updateAutomation()
 {
     const double currGain = getCurrentGainControl();
+//    *currentGain = getCurrentGainControl();
     const bool up = lastGain < currGain;
     const bool dChange = up != upBefore;
     const bool jump = 1.0 < abs(gainAtPoint - currGain);
+    const bool waited = count > (currentSampleRate / 4);
     if (dChange || jump) {
         automateCurrentGain();
         upBefore = up;
         gainAtPoint = currGain;
+        count = 0;
     }
+    ++count;
     lastGain = currGain;
+}
+
+void AutoVocalCtrlAudioProcessor::updateLoudnessGoal()
+{
+    double med = 0;
+    for (int i = 0; i < alphaGain.size(); ++i) {
+        med += alphaGain[i];
+    }
+    med = med / alphaGain.size();
+    newLoudness = (1 - betaCo) * newLoudness + betaCo * (*loudnessGoal - med);
+    *loudnessGoal = newLoudness;
+    std::fill(alphaGain.begin(), alphaGain.end(), 0.0);
 }
 
 void AutoVocalCtrlAudioProcessor::updateGain(int channel)
 {
-    const double prevGain = gain[channel];
+//    const double prevGain = gain[channel];
     const double g = *loudnessGoal - mls[channel];
     const double co = g < gain[channel] ? compressTCo:expandTCo;
     gain[channel] = clipRange.clipValue((1 - co) * gain[channel] + co * g);
     updateAutomation();
-    alphaGain[channel] = *alpha * gain[channel] + (1 - *alpha) * prevGain; // was mache ich damit?
+//    alphaGain[channel] = *alpha * gain[channel] + (1 - *alpha) * prevGain;
+    alphaGain[channel] = (1 - alphaCo) * alphaGain[channel] + alphaCo * gain[channel];
+    if (channel == getTotalNumInputChannels() - 1)
+    {
+        ++count2;
+        if (count2 > (currentSampleRate * (*alpha / 1000))) {
+            updateLoudnessGoal();
+            count2 = 0;
+        }
+    }
 }
 
 void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
