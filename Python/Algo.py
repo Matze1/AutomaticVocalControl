@@ -1,4 +1,5 @@
 import scipy.io.wavfile as wave
+import scipy.optimzie as optmze
 import numpy as np
 from Filter import Filter
 from Helper import Helper
@@ -55,12 +56,14 @@ def useAlgorithmOn(rate, data, goal, rmsWindow, compressTime, expandTime, gate, 
     avCo = helper.getTimeConstant(rmsWindow, rate)
     compressTCo = helper.getTimeConstant(compressTime, rate)
     expandTCo = helper.getTimeConstant(expandTime, rate)
-    i = 0
-    for sample in data:
+    i = -delayInSamples
+    delayZeros = np.zeros(delayInSamples)
+    for sample in np.append(data,delayZeros):
         g = pow(10, updateGain(updateMLS(updateRMS(updateFilterSample(sample), avCo), gate, goal),
                                goal, compressTCo, expandTCo, maxGain)/20)
         delayData[dpw] = sample
-        data[i] = delayData[dpr] * g;
+        if (i >= 0):
+            data[i] = delayData[dpr] * g
         
         dpr += 1
         dpw += 1
@@ -70,14 +73,33 @@ def useAlgorithmOn(rate, data, goal, rmsWindow, compressTime, expandTime, gate, 
             dpw = 0;
         
         i += 1
-
+    
+    #delaybuffer abziehen???
     return data
 
+def compareGainCurve(x):
+    global r
+    global d1
+    global d2
+    d = useAlgorithmOn(r, d1, -19, x[0], x[1], x[2], x[3], 6, x[4])
+    sum = 0
+    i = 0
+    for sample in d:
+        sum += abs(sample - d2[i])
+        i += 1
+    return sum / x.size()
 
-r,d = helper.readFile("cello.wav")
+r,d1 = helper.readFile("../Vergleich/original16.wav")
+r,d2 = helper.readFile("../Vergleich/withRider16.wav")
 lowcut.set_coefficients("lowcut", cutoff, r, (1. / 2.))
 highshelf.set_coefficients_shelf("highshelf", cutoff_hs, r, 4.)
 delayBufferLength = r
 delayData = np.zeros(delayBufferLength)
-d = useAlgorithmOn(r, d, -23, 100, 500, 500, -35, 6, 100)
-helper.writeFile("Output.wav", d, r)
+#x=rmsWindow, compressTime, expandTime, gate, delay
+x0 = np.array([60, 300, 500, -35, 100])
+bnds = ((10,500),(1,1000),(1,1000),(-100,-10),(1,999))
+optmze.minimize(compareGainCurve, x0, bounds=bnds, options={'disp': True})
+print(res.x)
+
+#d = useAlgorithmOn(r, d, -23, 100, 500, 500, -35, 6, 100)
+#helper.writeFile("Output.wav", d, r)
