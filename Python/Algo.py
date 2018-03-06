@@ -1,5 +1,5 @@
 import scipy.io.wavfile as wave
-import scipy.optimzie as optmze
+import scipy.optimize as optmze
 import numpy as np
 from Filter import Filter
 from Helper import Helper
@@ -85,12 +85,13 @@ def compareGainCurve(x):
     sum = 0
     i = 0
     for sample in d:
-        sum += abs(sample - d2[i])
+        diff = abs(sample - d2[i])
+        sum += diff**2
         i += 1
-    return sum / x.size()
+    return np.sqrt(sum) / d2.size
 
-r,d1 = helper.readFile("../Vergleich/original16.wav")
-r,d2 = helper.readFile("../Vergleich/withRider16.wav")
+r,d1 = helper.readFile("../Vergleich/in_short.wav")
+r,d2 = helper.readFile("../Vergleich/out_short.wav")
 lowcut.set_coefficients("lowcut", cutoff, r, (1. / 2.))
 highshelf.set_coefficients_shelf("highshelf", cutoff_hs, r, 4.)
 delayBufferLength = r
@@ -98,7 +99,7 @@ delayData = np.zeros(delayBufferLength)
 #x=rmsWindow, compressTime, expandTime, gate, delay
 x0 = np.array([60, 300, 500, -35, 100])
 bnds = ((10,500),(1,1000),(1,1000),(-100,-10),(1,999))
-optmze.minimize(compareGainCurve, x0, bounds=bnds, options={'disp': True})
+res = optmze.minimize(compareGainCurve, x0, bounds=bnds, options={'disp': True})
 print(res.x)
 
 #d = useAlgorithmOn(r, d, -23, 100, 500, 500, -35, 6, 100)
