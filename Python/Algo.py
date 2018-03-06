@@ -45,9 +45,20 @@ def updateGain(sample, goal, compressTCo, expandTCo, maxGain):
 
 def useAlgorithmOn(rate, data, goal, rmsWindow, compressTime, expandTime, gate, maxGain, delay):
     global dpr
+    dpr = 0
     global dpw
-    global delayData
+    dpw = 0
+    global rms
+    rms = 0
+    global gain
+    gain = 0
     global delayBufferLength
+    global delayData
+    delayData = np.zeros(delayBufferLength)
+    global lowcut
+    lowcut.reset_timeBuffer()
+    global highshelf
+    highshelf.reset_timeBuffer()
     delayInSamples = helper.getSamplesPerMs(delay, rate)
     dpr = int((dpw - delayInSamples + delayBufferLength) % delayBufferLength)
     if (data.ndim > 1): #GEHT NUR FÜR MONO!!!
@@ -77,29 +88,44 @@ def useAlgorithmOn(rate, data, goal, rmsWindow, compressTime, expandTime, gate, 
     #delaybuffer abziehen???
     return data
 
+r,d1 = helper.readFile("../Vergleich/in_short.wav")
+r,d2 = helper.readFile("../Vergleich/out_short.wav")
+
 def compareGainCurve(x):
     global r
     global d1
     global d2
-    d = useAlgorithmOn(r, d1, -19, x[0], x[1], x[2], x[3], 6, x[4])
+    d1_copy = np.copy(d1)
+#    d = useAlgorithmOn(r, d1, -19, x[0], x[1], x[2], x[3], 6, x[4])
+#    d = useAlgorithmOn(r, d1, -19, 60, x[0], x[1], -35, 6, x[2])
+    d = useAlgorithmOn(r, d1_copy, -19, 60, 300, 500, -35, 6, 100)
     sum = 0
+    print(sum)
     i = 0
     for sample in d:
         diff = abs(sample - d2[i])
         sum += diff**2
         i += 1
-    return np.sqrt(sum) / d2.size
+    print(sum)
+#    return np.sqrt(sum) / d2.size
+    return x[0] + x[1] + sum / 100.0
 
-r,d1 = helper.readFile("../Vergleich/in_short.wav")
-r,d2 = helper.readFile("../Vergleich/out_short.wav")
 lowcut.set_coefficients("lowcut", cutoff, r, (1. / 2.))
 highshelf.set_coefficients_shelf("highshelf", cutoff_hs, r, 4.)
 delayBufferLength = r
-delayData = np.zeros(delayBufferLength)
 #x=rmsWindow, compressTime, expandTime, gate, delay
-x0 = np.array([60, 300, 500, -35, 100])
-bnds = ((10,500),(1,1000),(1,1000),(-100,-10),(1,999))
+#x0 = np.array([60, 300, 500, -35, 100])
+#bnds = ((10,500),(1,1000),(1,1000),(-100,-10),(1,999))
+#x0 = np.array([300, 500, 100])
+#bnds = ((1,1000),(1,1000),(1,999))
+
+x0 = np.array([-35.0, 1.0])
+x1 = np.array([-25.0, 1.0])
+#print(compareGainCurve(x0))
+#print(compareGainCurve(x1))
+bnds = ((-100.0,-1.0),(0.0,2.0))
 res = optmze.minimize(compareGainCurve, x0, bounds=bnds, options={'disp': True})
+#res = optmze.minimize(compareGainCurve, x0, options={'disp': True})
 print(res.x)
 
 #d = useAlgorithmOn(r, d, -23, 100, 500, 500, -35, 6, 100)
