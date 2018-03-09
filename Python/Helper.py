@@ -65,9 +65,9 @@ class Helper:
             plt.xlim(0)
         plt.savefig("2_O.png")
         plt.figure(3)
-        diffData = np.subtract(self.inputData, data)
+#        diffData = np.subtract(self.inputData, data)
         if (data.ndim == 1):
-            plt.plot(diffData, color='red')
+#            plt.plot(diffData, color='red')
             plt.grid(True)
             plt.ylim(-1,1)
             plt.xlim(0)
@@ -85,7 +85,7 @@ class Helper:
             plt.xlim(0)
         plt.savefig("3_Diff.png")
         plt.figure(1)
-        diffData = self.inputData - data
+#        diffData = self.inputData - data
         if (data.ndim == 1):
             plt.plot(data, color='cyan')
         elif (data.ndim == 2):
