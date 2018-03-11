@@ -1,0 +1,164 @@
+\section{TikZ Extensions}
+
+\sectionPage{TikZ Extensions}
+
+\begin{frame}[c]{TikZ Extensions}{Overlay Effects in TikZ Images}
+    \centering
+    \begin{tikzpicture}[thick]
+        \draw[visible on=<1->, onslide=<5->uhhred, -latex] (0, 0) -- (1, 0);
+        \draw[visible on=<2->, onslide=<6->uhhgreen, -latex] (1, 0) -- (1, 1);
+        \draw[visible on=<3->, onslide=<7->uhhblue, -latex] (1, 1) -- (0, 1);
+        \draw[visible on=<4->, onslide=<8->uhhstone, -latex] (0, 1) -- (0, 0);
+    \end{tikzpicture}
+    \vspace{2ex}
+    \begin{itemize}
+        \item<1-> \texttt{visible on=<num-num>}: make node edge visible on that slide
+        \item<5-> \texttt{onslide=\{<num-num>style\}}: apply style on given slides
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[c]{TikZ Extensions}{Standalone Legends}
+    \centering
+    \begin{tikzpicture}
+        \begin{customlegend}[%
+                legend entries={%
+                    Entry 1,
+                    Entry 2,
+                    Entry 3 with comments,
+                    Entry 4,
+                },
+                legend columns={2},
+                legend cell align={left},
+                legend style={draw=none},
+            ]
+            \addlegendimage{thick, uhhblue};
+            \addlegendimage{area legend, thick, draw=none, fill=uhhred};
+            \addlegendimage{surf, thick};
+            \addlegendimage{dashed, uhhstone, mark=*}
+        \end{customlegend}
+    \end{tikzpicture}
+    \vspace{2ex}
+    \begin{itemize}
+        \item Custom legends using \texttt{customlegend} environment
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[c]{TikZ Extensions}{A Sine in TikZ}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                scale only axis,
+                axis x line=middle,
+                axis y line=middle,
+                xlabel={$t$},
+                ylabel={$x_a(t) = A \cos(2\pi f - \theta)$},
+                ymin=-2,
+                ymax=2,
+                width=6cm,
+                height=4cm,
+                xtick={0},
+                ytick={1},
+                yticklabels={$A$},
+                yticklabel style={right},
+            ]
+            \addplot[blue, mark=none, domain=-4:4, samples=500, name path=cos] {cos(deg(2*x + 1))};
+
+            \path[name path=yaxis] (axis cs:0, -2) -- (axis cs:0, 2);
+
+            \path [name intersections={of=cos and yaxis,by=E}];
+
+            \node[fill=blue, circle, inner sep=1pt, pin=30:$A\cos(\theta)$] at(E) {};
+
+            \draw (axis cs:-2.07, -0.75) -- (axis cs:-2.07, -1.25);
+            \draw (axis cs:1.07, -0.75) -- (axis cs:1.07, -1.25);
+            \draw[latex-latex] (axis cs:-2.07, -1.25) -- node[below] {$T = 1/f$} (axis cs:1.07, -1.25);
+        \end{axis}
+    \end{tikzpicture}
+    \vspace{2ex}
+    \begin{itemize}
+        \item Demo on how to plot a sine in TikZ
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[c]{TikZ Extensions}{An STFT Framework in TikZ}
+    \centering
+    \input{graphics/STFT}
+\end{frame}
+
+\begin{frame}[c, fragile]{TikZ Extensions}{An STFT Framework in TikZ}
+    \begin{itemize}
+        \item Some notes on the STFT framework picture
+        \item It requires the following files
+            \begin{itemize}
+                \item \verb|data/STFT.tex|
+                \item \verb|graphics/PersonRed.pdf|
+                \item \verb|graphics/Monkey.pdf|
+            \end{itemize}
+        \item Changing the folders of these files requires editing of the graphic itself
+        \item The graphic itself is given in \verb|graphics/STFT.tex|
+    \end{itemize}
+\end{frame}
+
+% \begin{frame}[c]{TikZ Extensions}{Image plots}
+%     \centering
+%     \begin{tikzpicture}[]
+%         \begin{groupplot}[
+%                 group style={%
+%                     group size={2 by 2},
+%                     xlabels at=edge bottom,
+%                     ylabels at=edge left,
+%                     horizontal sep=2.5cm,
+%                 },
+%                 axis on top,
+%                 scale only axis,
+%                 ymin=0,
+%                 ymax=4,
+%                 xmin=1.75,
+%                 xmax=3.5,
+%                 colormap name=viridis,
+%                 xlabel={$t~/~\text{s}$},
+%                 ylabel={$f~/~\text{kHz}$},
+%                 width=0.3\linewidth,
+%                 height=2.5cm,
+%                 colorbar,
+%                 colorbar style={width=2ex, xshift=-2ex},
+%                 title style={anchor=south, at={(0.5, 0.9)}},
+%             ]
+%             \nextgroupplot
+%             \imagesc{data/spectrogram_noisy.tsv}
+% 
+%             % Use different color range
+%             \nextgroupplot[
+%                 title={Different color range},
+%                 point meta min=-30,
+%                 colormap name=hot2,
+%                 point meta max=0]
+%             \imagesc{data/spectrogram_noisy.tsv}
+%             \node[draw, fill=white, anchor=north west, font=\footnotesize] at (rel axis cs:0, 0.99) {colormap name=hot2};
+% 
+%             % Show different excerpt
+%             \nextgroupplot[
+%                 title={Other excerpt},
+%                 point meta min=-30,
+%                 point meta max=0,
+%                 colormap name=parula,
+%                 xmin=2.75,
+%                 xmax=4.5,
+%                 ymin=0,
+%                 ymax=8]
+%             \imagesc{data/spectrogram_noisy.tsv}
+%             \node[draw, fill=white, anchor=north west, font=\footnotesize] at (rel axis cs:0, 0.99) {colormap name=parula};
+% 
+%             % Use custom defined colormap (it's intentionally ugly)
+%             \nextgroupplot[
+%                 title={Custom Colormap},
+%                 colormap name=temp, 
+%                 point meta min=-30,
+%                 point meta max=10,
+%                 xmin=3.5,
+%                 xmax=5.5]
+%             \imagesc{data/spectrogram_noisy.tsv}
+%             \node[draw, fill=white, anchor=north west, font=\footnotesize] at (rel axis cs:0, 0.99) {colormap name=temp};
+%         \end{groupplot}
+%     \end{tikzpicture}
+% \end{frame}

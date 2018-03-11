@@ -94,14 +94,14 @@ def useAlgorithmOn(rate, data, goal, rmsWindow, compressTime, expandTime, gate, 
 r,d1 = helper.readFile("../Vergleich/ex3in.wav")
 r,d2 = helper.readFile("../Vergleich/ex3out.wav")
 
-def compareGainCurve(x):
+def compareGainCurve(x, displayPS=False):
     global r
     global d1
     global d2
     print(x)
     d1_copy = np.copy(d1)
 #    d = useAlgorithmOn(r, d1_copy, -19, x[0], x[1], x[2], x[3], 6, x[4])
-    d = useAlgorithmOn(r, d1_copy, x[0], x[1], x[2], x[3], x[4], 6, x[5])
+    d = useAlgorithmOn(r, d1_copy, x[0], abs(x[1]), abs(x[2]), abs(x[3]), x[4], 6, abs(x[5]))
 #    d = useAlgorithmOn(r, d1_copy, -19, 60, x[0], x[1], -35, 6, x[2])
 #    d = useAlgorithmOn(r, d1_copy, -19, 60, 300, 500, x[0], 6, x[1])
     sum = 0
@@ -111,7 +111,8 @@ def compareGainCurve(x):
         sum += diff
         i += 1
     print(sum)
-#    print(sum / d2.size)
+    if displayPS:
+        print(sum / d2.size)
 #    return np.sqrt(sum) / d2.size
     test = sum + x[1]/5
 #    print(test)
@@ -134,7 +135,7 @@ def gainCurveGraph(x):
     global d1
     global d2
     d1_copy = np.copy(d1)
-    d3 = useAlgorithmOn(r, d1_copy, x[0], x[1], x[2], x[3], x[4], x[5], x[6])
+    d3 = useAlgorithmOn(r, d1_copy, x[0], abs(x[1]), abs(x[2]), abs(x[3]), x[4], 6, abs(x[5]))
     d1_abs = abs(d1)
     d1_abs[d1_abs == 0] = 1e-10
     d2_abs = abs(d2)
@@ -170,7 +171,13 @@ delayBufferLength = r
 #x0 = np.array([300, 500, 100])
 #bnds = ((1,1000),(1,1000),(1,999))
 #x0 = np.array([40, 40])
-#bnds = (slice(-21.0, -17.0, 2.0), slice(10.0, 70.0, 20.0), slice(10.0, 90.0, 20.0), slice(50.0, 170.0, 20.0), slice(-32.0, -26.0, 2.0), slice(10.0, 150.0, 20.0))
+
+#bnds = (slice(-34.0, -28.0, 2.0), slice(30.0, 70.0, 10.0), slice(270.0, 390.0, 30.0), slice(300.0, 540.0, 60.0), slice(-40.0, -30.0, 2.5), slice(10.0, 50.0, 10.0))
+
+#brute 1 ergebniss: -28.22 5.66 110.14 2044.41 -33.94 0.0
+x0 = np.array([-28.22, 5.66, 110.14, 2044.41, -33.94, 0.0])
+#bnds = (slice(-32.0, -28.0, 2.0), slice(5.0, 35.0, 10.0), slice(300.0, 350.0, 25.0), slice(600.0, 800.0, 100.0), slice(-35.0, -30.0, 2.5), slice(0.0, 30.0, 10.0))
+
 #x0 = np.array([-28.0, 50.0])
 #x1 = np.array([-17.0, 60.0])
 #compareGainCurve(x0)
@@ -179,12 +186,18 @@ delayBufferLength = r
 #res = optmze.brute(compareGainCurve, bnds, full_output=True, finish=optmze.fmin)
 #print(res[0])
 #print(res[1])
+#gainCurveGraph(res[0])
+bnds = ((-32.0, -26.0), (1.0, 30.0), (90.0, 150.0), (1900.0, 2100.0), (-35.0, -30.0), (0.0, 10.0))
+res = optmze.minimize(compareGainCurve, x0, bounds=bnds, options={'disp': True})
 #res = optmze.minimize(compareGainCurve, x0, bounds=bnds, options={'disp': True, 'eps': 20.0})
 #res = optmze.minimize(compareGainCurve, x0, options={'disp': True})
-#print(res.x)
+print(res.x)
+compareGainCurve(res.x, True)
+gainCurveGraph(res.x)
 
-x1 = np.array([-30, 50, 333, 400, -35, 6, 30])
-gainCurveGraph(x1)
+#x1 = np.array([-30, 50, 333, 400, -35, 30])
+#compareGainCurve(x1)
+#gainCurveGraph(x1)
 
 
 #d = useAlgorithmOn(r, d, -23, 100, 500, 500, -35, 6, 100)

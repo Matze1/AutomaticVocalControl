@@ -1,0 +1,65 @@
+% ===============================================================================
+% = LaTeX Beamer Template of the Signal Processing Group, Department of Informatics 
+% = (c) 2016 Prof. Dr. Hannes Federrath, Uni Hamburg, Fachbereich Informatik
+% = https://svs.informatik.uni-hamburg.de
+% =
+% = Weitgehend in Übereinstimmung mit dem Corporate Design 2016 der UHH:
+% = https://www.uni-hamburg.de/beschaeftigtenportal/services/oeffentlichkeitsarbeit/corporate-design.html
+% = 
+% ===============================================================================
+%
+\documentclass[10pt]{beamer} 
+% Option t              Place text of slides at the (vertical) top of the slides.
+% Option handout        Ein PDF ohne Pausen und Overlayeffekte erzeugen.
+% Option aspectratio=43 169 => 16:9, 1610 => 16:10, 43 => 4:3
+
+% Use SP theme and include all necessary packages
+% The following options can be specified:
+%   okular          -   embed media suitable for Okular (works with .wav)
+%   acrobat         -   embed media suitable for Adobe Reader (works with .mp3) 
+%   externalviewer  -   embed media such that an external player is opened
+%   footauthor      -   display short author names in foot line
+%   foottitle       -   display short title in foot line
+\usepackage[footauthor, foottitle]{beamersp2017}
+
+\addbibresource{bibliography/Bibliography.bib}
+
+\usepackage{lipsum}
+
+% =============================
+% = Ab hier Inhalte ändern... 
+% =============================
+
+\title[This is the short title]{Beamer Template of the Signal Processing Group}
+\subtitle{This is how the subtitle looks}
+\author[Short Name]{Robert Rehr}
+\institute[Uni Hamburg]{University of Hamburg\\ Department of Informatics}
+\date{\today}
+
+\tikzexternalize[prefix=./compiledFigs/] %speeds up compilation
+
+\begin{document}
+
+\begin{frame}[plain]
+    % Die Titelseite erscheint nach erneutem Übersetzen korrekt.
+    \maketitle
+\end{frame}
+
+\begin{frame}{Outline}
+    % Die Gliederung erscheit nach erneutem Übersetzen korrekt.
+    \tableofcontents
+\end{frame}
+
+\input{sections/colors}
+
+\input{sections/lists}
+
+\input{sections/blocks}
+
+\input{sections/citations}
+
+\input{sections/audio}
+
+\input{sections/tikz}
+
+\end{document}

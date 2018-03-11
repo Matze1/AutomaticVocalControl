@@ -1,0 +1,346 @@
+%-- info	--------------------------------------------------------------
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamersp2017}[2017/02/21 Signal Processing Beamer Template]
+
+% tools for package parameters
+\RequirePackage{etoolbox}
+
+%-----------------------------------------------------------------------------
+% -- package options --
+% declare general spaudio command which is overwritten by one of the package
+% options
+\newcommand{\spaudio}[1]{\sp@findpath{#1}\closein\sp@handle\sp@audioembed}%
+\makeatletter
+
+\DeclareOption{acrobat}{%
+    \def\sp@audioembed{\includemedia[width=0.5ex, height=2ex, playbutton=plain, transparent = false, addresource=\sp@filename, flashvars={source=\sp@filename & autoPlay=true & autoRewind=true & volume = 1 }]{ }{APlayer.swf}}
+}
+
+\DeclareOption{okular}{%
+    \def\sp@audioembed{\movie[showcontrols,height=0.25cm]{\playbutton[]}{\sp@filename}}
+}
+
+\DeclareOption{externalviewer}{%
+    \def\sp@audioembed{\movie[showcontrols,externalviewer,height=0.25cm]{\playbutton[]}{\sp@filename}}
+}
+
+\makeatother
+
+\newtoggle{@spFootAuthor}
+\togglefalse{@spFootAuthor}
+\DeclareOption{footauthor}{%
+    \toggletrue{@spFootAuthor}
+}
+
+\newtoggle{@spFootTitle}
+\togglefalse{@spFootTitle}
+\DeclareOption{foottitle}{%
+    \toggletrue{@spFootTitle}
+}
+
+\ExecuteOptions{okular}
+
+\ProcessOptions
+
+%-----------------------------------------------------------------------------
+% -- shared sp beamer --
+\RequirePackage{shared}
+
+%-- extra packages	------------------------------------------------------
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[ngerman, english]{babel}% languages, hyphenation
+
+% -- font related --
+\RequirePackage[T1]{fontenc}		%
+\RequirePackage[scaled]{helvet}
+
+% -- bibliography --
+\RequirePackage{csquotes}
+\RequirePackage[backend=biber,
+    style=ieee,
+    isbn=false,
+    doi=false,
+    uniquename=init,
+    giveninits]{biblatex}
+
+
+% -- fonts --
+\RequirePackage{lmodern}
+
+% -- multimedia --
+\RequirePackage{multimedia}
+\RequirePackage{media9}
+
+% ---------------------------------------------------------------------------
+% -- biblatex configuration --
+\DeclareNameAlias{sortname}{first-last}
+
+% footnotes in square brackets
+% Taken from:  http://tex.stackexchange.com/questions/308038/beamerbiblatex-change-the-footnotemark-style-of-footcite
+\makeatletter
+    \def\@makefnmark{\hbox{{{\usebeamercolor[fg]{footnote mark}\usebeamerfont*{footnote mark}\textsuperscript{[\@thefnmark]}}}}}
+
+    \def\@makefntext#1{%
+        \def\insertfootnotetext{ #1}%
+        \def\insertfootnotemark{\@makefnmark}%
+        \usebeamertemplate***{footnote}}
+\makeatother
+
+% -- tikz extensions for beamer --
+% overlays in tikz
+\tikzset{onslide/.code args={<#1>#2}{%
+  \only<#1>{\pgfkeysalso{#2}} % \pgfkeysalso doesn't change the path
+}}
+
+\tikzset{temporal/.code args={<#1>#2#3#4}{%
+  \temporal<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}}{\pgfkeysalso{#4}} % \pgfkeysalso doesn't change the path
+}}
+
+\tikzset{%
+    invisible/.style={opacity=0,text opacity=0},
+    visible on/.style={alt=#1{}{invisible}},
+    alt/.code args={<#1>#2#3}{%
+        \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}}
+    },
+}
+
+% ---------------------------------------------------------------------------
+% -- theme definition --
+\mode<presentation>
+
+% Navigationsleiste ausblenden
+\beamertemplatenavigationsymbolsempty%
+
+% Ränder definieren
+\setbeamersize{text margin left=5ex, text margin right=5ex}
+
+% Farben der Bullets der Ebenen
+\setbeamerfont*{itemize item}{series=\bfseries} 
+\setbeamerfont*{description item}{series=\bfseries} 
+\setbeamercolor{itemize item}{fg=uhhstone}
+\setbeamercolor{itemize subitem}{fg=uhhstone!85!white}
+\setbeamercolor{itemize subsubitem}{fg=uhhstone!70!white}
+% \setbeamercolor{enumerate item}{parent=itemize item}
+% \setbeamercolor{enumerate subitem}{parent=itemize subitem}
+
+% Formen der Bullets der Ebenen
+\setbeamertemplate{itemize item}{\raisebox{0.2ex}{\tiny$\blacksquare$}}
+\setbeamertemplate{itemize subitem}{\raisebox{0.2ex}{\tiny$\blacksquare$}}
+\setbeamertemplate{itemize subsubitem}{\raisebox{0.2ex}{\tiny$\blacksquare$}}
+
+% Farben der Texte
+% Titelseite
+\setbeamercolor{title}{fg=white}
+\setbeamercolor{author}{fg=white}
+\setbeamercolor{institute}{fg=white}
+\setbeamercolor{date}{fg=white}
+
+% Folieninhalt
+\setbeamercolor{structure}{fg=uhhstone}
+\setbeamercolor{section in toc}{fg=uhhblack}
+\setbeamercolor{subsection in toc}{fg=uhhstone}
+\setbeamercolor{framesubtitle}{fg=uhhstone}
+\setbeamercolor{itemize/enumerate body}{fg=uhhblack}
+\setbeamercolor{itemize/enumerate subbody}{fg=uhhblack}
+\setbeamercolor{itemize/enumerate subsubbody}{fg=uhhblack}
+
+\setbeamercolor{footline}{fg=uhhblack, bg=uhhstone!15!white}
+
+% Zeichensätze der Texte
+\setbeamerfont{title}{size=\large, series=\bfseries}
+\setbeamerfont{subtitle}{size=\normalsize, series=\mdseries}
+\setbeamerfont{author}{size=\normalsize}
+\setbeamerfont{institute}{size=\footnotesize}
+\setbeamerfont{date}{size=\footnotesize}
+\setbeamerfont{frametitle}{size=\Large}
+\setbeamerfont{framesubtitle}{size=\normalsize}
+\setbeamerfont{sections/subsections in toc}{size=\normalsize}
+\setbeamerfont{itemize/enumerate body}{size=\normalsize}
+\setbeamerfont{itemize/enumerate subbody}{size=\normalsize}
+\setbeamerfont{itemize/enumerate subsubbody}{size=\normalsize}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Schriftgröße in biblatex Literaturverzeichnis
+\renewcommand*{\bibfont}{\scriptsize}
+
+% Definitionen für farbig hinterlegten Block
+\setbeamertemplate{blocks}[rounded]
+\setbeamercolor{block title}{fg=white,bg=uhhstone}
+\setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!25!bg}
+\setbeamerfont{block title}{size=\normalsize}
+\setbeamerfont{block body}{size=\normalsize}
+
+% Definitionen für Agenda (FIXME: noch stärker an normale Listendefs. anpassen)
+\setbeamertemplate{section in toc}[sections numbered]
+\setbeamertemplate{subsection in toc}[square]
+
+% file for sp logo
+\edef\splogo{theme/logo_sp_stone}
+
+% Dimensions for images in slide headers
+\newlength{\titleuhhlogoheight}
+\newlength{\titlesplogoheight}
+\newlength{\titlelogomarginborder}
+\newlength{\titleuhhlogomargintop}
+\newlength{\titlesplogomargintop}
+
+\setlength{\titleuhhlogoheight}{10mm}
+\setlength{\titlesplogoheight}{0.75\titleuhhlogoheight}
+\setlength{\titlelogomarginborder}{7.5mm}
+\setlength{\titleuhhlogomargintop}{6mm}
+\setlength{\titlesplogomargintop}{\titleuhhlogomargintop}
+\addtolength{\titlesplogomargintop}{-0.5\titlesplogoheight}
+\addtolength{\titlesplogomargintop}{0.5\titleuhhlogoheight}
+
+% Titelzeile
+\setbeamertemplate{frametitle}{%
+    \begin{beamercolorbox}[wd=\paperwidth]{frametitle}
+        \hskip2mm%
+        \includegraphics[height=1.2em]{theme/logo_uhh_notext}%
+        \hskip4mm\raisebox{0.25\height}{\strut\insertframetitle}%
+        \hfill%
+        \includegraphics[height=1.2em]{\splogo}%
+        \hspace*{2mm}\par%
+        \vspace*{-2.2ex}%
+        {\color{uhhblue}\rule{\paperwidth}{1pt}\par}%
+        \vspace*{-0.3ex}%
+        \ifx\insertframesubtitle\strut%
+        \else%
+        {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\hskip4mm\insertframesubtitle\strut\par}%
+        \fi%
+    \end{beamercolorbox}
+    \vspace*{-1ex}
+}
+
+% Kopfzeile
+\setbeamertemplate{headline}{%
+    \vskip2mm\par%
+}
+
+% Fusszeile
+\setbeamertemplate{footline}[text line]{%
+    \begin{beamercolorbox}[wd=\paperwidth, ht=3.5ex]{footline}
+        \hskip5mm\insertframenumber\hfill%
+        \strut\iftoggle{@spFootTitle}{\insertshorttitle}{}%
+        \hfill%
+        \strut\iftoggle{@spFootAuthor}{\insertshortauthor}{}%
+        \hspace*{5mm}\vskip0.25pt%
+    \end{beamercolorbox}
+}
+
+% Title page
+\defbeamertemplate*{title page}{sp}[1][]{%
+    \tikzset{external/export next=false}
+    \begin{tikzpicture}[remember picture,overlay]
+        \fill[uhhstone] ([yshift=-22mm]current page.north west) rectangle (current page.south east);
+        \node[xshift=7.5mm, inner sep=0pt, yshift=-6mm, anchor=north west] (uhh) at (current page.north west) {\includegraphics[height=\titleuhhlogoheight]{theme/logo_uhh}};
+        \node[xshift=-7.5mm, inner sep=0pt, yshift=-7mm, anchor=north east] (uhh) at (current page.north east) {\includegraphics[height=7.7mm]{\splogo}};
+    \end{tikzpicture}
+    \par
+    \vskip4cm
+    \vbox{}
+    \vfill
+    \begingroup
+    \vskip1em%
+    \begin{beamercolorbox}[sep=2pt,#1]{author}
+        \usebeamerfont{author}\insertauthor\strut%
+    \end{beamercolorbox}%
+    \vskip-1em%
+    \makebox[\textwidth][c]{%
+        \begin{minipage}{\paperwidth}
+            \color{white}\rule{7cm}{2pt}
+        \end{minipage}%
+    }%
+    \vskip0.5em%
+    \begin{beamercolorbox}[sep=2pt,#1]{title}
+        \usebeamerfont{title}\strut\inserttitle\strut\par%
+        \ifx\insertsubtitle\@empty%
+        \else%
+        \vskip0.25em%
+        {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
+        \fi%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[sep=2pt,#1]{institute}
+        \usebeamerfont{institute}\insertinstitute%
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=2pt,#1]{date}
+        \usebeamerfont{date}\insertdate%
+    \end{beamercolorbox}
+    \vskip0.5em%
+    {\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic\par}
+    \endgroup
+    \vfill
+}
+
+\mode<all>
+
+% ----------------------------------------------------------------------------
+% -- defining custom symbols --
+\newcommand{\inlineitem}{\leavevmode{\usebeamercolor[fg]{item}\usebeamertemplate{itemize item}}~}
+\newcommand{\playbutton}[1][]{%
+    \raisebox{-0.25ex}{%
+        \tikz{%
+            \node[shading=radial,
+                outer color=uhhgreen,
+                inner color=uhhgreen!25!white,
+                draw=uhhstone,
+                circle,
+                text=white,
+                inner sep=0.5pt,
+                align=center,
+                font=\small,
+                #1] {\hspace{1pt}$\blacktriangleright$};
+            }
+    }
+}
+
+
+\newcommand{\sectionPage}[1]{%
+    \begin{frame}[plain]{}
+         \tikzset{external/export next=false}
+        \begin{tikzpicture}[remember picture,overlay]
+            \fill[uhhstone] ([yshift=-22mm]current page.north west) rectangle (current page.south east);
+            \node
+                [xshift=\titlelogomarginborder,
+                inner sep=0pt,
+                yshift=-\titleuhhlogomargintop,
+                anchor=north west
+            ]
+                (uhh) at (current page.north west)
+                {\includegraphics[height=\titleuhhlogoheight]{theme/logo_uhh}};
+            \node[xshift=-\titlelogomarginborder,
+                inner sep=0pt,
+                yshift=-\titlesplogomargintop,
+                anchor=north east
+            ]
+                (sp) at (current page.north east)
+                {\includegraphics[height=\titlesplogoheight]{\splogo}};
+        \end{tikzpicture}
+        \par
+        \vskip4cm
+        \vbox{}
+        \vfill
+        \begingroup
+        \vskip1em%
+        \begin{beamercolorbox}[sep=2pt]{author}
+            \usebeamerfont{author}\strut%
+        \end{beamercolorbox}%
+        \vskip-1em%
+        \makebox[\textwidth][c]{%
+            \begin{minipage}{\paperwidth}
+                \color{white}\rule{7cm}{2pt}
+            \end{minipage}%
+        }%
+        \vskip0.5em%
+        \begin{beamercolorbox}[sep=2pt]{title}
+            \usebeamerfont{title}\strut#1\strut\par%
+        \end{beamercolorbox}%
+        \endgroup
+        \vfill
+    \end{frame}
+}
+
+
+% -- math font configuration --
+\renewcommand{\mathfamilydefault}{\rmdefault}

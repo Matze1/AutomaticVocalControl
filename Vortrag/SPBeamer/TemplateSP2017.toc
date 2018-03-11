@@ -1,0 +1,15 @@
+\boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
+\defcounter {refsection}{0}\relax 
+\select@language {english}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{Predefined Colors}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{Itemize and Enumerate}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{Blocks}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{Citations}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{Audio}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{TikZ Extensions}
