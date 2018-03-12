@@ -1,15 +1,8 @@
 \boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
-\defcounter {refsection}{0}\relax 
 \select@language {english}
-\defcounter {refsection}{0}\relax 
-\contentsline {section}{Predefined Colors}
-\defcounter {refsection}{0}\relax 
-\contentsline {section}{Itemize and Enumerate}
-\defcounter {refsection}{0}\relax 
-\contentsline {section}{Blocks}
-\defcounter {refsection}{0}\relax 
-\contentsline {section}{Citations}
-\defcounter {refsection}{0}\relax 
-\contentsline {section}{Audio}
-\defcounter {refsection}{0}\relax 
-\contentsline {section}{TikZ Extensions}
+\beamer@sectionintoc {1}{Predefined Colors}{3}{0}{1}
+\beamer@sectionintoc {2}{Itemize and Enumerate}{5}{0}{2}
+\beamer@sectionintoc {3}{Blocks}{8}{0}{3}
+\beamer@sectionintoc {4}{Citations}{10}{0}{4}
+\beamer@sectionintoc {5}{Audio}{12}{0}{5}
+\beamer@sectionintoc {6}{TikZ Extensions}{14}{0}{6}
