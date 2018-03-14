@@ -1,3 +1,14 @@
 \chapter{Approaches}
-\label{chapter:approach} %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{chapter:approach}
+
+\section{Overview}
+
+The basic approach works in five steps: filter, root mean square (RMS) calculation, gate, gain adaption, delay.\\
+It starts with a low-cut and a high-shelf filter which will be applied sample wise on the incoming audio. Those filters are a simplified mapping of the perception of sound pressure for human beings. In this way (as done in FOOTNTE) it is the first step to adjust the plug-in to loudness instead of sound pressure. Although in the basic approach the plug-in will not be working with the full loudness detection algorithm (FUTNOT) due to calculation time and real time capability (see SPÄTER? oder hier?).\\
+After the filter section every sample is passed to the RMS calculation.  This will output the squared average of a previously specified period of time. The determination of the square root is not necessary because it will happen in the following calculation of the equivalent dB value. The plug-in needs to convert the linear audio samples into the logarithmic dB scale because it will display gain values and loudness goal (see gain part?) in dB at the user interface (UI) as it is the standard scale of DAWs. Thereby the executive sound engineer will intuitively know how to interpret and interact with the UI (see design part?).\\
+When dB conversion is done, all the samples path through an initially specified gate. The gate will set all samples with lower dB value as itself to the current loudness goal (see gain, see improve). In this way the plug-in will not operate when it is fed with silence or irrelevant noise.\\
+Next step after the gate is the gain adaption. In this step the gated RMS value is compared to the current loudness goal. Depending on the difference of both values there results an preliminary gain. The gain variations per sample are smoothed comparable to the RMS calculation. This leads to the final gain value.\\
+Lastly the new gain is multiplied with the current sample. Because the plugins behaviour is smoothed as it shall sound natural, it will not react instantly to the input. To compensate the reaction time it delays the input signal before multiplying the calculated gain. This delay is finally offset by the DAW.\\ 
+During development most of the parameters described in the following sections were settable in a basic dummy UI. This was realised with the standard JUCE slider and button objects and used for tests and fast adjustments.\\
+
 
