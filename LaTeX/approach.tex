@@ -11,4 +11,38 @@ Next step after the gate is the gain adaption. In this step the gated RMS value 
 Lastly the new gain is multiplied with the current sample. Because the plugins behaviour is smoothed as it shall sound natural, it will not react instantly to the input. To compensate the reaction time it delays the input signal before multiplying the calculated gain. This delay is finally offset by the DAW.\\ 
 During development most of the parameters described in the following sections were settable in a basic dummy UI. This was realised with the standard JUCE slider and button objects and used for tests and fast adjustments.\\
 
+\section{Filter}
+
+While gathering information on how to improve my idea of the plug-in I got interested in the ITU-R BS.1770-4 [FOOTNOTE pls] algorithm. It classifies an audio file for its humanly perceived loudness. The main use of this algorithm is in television and music streaming services as they can keep the program loudness while switching content. As the human perception is also interesting for mixing a song, I examined how it was done. Because there was a good documentation about how to implement the algorithm I build it in python and decided which elements could be useful for my plug-in. The first element were the filters. Like I described above, their use ist to mimic the human perception of sound pressure at different frequencies. Realised in a greatly simplified but cost effective version with one low cut and one high shelf filter. The low cut filter has a cutoff frequency at 38 Hz, the high shelf around 1681 Hz. They are initialised at every plug-in startup in the JUCE method “prepareToPlay” with the current sample rate of the integrating DAW:
+
+\lstset{language=C++}
+\begin{lstlisting}[frame=single]
+lowcut.setCoefficients(38.0, sampleRate, (1.0/2.0));
+highshelf.setCoefficientsShelf(1681.0, sampleRate, 4.0);
+\end{lstlisting}
+
+The implementation is based on the biquad filter from the Book BLA (BLA NOTE auch im code).  I have chosen the biquat filter architecture because it is a very flexible and simple solution which is real time capable. The calculation of filter coefficients is adopted as follows:
+
+berechnung in Math Latex für beide filter wo dran steht wie sie heißen. $$ a = 2$$
+
+Because the loudness algorithm uses second order filters (with two delay memories) it works like this:
+
+Biquatfilter Bild
+
+The same as my implementation in the Filter class:
+
+\begin{lstlisting}[frame=single]
+double AutoVocalCtrlFilter::process(double sample)
+{
+    const double mid = sample - a1 * z_1 - a2 * z_2;
+    const double out = b0 * mid + b1 * z_1 + b2 * z_2;
+    
+    z_2 = z_1;
+    z_1 = mid;
+    
+    return out;
+}
+\end{lstlisting}
+
+
 
