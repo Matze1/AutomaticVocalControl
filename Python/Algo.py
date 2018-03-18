@@ -94,9 +94,14 @@ def useAlgorithmOn(rate, data, goal, rmsWindow, compressTime, expandTime, gate, 
 #r,d1 = helper.readFile("../Vergleich/ex3in.wav")
 #r,d2 = helper.readFile("../Vergleich/ex3out.wav")
 r,d1 = helper.readFile("../Vergleich/ex3in_26_puffer.wav")
-#r,d2 = helper.readFile("../Vergleich/ex3out_26_puffer.wav")
+r,d2 = helper.readFile("../Vergleich/ex3out_26_puffer.wav")
 #r,d2 = helper.readFile("../Vergleich/ex3out_26_puffer_live.wav")
-r,d2 = helper.readFile("../Vergleich/ex3out_26_puffer_auto.wav")
+#r,d2 = helper.readFile("../Vergleich/ex3out_26_puffer_auto.wav")
+#r,d2 = helper.readFile("../Vergleich/ex3out_26_puffer_own_auto.wav")
+#r,d2 = helper.readFile("../Vergleich/logic_neu_own_auto.wav")
+#r,d2 = helper.readFile("../Vergleich/logic2plugin.wav")
+#r,d1 = helper.readFile("../Vergleich/sine.wav")
+#r,d2 = helper.readFile("../Vergleich/sine-3.wav")
 
 def compareGainCurve(x, displayPS=False):
     global r
@@ -134,18 +139,50 @@ def deNull(x0):
         i += 1
     return x
 
-def gainCurveGraph(x):
+def specialDeNull(x0, x1, x2):
+    i = 0
+    for y in x0:
+        if y == 0.0:
+            if i > 0:
+                x0[i] = x0[i-1]
+                x1[i] = x1[i-1]
+                x2[i] = x2[i-1]
+            else:
+                x0[i] = 0.006
+                x1[i] = 0.0
+                x2[i] = 0.0
+        if y < 0.006:
+            if i > 0:
+                x0[i] = x0[i-1]
+                x1[i] = x1[i-1]
+                x2[i] = x2[i-1]
+            else:
+                x0[i] = 0.006
+                x1[i] = 0.0
+                x2[i] = 0.0
+        i += 1
+
+def gainCurveGraph(x, delaySamples):
     global r
     global d1
     global d2
+#    d2 = np.resize(d2,(1,d1.size))[0]
+    if (delaySamples > 0):
+        d2 = d2[:-delaySamples]
+        d2 = np.append(np.zeros(delaySamples),d2)
+    elif (delaySamples < 0):
+        d2 = d2[abs(delaySamples):]
+        d2 = np.append(d2, np.zeros(abs(delaySamples)))
     d1_copy = np.copy(d1)
     d3 = useAlgorithmOn(r, d1_copy, x[0], abs(x[1]), abs(x[2]), abs(x[3]), x[4], 6, abs(x[5]))
     d1_abs = abs(d1)
-    d1_abs[d1_abs == 0] = 1e-10
+#    d1_abs[d1_abs == 0] = -1e-10
     d2_abs = abs(d2)
     d3_abs = abs(d3)
+    specialDeNull(d1_abs,d2_abs,d3_abs)
+    d1_abs_copy = np.copy(d1_abs) # nicht nötig
     d12 = np.divide(d2_abs, d1_abs)
-    d13 = np.divide(d3_abs, d1_abs)
+    d13 = np.divide(d3_abs, d1_abs_copy)
 #    d12[d12 == 0] = 1.0
 #    d13[d13 == 0] = 1.0
     d12 = deNull(d12)
@@ -155,11 +192,13 @@ def gainCurveGraph(x):
     plt.figure(1)
     plt.subplot(211)
     plt.plot(d12dB, 'r', d13dB, 'g')
+#    plt.plot(d12dB, 'r')
     plt.grid(True)
     plt.ylim(-6,6)
     plt.xlim(0)
     plt.subplot(212)
-    plt.plot(d1)
+#    plt.plot(d1, 'b', d2, 'r')
+    plt.plot(d1_abs, 'b', d2_abs, 'r')
     plt.grid(True)
     plt.ylim(-0.4,0.4)
     plt.xlim(0)
@@ -208,8 +247,8 @@ delayBufferLength = r
 #gainCurveGraph(x1)
 
 x1 = np.array([-27.63, 5.01, 113.63, 1604.81, -33.73, 5.76])
-compareGainCurve(x1, True)
-gainCurveGraph(x1)
+#compareGainCurve(x1, True)
+gainCurveGraph(x1, 0)
 
 
 #d = useAlgorithmOn(r, d, -23, 100, 500, 500, -35, 6, 100)
