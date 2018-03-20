@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2018.3.8)  15 MAR 2018 18:11
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2018.3.8)  20 MAR 2018 16:12
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -2670,24 +2670,12 @@ Overfull \hbox (1.18057pt too wide) has occurred while \output is active
 []  
  []
 
-(./sections/lists.tex
+(./sections/motivation.tex
 A tikzpicture has been optimized away. Use '/tikz/external/optimize=false' to d
 isable this.
 \pbs@newkey{pbs@last@page}{3}
-\openout4 = `./compiledFigs/TemplateSP2017-figure0.vrb'.
-
-(./compiledFigs/TemplateSP2017-figure0.vrb
-\openout7 = `./compiledFigs/TemplateSP2017-figure0.dpth'.
-
-[4
-
-
-
-
-]
-A tikzpicture has been optimized away. Use '/tikz/external/optimize=false' to d
-isable this.
-)
+The command '\includegraphics [scale=0.6]{images/wave}' has been optimized away
+. Use '/tikz/external/optimize=false' to disable this.
 The command '\includegraphics [height=1.2em]{theme/logo_uhh_notext}' has been o
 ptimized away. Use '/tikz/external/optimize=false' to disable this.
 The command '\includegraphics [height=1.2em]{\splogo }' has been optimized away
@@ -2698,6 +2686,8 @@ Overfull \hbox (1.18057pt too wide) has occurred while \output is active
 []  
  []
 
+The command '\includegraphics [scale=0.6]{images/wave}' has been optimized away
+. Use '/tikz/external/optimize=false' to disable this.
 The command '\includegraphics [height=1.2em]{theme/logo_uhh_notext}' has been o
 ptimized away. Use '/tikz/external/optimize=false' to disable this.
 The command '\includegraphics [height=1.2em]{\splogo }' has been optimized away
@@ -2708,10 +2698,229 @@ Overfull \hbox (1.18057pt too wide) has occurred while \output is active
 []  
  []
 
+The command '\includegraphics [scale=0.6]{images/wave}' has been optimized away
+. Use '/tikz/external/optimize=false' to disable this.
+The command '\includegraphics [height=1.2em]{theme/logo_uhh_notext}' has been o
+ptimized away. Use '/tikz/external/optimize=false' to disable this.
+The command '\includegraphics [height=1.2em]{\splogo }' has been optimized away
+. Use '/tikz/external/optimize=false' to disable this.
+\pbs@newkey{pbs@last@page}{6}
+
+Overfull \hbox (1.18057pt too wide) has occurred while \output is active
+[]  
+ []
+
+The command '\includegraphics [scale=0.6]{images/auto}' has been optimized away
+. Use '/tikz/external/optimize=false' to disable this.
+The command '\includegraphics [height=1.2em]{theme/logo_uhh_notext}' has been o
+ptimized away. Use '/tikz/external/optimize=false' to disable this.
+The command '\includegraphics [height=1.2em]{\splogo }' has been optimized away
+. Use '/tikz/external/optimize=false' to disable this.
+\pbs@newkey{pbs@last@page}{7}
+
+Overfull \hbox (1.18057pt too wide) has occurred while \output is active
+[]  
+ []
+
+) (./sections/algorithm.tex
+A tikzpicture has been optimized away. Use '/tikz/external/optimize=false' to d
+isable this.
+\pbs@newkey{pbs@last@page}{8}
+The command '\includegraphics [height=1.2em]{theme/logo_uhh_notext}' has been o
+ptimized away. Use '/tikz/external/optimize=false' to disable this.
+The command '\includegraphics [height=1.2em]{\splogo }' has been optimized away
+. Use '/tikz/external/optimize=false' to disable this.
+\pbs@newkey{pbs@last@page}{9}
+
+Overfull \hbox (1.18057pt too wide) has occurred while \output is active
+[]  
+ []
+
+The command '\includegraphics [height=1.2em]{theme/logo_uhh_notext}' has been o
+ptimized away. Use '/tikz/external/optimize=false' to disable this.
+The command '\includegraphics [height=1.2em]{\splogo }' has been optimized away
+. Use '/tikz/external/optimize=false' to disable this.
+\pbs@newkey{pbs@last@page}{10}
+
+Overfull \hbox (1.18057pt too wide) has occurred while \output is active
+[]  
+ []
+
+) (./sections/optimization.tex
+A tikzpicture has been optimized away. Use '/tikz/external/optimize=false' to d
+isable this.
+\pbs@newkey{pbs@last@page}{11}
+) (./sections/results.tex
+A tikzpicture has been optimized away. Use '/tikz/external/optimize=false' to d
+isable this.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+\pbs@newkey{pbs@last@page}{12}
+
+Overfull \vbox (11.0pt too high) has occurred while \output is active []
+
+\pbs@newkey{pbs@last@page}{13}
+
+Overfull \hbox (1.18057pt too wide) has occurred while \output is active
+[]  
+ []
+
+\openout4 = `./compiledFigs/TemplateSP2017-figure0.vrb'.
+
+(./compiledFigs/TemplateSP2017-figure0.vrb
+\openout7 = `./compiledFigs/TemplateSP2017-figure0.dpth'.
+
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <9> on input line 3.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <6> on input line 3.
+[14
+
+
+
+
+{/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+Overfull \hbox (81.98764pt too wide) in paragraph at lines 3--4
+[][]  
+ []
+
+A tikzpicture has been optimized away. Use '/tikz/external/optimize=false' to d
+isable this.
+
+Overfull \hbox (116.3398pt too wide) in paragraph at lines 4--5
+[][]  
+ []
+
+)
+The command '\includegraphics [height=1.2em]{theme/logo_uhh_notext}' has been o
+ptimized away. Use '/tikz/external/optimize=false' to disable this.
+The command '\includegraphics [height=1.2em]{\splogo }' has been optimized away
+. Use '/tikz/external/optimize=false' to disable this.
+\pbs@newkey{pbs@last@page}{14}
+
+Overfull \hbox (1.18057pt too wide) has occurred while \output is active
+[]  
+ []
+
+) (./sections/outlook.tex
+A tikzpicture has been optimized away. Use '/tikz/external/optimize=false' to d
+isable this.
+\pbs@newkey{pbs@last@page}{15}
+) (./sections/colors.tex
+A tikzpicture has been optimized away. Use '/tikz/external/optimize=false' to d
+isable this.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+\pbs@newkey{pbs@last@page}{16}
+
+Overfull \vbox (11.0pt too high) has occurred while \output is active []
+
+\pbs@newkey{pbs@last@page}{17}
+
+Overfull \hbox (1.18057pt too wide) has occurred while \output is active
+[]  
+ []
+
+\openout4 = `./compiledFigs/TemplateSP2017-figure0.vrb'.
+
+(./compiledFigs/TemplateSP2017-figure0.vrb)
+The command '\includegraphics [height=1.2em]{theme/logo_uhh_notext}' has been o
+ptimized away. Use '/tikz/external/optimize=false' to disable this.
+The command '\includegraphics [height=1.2em]{\splogo }' has been optimized away
+. Use '/tikz/external/optimize=false' to disable this.
+\pbs@newkey{pbs@last@page}{18}
+
+Overfull \hbox (1.18057pt too wide) has occurred while \output is active
+[]  
+ []
+
+) (./sections/lists.tex
+A tikzpicture has been optimized away. Use '/tikz/external/optimize=false' to d
+isable this.
+\pbs@newkey{pbs@last@page}{19}
+\openout4 = `./compiledFigs/TemplateSP2017-figure0.vrb'.
+
+(./compiledFigs/TemplateSP2017-figure0.vrb
+A tikzpicture has been optimized away. Use '/tikz/external/optimize=false' to d
+isable this.
+
+LaTeX Font Warning: Font shape `T1/lmss/bx/sc' undefined
+(Font)              using `T1/lmss/bx/n' instead on input line 12.
+
+A tikzpicture has been optimized away. Use '/tikz/external/optimize=false' to d
+isable this.
+)
+The command '\includegraphics [height=1.2em]{theme/logo_uhh_notext}' has been o
+ptimized away. Use '/tikz/external/optimize=false' to disable this.
+The command '\includegraphics [height=1.2em]{\splogo }' has been optimized away
+. Use '/tikz/external/optimize=false' to disable this.
+\pbs@newkey{pbs@last@page}{20}
+
+Overfull \hbox (1.18057pt too wide) has occurred while \output is active
+[]  
+ []
+
+The command '\includegraphics [height=1.2em]{theme/logo_uhh_notext}' has been o
+ptimized away. Use '/tikz/external/optimize=false' to disable this.
+The command '\includegraphics [height=1.2em]{\splogo }' has been optimized away
+. Use '/tikz/external/optimize=false' to disable this.
+\pbs@newkey{pbs@last@page}{21}
+
+Overfull \hbox (1.18057pt too wide) has occurred while \output is active
+[]  
+ []
+
+) (./sections/blocks.tex
+A tikzpicture has been optimized away. Use '/tikz/external/optimize=false' to d
+isable this.
+\pbs@newkey{pbs@last@page}{22}
+The command '\includegraphics [height=1.2em]{theme/logo_uhh_notext}' has been o
+ptimized away. Use '/tikz/external/optimize=false' to disable this.
+The command '\includegraphics [height=1.2em]{\splogo }' has been optimized away
+. Use '/tikz/external/optimize=false' to disable this.
+\pbs@newkey{pbs@last@page}{23}
+
+Overfull \hbox (1.18057pt too wide) has occurred while \output is active
+[]  
+ []
+
+) (./sections/citations.tex
+A tikzpicture has been optimized away. Use '/tikz/external/optimize=false' to d
+isable this.
+\pbs@newkey{pbs@last@page}{24}
+
+LaTeX Warning: Citation 'breithaupt_parameterized_2008' on page 25 undefined on
+ input line 13.
+
+
+LaTeX Warning: Citation 'gerkmann_improved_2008' on page 25 undefined on input 
+line 13.
+
+
+LaTeX Warning: Empty bibliography on input line 13.
+
+The command '\includegraphics [height=1.2em]{theme/logo_uhh_notext}' has been o
+ptimized away. Use '/tikz/external/optimize=false' to disable this.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <14.4> on input line 13.
+
+LaTeX Warning: Citation 'gerkmann_bayesian_2014' on page 25 undefined on input 
+line 13.
+
+The command '\includegraphics [height=1.2em]{\splogo }' has been optimized away
+. Use '/tikz/external/optimize=false' to disable this.
+\pbs@newkey{pbs@last@page}{25}
+
+Overfull \hbox (1.18057pt too wide) has occurred while \output is active
+[]  
+ []
+
 ) (./sections/audio.tex
 A tikzpicture has been optimized away. Use '/tikz/external/optimize=false' to d
 isable this.
-\pbs@newkey{pbs@last@page}{6}
+\pbs@newkey{pbs@last@page}{26}
 \openout4 = `./compiledFigs/TemplateSP2017-figure0.vrb'.
 
 (./compiledFigs/TemplateSP2017-figure0.vrb
@@ -2727,7 +2936,7 @@ The command '\includegraphics [height=1.2em]{theme/logo_uhh_notext}' has been o
 ptimized away. Use '/tikz/external/optimize=false' to disable this.
 The command '\includegraphics [height=1.2em]{\splogo }' has been optimized away
 . Use '/tikz/external/optimize=false' to disable this.
-\pbs@newkey{pbs@last@page}{7}
+\pbs@newkey{pbs@last@page}{27}
 
 Overfull \hbox (1.18057pt too wide) has occurred while \output is active
 []  
@@ -2736,14 +2945,14 @@ Overfull \hbox (1.18057pt too wide) has occurred while \output is active
 ) (./sections/tikz.tex
 A tikzpicture has been optimized away. Use '/tikz/external/optimize=false' to d
 isable this.
-\pbs@newkey{pbs@last@page}{8}
+\pbs@newkey{pbs@last@page}{28}
 A tikzpicture has been optimized away. Use '/tikz/external/optimize=false' to d
 isable this.
 The command '\includegraphics [height=1.2em]{theme/logo_uhh_notext}' has been o
 ptimized away. Use '/tikz/external/optimize=false' to disable this.
 The command '\includegraphics [height=1.2em]{\splogo }' has been optimized away
 . Use '/tikz/external/optimize=false' to disable this.
-\pbs@newkey{pbs@last@page}{9}
+\pbs@newkey{pbs@last@page}{29}
 
 Overfull \hbox (1.18057pt too wide) has occurred while \output is active
 []  
@@ -2755,7 +2964,7 @@ The command '\includegraphics [height=1.2em]{theme/logo_uhh_notext}' has been o
 ptimized away. Use '/tikz/external/optimize=false' to disable this.
 The command '\includegraphics [height=1.2em]{\splogo }' has been optimized away
 . Use '/tikz/external/optimize=false' to disable this.
-\pbs@newkey{pbs@last@page}{10}
+\pbs@newkey{pbs@last@page}{30}
 
 Overfull \hbox (1.18057pt too wide) has occurred while \output is active
 []  
@@ -2767,7 +2976,7 @@ The command '\includegraphics [height=1.2em]{theme/logo_uhh_notext}' has been o
 ptimized away. Use '/tikz/external/optimize=false' to disable this.
 The command '\includegraphics [height=1.2em]{\splogo }' has been optimized away
 . Use '/tikz/external/optimize=false' to disable this.
-\pbs@newkey{pbs@last@page}{11}
+\pbs@newkey{pbs@last@page}{31}
 
 Overfull \hbox (1.18057pt too wide) has occurred while \output is active
 []  
@@ -2779,7 +2988,7 @@ The command '\includegraphics [height=1.2em]{theme/logo_uhh_notext}' has been o
 ptimized away. Use '/tikz/external/optimize=false' to disable this.
 The command '\includegraphics [height=1.2em]{\splogo }' has been optimized away
 . Use '/tikz/external/optimize=false' to disable this.
-\pbs@newkey{pbs@last@page}{12}
+\pbs@newkey{pbs@last@page}{32}
 
 Overfull \hbox (1.18057pt too wide) has occurred while \output is active
 []  
@@ -2791,7 +3000,7 @@ The command '\includegraphics [height=1.2em]{theme/logo_uhh_notext}' has been o
 ptimized away. Use '/tikz/external/optimize=false' to disable this.
 The command '\includegraphics [height=1.2em]{\splogo }' has been optimized away
 . Use '/tikz/external/optimize=false' to disable this.
-\pbs@newkey{pbs@last@page}{13}
+\pbs@newkey{pbs@last@page}{33}
 
 Overfull \hbox (1.18057pt too wide) has occurred while \output is active
 []  
@@ -2803,7 +3012,7 @@ The command '\includegraphics [height=1.2em]{theme/logo_uhh_notext}' has been o
 ptimized away. Use '/tikz/external/optimize=false' to disable this.
 The command '\includegraphics [height=1.2em]{\splogo }' has been optimized away
 . Use '/tikz/external/optimize=false' to disable this.
-\pbs@newkey{pbs@last@page}{14}
+\pbs@newkey{pbs@last@page}{34}
 
 Overfull \hbox (1.18057pt too wide) has occurred while \output is active
 []  
@@ -2815,7 +3024,7 @@ The command '\includegraphics [height=1.2em]{theme/logo_uhh_notext}' has been o
 ptimized away. Use '/tikz/external/optimize=false' to disable this.
 The command '\includegraphics [height=1.2em]{\splogo }' has been optimized away
 . Use '/tikz/external/optimize=false' to disable this.
-\pbs@newkey{pbs@last@page}{15}
+\pbs@newkey{pbs@last@page}{35}
 
 Overfull \hbox (1.18057pt too wide) has occurred while \output is active
 []  
@@ -2829,7 +3038,7 @@ The command '\includegraphics [height=1.2em]{theme/logo_uhh_notext}' has been o
 ptimized away. Use '/tikz/external/optimize=false' to disable this.
 The command '\includegraphics [height=1.2em]{\splogo }' has been optimized away
 . Use '/tikz/external/optimize=false' to disable this.
-\pbs@newkey{pbs@last@page}{16}
+\pbs@newkey{pbs@last@page}{36}
 
 Overfull \hbox (1.18057pt too wide) has occurred while \output is active
 []  
@@ -2842,7 +3051,7 @@ The command '\includegraphics [height=1.2em]{theme/logo_uhh_notext}' has been o
 ptimized away. Use '/tikz/external/optimize=false' to disable this.
 The command '\includegraphics [height=1.2em]{\splogo }' has been optimized away
 . Use '/tikz/external/optimize=false' to disable this.
-\pbs@newkey{pbs@last@page}{17}
+\pbs@newkey{pbs@last@page}{37}
 
 Overfull \hbox (1.18057pt too wide) has occurred while \output is active
 []  
@@ -2850,10 +3059,13 @@ Overfull \hbox (1.18057pt too wide) has occurred while \output is active
 
 )
 \acro@rerun@check 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 65.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 65.
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 65.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 65.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 75.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 75.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 75.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 75.
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
 
 LaTeX Warning: There were undefined references.
 
@@ -2868,19 +3080,20 @@ Package logreq Info: Writing requests to './compiledFigs/TemplateSP2017-figure0
 
  ) 
 Here is how much of TeX's memory you used:
- 54692 strings out of 492995
- 1274461 string characters out of 6132705
- 1747110 words of memory out of 5000000
- 57289 multiletter control sequences out of 15000+600000
- 600314 words of font info for 66 fonts, out of 8000000 for 9000
+ 55064 strings out of 492995
+ 1281905 string characters out of 6132705
+ 1747048 words of memory out of 5000000
+ 57612 multiletter control sequences out of 15000+600000
+ 640629 words of font info for 95 fonts, out of 8000000 for 9000
  1145 hyphenation exceptions out of 8191
- 83i,16n,111p,10397b,857s stack positions out of 5000i,500n,10000p,200000b,80000s
-
-Output written on ./compiledFigs/TemplateSP2017-figure0.pdf (1 page, 1552 bytes
-).
+ 83i,16n,111p,10397b,1588s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/symbols/msam1
+0.pfb>
+Output written on ./compiledFigs/TemplateSP2017-figure0.pdf (1 page, 10222 byte
+s).
 PDF statistics:
- 34 PDF objects out of 1000 (max. 8388607)
- 8 compressed objects within 1 object stream
+ 56 PDF objects out of 1000 (max. 8388607)
+ 13 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 47 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 59 words of extra memory for PDF output out of 10000 (max. 10000000)
 

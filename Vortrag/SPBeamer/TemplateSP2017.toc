@@ -1,8 +1,7 @@
 \boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
 \select@language {english}
-\beamer@sectionintoc {1}{Predefined Colors}{3}{0}{1}
-\beamer@sectionintoc {2}{Itemize and Enumerate}{5}{0}{2}
-\beamer@sectionintoc {3}{Blocks}{8}{0}{3}
-\beamer@sectionintoc {4}{Citations}{10}{0}{4}
-\beamer@sectionintoc {5}{Audio}{12}{0}{5}
-\beamer@sectionintoc {6}{TikZ Extensions}{14}{0}{6}
+\beamer@sectionintoc {1}{Motivation}{3}{0}{1}
+\beamer@sectionintoc {2}{Algorithm}{9}{0}{2}
+\beamer@sectionintoc {3}{Optimization}{19}{0}{3}
+\beamer@sectionintoc {4}{Results}{22}{0}{4}
+\beamer@sectionintoc {5}{Future Implementations}{24}{0}{5}

@@ -1,12 +1,11 @@
-\frametitle{TikZ Extensions}\framesubtitle {An STFT Framework in TikZ}
+\frametitle{Audio Examples}
+\includegraphics[scale=0.6]{images/wave}
+	\centering
+	\\
     \begin{itemize}
-        \item Some notes on the STFT framework picture
-        \item It requires the following files
-            \begin{itemize}
-                \item \verb|data/STFT.tex|
-                \item \verb|graphics/PersonRed.pdf|
-                \item \verb|graphics/Monkey.pdf|
-            \end{itemize}
-        \item Changing the folders of these files requires editing of the graphic itself
-        \item The graphic itself is given in \verb|graphics/STFT.tex|
+        \item Original: \spaudio{audioexamples/OG.wav}
+        \item Gain Control: \spaudio{audioexamples/Control.wav}
     \end{itemize}
+	\includegraphics[scale=0.6]{images/after}
+	\centering
+	\\

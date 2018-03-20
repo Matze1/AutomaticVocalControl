@@ -295,7 +295,7 @@ def filterTest():
     plt.grid(True)
     plt.show()
 
-#filterTest()
+filterTest()
 
 #r,d = readFile("OHTest.wav")
 #r,d = readFile("testFiles/1770-2_Comp_23LKFS_2000Hz_2ch.wav")
@@ -303,8 +303,8 @@ def filterTest():
 #r,d = readFile("testFiles/1770-2_Comp_AbsGateTest.wav")
 #r,d = readFile("testFiles/1770-2_Comp_RelGateTest.wav")
 #r,d = readFile("testFiles/1770-2_Conf_Stereo_VinL+R-24LKFS.wav")
-r,d = readFile("testFiles/1770-2_Conf_Mono_Voice+Music-23LKFS.wav")
-useAlgorithmOn(r, d)
+#r,d = readFile("testFiles/1770-2_Conf_Mono_Voice+Music-23LKFS.wav")
+#useAlgorithmOn(r, d)
 #fftPlot(r, d)
 #whiteNoise = np.random.uniform(-1, 1, 50*44100)
 #fftPlot(44100, whiteNoise)

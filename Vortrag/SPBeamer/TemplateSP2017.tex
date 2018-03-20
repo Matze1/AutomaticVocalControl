@@ -8,7 +8,7 @@
 % = 
 % ===============================================================================
 %
-\documentclass[10pt,aspectratio=169]{beamer} 
+\documentclass[10pt]{beamer} 
 % Option t              Place text of slides at the (vertical) top of the slides.
 % Option handout        Ein PDF ohne Pausen und Overlayeffekte erzeugen.
 % Option aspectratio=43 169 => 16:9, 1610 => 16:10, 43 => 4:3
@@ -25,14 +25,15 @@
 \addbibresource{bibliography/Bibliography.bib}
 
 \usepackage{lipsum}
+\usepackage{listings}
 %\tikzexternalize[optimize=false,prefix=compiledFigs/]
 % =============================
 % = Ab hier Inhalte ändern... 
 % =============================
 
-\title[This is the short title]{Beamer Template of the Signal Processing Group}
-\subtitle{This is how the subtitle looks}
-\author[Short Name]{Robert Rehr}
+\title[This is the short title]{Real-Time Automatic Gain Control for Singing Voice Applications}
+%\subtitle{Real}
+\author[Short Name]{Nils Heine}
 \institute[Uni Hamburg]{University of Hamburg\\ Department of Informatics}
 \date{\today}
 
@@ -50,16 +51,33 @@
     \tableofcontents
 \end{frame}
 
-\input{sections/colors}
+\input{sections/motivation}
 
-\input{sections/lists}
+%JUCE FRAMEWORK BLA BLA
 
-\input{sections/blocks}
+\input{sections/algorithm}
 
-\input{sections/citations}
+\input{sections/optimization}
 
-\input{sections/audio}
+\input{sections/results}
 
-\input{sections/tikz}
+\input{sections/future}
+
+%\input{sections/colors}
+
+%\input{sections/lists}
+
+%\input{sections/blocks}
+
+%\input{sections/citations}
+
+%\input{sections/audio}
+
+%\input{sections/tikz}
+
+\begin{frame}{Outline}
+    % Die Gliederung erscheit nach erneutem Übersetzen korrekt.
+    \tableofcontents
+\end{frame}
 
 \end{document}

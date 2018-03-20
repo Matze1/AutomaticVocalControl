@@ -2121,10 +2121,24 @@
     <bcf:datasource type="file" datatype="bibtex">bibliography/Bibliography.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">breithaupt_parameterized_2008</bcf:citekey>
-    <bcf:citekey order="2">gerkmann_improved_2008</bcf:citekey>
-    <bcf:citekey order="3">gerkmann_bayesian_2014</bcf:citekey>
+    <bcf:citekey order="1">Figure from DAFX: Digital Audio Effects by Udo Zoelzer</bcf:citekey>
+    <bcf:citekey order="2">from Recommendation ITU-R BS.1770-4</bcf:citekey>
+    <bcf:citekey order="3">Based on Book: Digital Audio Signal Processing by Udo Zoelzer</bcf:citekey>
   </bcf:section>
+  <bcf:sortlist section="0" name="none/global/" type="entry" sortscheme="none" sortnamekeyscheme="global" labelprefix="">
+  <bcf:sorting>
+    <bcf:sort order="1">
+      <bcf:sortitem order="1">citeorder</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sorting>
+  </bcf:sortlist>
+  <bcf:sortlist section="0" name="none/global/" type="entry" sortscheme="none" sortnamekeyscheme="global" labelprefix="">
+  <bcf:sorting>
+    <bcf:sort order="1">
+      <bcf:sortitem order="1">citeorder</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sorting>
+  </bcf:sortlist>
   <bcf:sortlist section="0" name="none/global/" type="entry" sortscheme="none" sortnamekeyscheme="global" labelprefix="">
   <bcf:sorting>
     <bcf:sort order="1">
