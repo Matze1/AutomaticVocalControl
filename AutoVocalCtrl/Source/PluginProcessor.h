@@ -80,10 +80,10 @@ public:
     double getCurrentGainControl();
     
     //==============================================================================
-    void updateFilterSample(double sample, int channel);
-    void updateRMS(int channel);
-    void updateMLS(int channel);
-    void updateGain(int channel);
+    double updateFilterSample(double sample, AutoVocalCtrlFilter hs, AutoVocalCtrlFilter lc);
+    double updateRMS2(double sample, double last);
+    double updateGate(double rms2);
+    double updateGain(double sample, double scSample, double lastGn, int channel);
     
     //==============================================================================
     void numChannelsChanged() override;
@@ -116,6 +116,8 @@ private:
     double gainAtPoint;
     AutoVocalCtrlFilter lowcut;
     AutoVocalCtrlFilter highshelf;
+    AutoVocalCtrlFilter scLowcut;
+    AutoVocalCtrlFilter scHighshelf;
     Range<double> clipRange;
     double currentSampleRate;
     double rmsCo;
@@ -127,8 +129,11 @@ private:
     int maxIdleSamples;
     int idleCount = 0;
     std::vector<double> filterSample;
-    std::vector<double> rms;
-    std::vector<double> mls;
+    std::vector<double> scFilterSample;
+    std::vector<double> rms2;
+    std::vector<double> scRms2;
+    std::vector<double> gated;
+    std::vector<double> scGated;
     std::vector<double> gain;
     std::vector<double> alphaGain;
     

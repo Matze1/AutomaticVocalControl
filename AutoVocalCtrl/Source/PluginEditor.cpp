@@ -38,11 +38,11 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     compressTimeSlider.setValue(processor.compressTime->get());
     compressTimeSlider.addListener(this);
     
-    maxIdleTimeSlider.setRange(processor.maxIdleTime->range.start, 0.0f, 1.0f); // zurzeit aus
-    maxIdleTimeSlider.setSliderStyle(Slider::LinearBarVertical);
-    maxIdleTimeSlider.setTextValueSuffix(" ms");
-    maxIdleTimeSlider.setValue(processor.maxIdleTime->get());
-    maxIdleTimeSlider.addListener(this);
+//    maxIdleTimeSlider.setRange(processor.maxIdleTime->range.start, 0.0f, 1.0f); // zurzeit aus
+//    maxIdleTimeSlider.setSliderStyle(Slider::LinearBarVertical);
+//    maxIdleTimeSlider.setTextValueSuffix(" ms");
+//    maxIdleTimeSlider.setValue(processor.maxIdleTime->get());
+//    maxIdleTimeSlider.addListener(this);
     
     delaySlider.setRange(processor.delayLength->range.start, processor.delayLength->range.end, 1.0f);
     delaySlider.setSliderStyle(Slider::LinearBarVertical);

@@ -16,23 +16,19 @@
 //==============================================================================
 AutoVocalCtrlAudioProcessor::AutoVocalCtrlAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
-     : AudioProcessor (BusesProperties()
-                     #if ! JucePlugin_IsMidiEffect
-                      #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  AudioChannelSet::stereo(), true)
-                      #endif
-                       .withOutput ("Output", AudioChannelSet::stereo(), true)
-                     #endif
+     : AudioProcessor (BusesProperties().withInput  ("Input",  AudioChannelSet::stereo(), true)
+                                        .withOutput ("Output", AudioChannelSet::stereo(), true)
+                                        .withInput  ("Sidechain", AudioChannelSet::stereo(), true)
                        )
 #endif
 {
     addParameter(rmsWindow = new AudioParameterFloat ("rmsWindow", "RMSWindow", 10.0f, 500.0f, 60.0f));
-    addParameter(expandTime = new AudioParameterFloat ("expandTime", "ExpandTime", 1.0f, 1000.0f, 500.0f));
-    addParameter(compressTime = new AudioParameterFloat ("compressTime", "CompressTime", 1.0f, 1000.0f, 300.0f));
+    addParameter(expandTime = new AudioParameterFloat ("expandTime", "ExpandTime", 1.0f, 3000.0f, 1500.0f));
+    addParameter(compressTime = new AudioParameterFloat ("compressTime", "CompressTime", 1.0f, 1000.0f, 150.0f));
     addParameter(loudnessGoal = new AudioParameterFloat ("loudnessGoal", "LoudnessGoal", -60.0f, 0.0f, -23.0f));
     addParameter(gainRange = new AudioParameterFloat ("gainRange", "GainRange", 0.0f, 10.0f, 6.0f));
     addParameter(maxIdleTime = new AudioParameterFloat ("maxIdleTime", "MaxIdleTime", 0.0f, 500.0f, 0.0f));
-    addParameter(gate1 = new AudioParameterFloat ("gate1", "Gate1", -100.0f, -10.0f, -35.0f));
+    addParameter(gate1 = new AudioParameterFloat ("gate1", "Gate1", -100.0f, -10.0f, -33.0f));
     addParameter(delayLength = new AudioParameterFloat ("delayLength", "DelayLength", 0.0f, (maxDelayInSec * 1000.0f) - 1.0f, 100.0f));
     addParameter(alpha = new AudioParameterFloat ("alpha", "Alpha", 100.0f, 2000.0f, 1000.0f));
     addParameter(currentGain = new AudioParameterFloat ("currentGain", "CurrentGain", -10.0f, 10.0f, 0.0f));
@@ -44,6 +40,12 @@ AutoVocalCtrlAudioProcessor::AutoVocalCtrlAudioProcessor()
     count = 0;
     upBefore = false;
     newLoudness = *loudnessGoal;
+    scFilterSample.push_back(0.0); // CHEESY, SAUBERER MACHEN ok? cool.
+    scFilterSample.push_back(0.0);
+    scRms2.push_back(0.0);
+    scRms2.push_back(0.0);
+    scGated.push_back(0.0);
+    scGated.push_back(0.0);
 }
 
 AutoVocalCtrlAudioProcessor::~AutoVocalCtrlAudioProcessor()
@@ -175,26 +177,26 @@ void AutoVocalCtrlAudioProcessor::updatePrivateParameter()
 
 void AutoVocalCtrlAudioProcessor::updateVectors()
 {
-    int diff = getTotalNumInputChannels() - lastNumInputChannels;
+    int diff = getMainBusNumInputChannels() - lastNumInputChannels;
     if (diff > 0) {
         for (diff = diff; diff > 0; --diff) {
             filterSample.push_back(0.0);
-            rms.push_back(0.0);
-            mls.push_back(0.0);
+            rms2.push_back(0.0);
+            gated.push_back(0.0);
             gain.push_back(0.0);
             alphaGain.push_back(0.0);
         }
     } else if (diff < 0) {
         for (diff = diff; diff < 0; ++diff) {
             filterSample.pop_back();
-            rms.pop_back();
-            mls.pop_back();
+            rms2.pop_back();
+            gated.pop_back();
             gain.pop_back();
             alphaGain.pop_back();
         }
         
     }
-    lastNumInputChannels = getTotalNumInputChannels();
+    lastNumInputChannels = getMainBusNumInputChannels();
 }
 
 void AutoVocalCtrlAudioProcessor::updateClipRange()
@@ -223,6 +225,8 @@ void AutoVocalCtrlAudioProcessor::prepareToPlay (double sampleRate, int samplesP
     updateVectors();
     lowcut.setCoefficients(38.0, sampleRate, (1.0/2.0));
     highshelf.setCoefficientsShelf(1681.0, sampleRate, 4.0);
+    scLowcut.setCoefficients(38.0, sampleRate, (1.0/2.0));
+    scHighshelf.setCoefficientsShelf(1681.0, sampleRate, 4.0);
     delayBufferLength = (int)(maxDelayInSec*sampleRate);
     if(delayBufferLength < 1)
         delayBufferLength = 1;
@@ -261,30 +265,24 @@ bool AutoVocalCtrlAudioProcessor::isBusesLayoutSupported (const BusesLayout& lay
 }
 #endif
 
-void AutoVocalCtrlAudioProcessor::updateFilterSample(double sample, int channel)
+double AutoVocalCtrlAudioProcessor::updateFilterSample(double sample, AutoVocalCtrlFilter hs, AutoVocalCtrlFilter lc)
 {
-    filterSample[channel] = highshelf.process(lowcut.process(sample));
+    return hs.process(lc.process(sample)); //eingehen darauf das sich über die zeit selbst zurückstezen?? wie lange dauert?
 }
 
-void AutoVocalCtrlAudioProcessor::updateRMS(int channel)
+double AutoVocalCtrlAudioProcessor::updateRMS2(double sample, double last)
 {
-    rms[channel] = (1. - rmsCo) * rms[channel] + rmsCo * (filterSample[channel] * filterSample[channel]);
+    return (1. - rmsCo) * last + rmsCo * (sample * sample);
     // RMS Calculation based on Book: Digital Audio Signal Processing by Udo Zölzer
 }
 
-void AutoVocalCtrlAudioProcessor::updateMLS(int channel)
+double AutoVocalCtrlAudioProcessor::updateGate(double rms2)
 {
-    const double currentRMS = 10 * std::log10(rms[channel]);
-    if (currentRMS < *gate1) { // gate
-        mls[channel] = *loudnessGoal;
-//        if (idleCount > maxIdleSamples) {
-//            mls[channel] = *loudnessGoal;
-//            idleCount = 0;
-//        } else {
-//            ++idleCount;
-//        }
-    } else
-        mls[channel] = currentRMS;
+    const double currentRMS = 10 * std::log10(rms2);
+    if (currentRMS < *gate1)
+        return *loudnessGoal;
+    else
+        return currentRMS;
 }
 
 void AutoVocalCtrlAudioProcessor::automateCurrentGain()
@@ -324,16 +322,13 @@ void AutoVocalCtrlAudioProcessor::updateLoudnessGoal()
     std::fill(alphaGain.begin(), alphaGain.end(), 0.0);
 }
 
-void AutoVocalCtrlAudioProcessor::updateGain(int channel)
+double AutoVocalCtrlAudioProcessor::updateGain(double sample, double scSample, double lastGn, int channel) // channel muss hier noch raus
 {
-//    const double prevGain = gain[channel];
-    const double g = *loudnessGoal - mls[channel];
-    const double co = g < gain[channel] ? compressTCo:expandTCo;
-    gain[channel] = clipRange.clipValue((1 - co) * gain[channel] + co * g);
+    const double g = *loudnessGoal - sample;
+    const double co = g < lastGn ? compressTCo:expandTCo;
     updateAutomation();
-//    alphaGain[channel] = *alpha * gain[channel] + (1 - *alpha) * prevGain;
-    alphaGain[channel] = (1 - alphaCo) * alphaGain[channel] + alphaCo * gain[channel];
-    if (channel == getTotalNumInputChannels() - 1)
+    alphaGain[channel] = (1 - alphaCo) * alphaGain[channel] + alphaCo * lastGn;
+    if (channel == getMainBusNumInputChannels() - 1)
     {
         ++count2;
         if (count2 > (currentSampleRate * (*alpha / 1000))) {
@@ -341,13 +336,19 @@ void AutoVocalCtrlAudioProcessor::updateGain(int channel)
             count2 = 0;
         }
     }
+    return clipRange.clipValue((1 - co) * lastGn + co * g);
 }
 
 void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
+    AudioSampleBuffer mainInputOutput = getBusBuffer(buffer, true, 0);
+    AudioSampleBuffer sideChainInput  = getBusBuffer(buffer, true, 1);
+    
     ScopedNoDenormals noDenormals;
-    const int totalNumInputChannels  = getTotalNumInputChannels();
-    const int totalNumOutputChannels = getTotalNumOutputChannels();
+    const int totalNumInputChannels  = getMainBusNumInputChannels();
+    const int totalNumOutputChannels = getMainBusNumOutputChannels();
+//    const int totalNumInputChannels  = getTotalNumInputChannels();
+//    const int totalNumOutputChannels = getTotalNumOutputChannels();
 
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
@@ -356,28 +357,33 @@ void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
     // when they first compile a plugin, but obviously you don't need to keep
     // this code if your algorithm always overwrites all the output channels.
     for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
+        mainInputOutput.clear (i, 0, mainInputOutput.getNumSamples());
 
     int channel, dpr, dpw;
     // This is the place where you'd normally do the guts of your plugin's
     // audio processing...
     for (channel = 0; channel < totalNumInputChannels; ++channel)
     {
-        float* channelData = buffer.getWritePointer (channel);
+        float* channelData = mainInputOutput.getWritePointer (channel);
+        const float* sideChainData = sideChainInput.getReadPointer(sideChainInput.getNumChannels() - 1);
         float* delayData = delayBuffer.getWritePointer(jmin(channel, delayBuffer.getNumChannels() - 1));
         dpr = delayReadPos;
         dpw = delayWritePos;
         
-        for (int sample = 0; sample < buffer.getNumSamples(); ++sample) {
+        for (int sample = 0; sample < mainInputOutput.getNumSamples(); ++sample) {
             if (*read) {
                 gain[channel] = *currentGain;
                 const double g = pow(10, gain[channel]/20);
-                channelData[sample] = channelData[sample] * g;
+                channelData[sample] = channelData[sample] * g; //HIER NOCH CLIPPEN!?
             } else {
-                updateFilterSample(channelData[sample], channel);
-                updateRMS(channel);
-                updateMLS(channel);
-                updateGain(channel);
+                // hier deutlich vereinfachen::
+                filterSample[channel] = updateFilterSample(channelData[sample], highshelf, lowcut);
+                scFilterSample[0] = updateFilterSample(sideChainData[sample], scHighshelf, scLowcut);
+                rms2[channel] = updateRMS2(filterSample[channel], rms2[channel]);
+                scRms2[0] = updateRMS2(scFilterSample[0], scRms2[0]);
+                gated[channel] = updateGate(rms2[channel]);
+                scGated[0] = updateGate(scRms2[0]);
+                gain[channel] = updateGain(gated[channel], scGated[0], gain[channel], channel);
                 const double g = pow(10, gain[channel]/20);
                 delayData[dpw] = channelData[sample]; //kann andersrum also erst read dann write falls immer mit lookahead (fest?) nur damit 0 geht
                 channelData[sample] = delayData[dpr] * g;
@@ -428,7 +434,7 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 
 double AutoVocalCtrlAudioProcessor::getCurrentGainControl()
 {
-    if (getTotalNumInputChannels() > 1)
+    if (getMainBusNumInputChannels() > 1)
         return (gain[0] + gain[1]) / 2;
     else
         return gain[0];

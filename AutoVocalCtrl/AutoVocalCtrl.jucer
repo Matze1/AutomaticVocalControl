@@ -11,7 +11,7 @@
               pluginProducesMidiOut="0" pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0"
               pluginAUExportPrefix="AutoVocalCtrlAU" pluginRTASCategory=""
               aaxIdentifier="com.yourcompany.AutoVocalCtrl" pluginAAXCategory="AAX_ePlugInCategory_Dynamics"
-              jucerVersion="5.2.1">
+              jucerVersion="5.3.0">
   <MAINGROUP id="MJg5P8" name="AutoVocalCtrl">
     <GROUP id="{FD4AE781-8684-6C46-6B8C-F6F811085896}" name="Source">
       <FILE id="XV65rl" name="Filter.cpp" compile="1" resource="0" file="Source/Filter.cpp"/>
