@@ -18,7 +18,7 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (1000, 400);
+    setSize (1100, 400);
     
     rmsSlider.setRange(processor.rmsWindow->range.start, processor.rmsWindow->range.end, 1.0f);
     rmsSlider.setSliderStyle(Slider::LinearBarVertical);
@@ -80,6 +80,11 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     alphaSlider.setValue(processor.alpha->get());
     alphaSlider.addListener(this);
     
+    v2bDiffSlider.setRange(processor.v2bDiff->range.start, processor.v2bDiff->range.end, 0.1f);
+    v2bDiffSlider.setSliderStyle(Slider::LinearBarVertical);
+    v2bDiffSlider.setValue(processor.v2bDiff->get());
+    v2bDiffSlider.addListener(this);
+    
 
     rmsLabel.setText ("RMS Window", dontSendNotification);
     rmsLabel.attachToComponent(&rmsSlider, false);
@@ -111,11 +116,25 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     alphaLabel.setText ("Alpha", dontSendNotification);
     alphaLabel.attachToComponent(&alphaSlider, false);
     
+    v2bDiffLabel.setText ("V2B Diff", dontSendNotification);
+    v2bDiffLabel.attachToComponent(&v2bDiffSlider, false);
+    
+    
     readButton.addListener(this);
     readButton.setButtonText("Write");
     readButton.setToggleState(processor.read->get(), dontSendNotification);
     
+    detectButton.addListener(this);
+    detectButton.setButtonText("Detect Best Goal");
+    detectButton.setToggleState(processor.detect->get(), dontSendNotification);
+    
+    scButton.addListener(this);
+    scButton.setButtonText("SC MUTE");
+    scButton.setToggleState(processor.sc->get(), dontSendNotification);
+    
     addAndMakeVisible(readButton);
+    addAndMakeVisible(detectButton);
+    addAndMakeVisible(scButton);
     
     addAndMakeVisible(rmsSlider);
     addAndMakeVisible(rmsLabel);
@@ -137,6 +156,8 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     addAndMakeVisible(gateLabel);
     addAndMakeVisible(alphaSlider);
     addAndMakeVisible(alphaLabel);
+    addAndMakeVisible(v2bDiffSlider);
+    addAndMakeVisible(v2bDiffLabel);
     
     startTimer(40);
 }
@@ -162,6 +183,8 @@ void AutoVocalCtrlAudioProcessorEditor::resized()
     // subcomponents in your editor..
     
     readButton.setBounds(40, 290, 180, 40);
+    detectButton.setBounds(260, 290, 180, 40);
+    scButton.setBounds(480, 290, 180, 40);
     
     rmsSlider.setBounds(40, 50, 80, 200);
     expandTimeSlider.setBounds(140, 50, 80, 200);
@@ -172,8 +195,9 @@ void AutoVocalCtrlAudioProcessorEditor::resized()
     gainRangeSlider.setBounds(540, 50, 80, 200);
     gateSlider.setBounds(640, 50, 80, 200);
     alphaSlider.setBounds(740, 50, 80, 200);
+    v2bDiffSlider.setBounds(840, 50, 80, 200);
     
-    gainControlSlider.setBounds(880, 50, 80, 200);
+    gainControlSlider.setBounds(980, 50, 80, 200);
 }
 
 void AutoVocalCtrlAudioProcessorEditor::buttonClicked(Button* button)
@@ -184,6 +208,27 @@ void AutoVocalCtrlAudioProcessorEditor::buttonClicked(Button* button)
         readButton.setToggleState(!value, dontSendNotification);
         String buttonLabel = !value ? "Read":"Write";
         readButton.setButtonText(buttonLabel);
+    } else if (button == &detectButton) {
+        const bool value = processor.detect->get();
+        if (value) {
+            processor.updateLoudnessGoal();
+            processor.gainRange->operator=(oldGainRange);
+            processor.updateClipRange();
+            detectButton.setButtonText("Detect Best Goal");
+        } else {
+            oldGainRange = processor.gainRange->get();
+            processor.gainRange->operator=(processor.gainRange->range.end);
+            processor.updateClipRange();
+            detectButton.setButtonText("Detecting..."); // SOLLTE NOCH ROT WERDEN ODER SOWAS OK
+        }
+        processor.detect->operator=(!value);
+        detectButton.setToggleState(!value, dontSendNotification);
+    } else if (button == &scButton) {
+        const bool value = processor.sc->get();
+        processor.sc->operator=(!value);
+        scButton.setToggleState(!value, dontSendNotification);
+        String buttonLabel = !value ? "SC ACTV":"SC MUTE";
+        scButton.setButtonText(buttonLabel);
     }
 }
 
@@ -218,7 +263,6 @@ void AutoVocalCtrlAudioProcessorEditor::sliderValueChanged (Slider* slider)
     {
         double loudness = loudnessGoalSlider.getValue();
         processor.loudnessGoal->operator=(loudness);
-        processor.newLoudness = loudness;
     }
     else if (slider == &gainRangeSlider)
     {
@@ -241,4 +285,5 @@ void AutoVocalCtrlAudioProcessorEditor::timerCallback()
 {
     gainControlSlider.setValue(processor.getCurrentGainControl());
     loudnessGoalSlider.setValue(processor.loudnessGoal->get());
+    v2bDiffSlider.setValue(processor.v2bDiff->get());
 }

@@ -46,8 +46,11 @@ private:
     Slider gateSlider;
     Slider delaySlider;
     Slider alphaSlider;
+    Slider v2bDiffSlider;
     
     TextButton readButton;
+    TextButton detectButton; //verschiedene loudness goal modi in dropdown menü? detect (-> extra button kommt in UI) / SC / selbst einstellen
+    TextButton scButton;
     
     Label rmsLabel;
     Label expandTimeLabel;
@@ -59,6 +62,9 @@ private:
     Label gateLabel;
     Label delayLabel;
     Label alphaLabel;
+    Label v2bDiffLabel;
+    
+    float oldGainRange = 6.0;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AutoVocalCtrlAudioProcessorEditor)
 };

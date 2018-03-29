@@ -82,8 +82,8 @@ public:
     //==============================================================================
     double updateFilterSample(double sample, AutoVocalCtrlFilter hs, AutoVocalCtrlFilter lc);
     double updateRMS2(double sample, double last);
-    double updateGate(double rms2);
-    double updateGain(double sample, double scSample, double lastGn, int channel);
+    double updateGate(double rms2, double gate);
+    double updateGain(double sample, double scSample, double lastGn);
     
     //==============================================================================
     void numChannelsChanged() override;
@@ -99,8 +99,10 @@ public:
     AudioParameterFloat* delayLength;
     AudioParameterFloat* alpha;
     AudioParameterFloat* currentGain;
+    AudioParameterFloat* v2bDiff;
     AudioParameterBool* read;
-    double newLoudness;
+    AudioParameterBool* detect;
+    AudioParameterBool* sc;
 
 private:
     //==============================================================================
@@ -111,6 +113,7 @@ private:
     
     int count;
     int count2;
+    int detCount;
     bool upBefore;
     double lastGain;
     double gainAtPoint;
@@ -125,15 +128,12 @@ private:
     double compressTCo;
     double alphaCo;
     double betaCo;
+    double scGain;
     int lastNumInputChannels = 0;
     int maxIdleSamples;
     int idleCount = 0;
-    std::vector<double> filterSample;
-    std::vector<double> scFilterSample;
     std::vector<double> rms2;
     std::vector<double> scRms2;
-    std::vector<double> gated;
-    std::vector<double> scGated;
     std::vector<double> gain;
     std::vector<double> alphaGain;
     
