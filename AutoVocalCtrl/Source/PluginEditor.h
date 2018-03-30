@@ -47,10 +47,16 @@ private:
     Slider delaySlider;
     Slider alphaSlider;
     Slider v2bDiffSlider;
+    Slider scInputGSlider;
+    Slider inputSlider;
+    Slider scGainSlider;
+    Slider outputSlider;
     
     TextButton readButton;
     TextButton detectButton; //verschiedene loudness goal modi in dropdown menü? detect (-> extra button kommt in UI) / SC / selbst einstellen
     TextButton scButton;
+    
+    Label detectLabel;
     
     Label rmsLabel;
     Label expandTimeLabel;
@@ -63,6 +69,10 @@ private:
     Label delayLabel;
     Label alphaLabel;
     Label v2bDiffLabel;
+    Label scInputGLabel;
+    Label inputLabel;
+    Label scGainLabel;
+    Label outputLabel;
     
     float oldGainRange = 6.0;
     

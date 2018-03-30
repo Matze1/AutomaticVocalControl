@@ -78,6 +78,10 @@ public:
     
     //==============================================================================
     double getCurrentGainControl();
+    double getAlphaGain();
+    double getInputRMSdB();
+    double getScInputRMSdB();
+    double getOutputdB();
     
     //==============================================================================
     double updateFilterSample(double sample, AutoVocalCtrlFilter hs, AutoVocalCtrlFilter lc);
@@ -100,9 +104,11 @@ public:
     AudioParameterFloat* alpha;
     AudioParameterFloat* currentGain;
     AudioParameterFloat* v2bDiff;
+    AudioParameterFloat* scGainUI;
     AudioParameterBool* read;
     AudioParameterBool* detect;
     AudioParameterBool* sc;
+    
 
 private:
     //==============================================================================
@@ -132,10 +138,11 @@ private:
     int lastNumInputChannels = 0;
     int maxIdleSamples;
     int idleCount = 0;
+    std::vector<double> gain;
     std::vector<double> rms2;
     std::vector<double> scRms2;
-    std::vector<double> gain;
     std::vector<double> alphaGain;
+    std::vector<double> output;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AutoVocalCtrlAudioProcessor)
 };

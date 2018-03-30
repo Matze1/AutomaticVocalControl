@@ -33,6 +33,7 @@ AutoVocalCtrlAudioProcessor::AutoVocalCtrlAudioProcessor()
     addParameter(alpha = new AudioParameterFloat ("alpha", "Alpha", 100.0f, 4000.0f, 2000.0f));
     addParameter(currentGain = new AudioParameterFloat ("currentGain", "CurrentGain", -10.0f, 10.0f, 0.0f));
     addParameter(v2bDiff = new AudioParameterFloat ("v2bDiff", "V2BDiff", -100.0f, 100.0f, 0.0f));
+    addParameter(scGainUI = new AudioParameterFloat ("scGainUI", "SCGainUI", -10.0f, 10.0f, 0.0f));
     addParameter(read = new AudioParameterBool("read","Read",false));
     addParameter(detect = new AudioParameterBool("detect","Detect",false));
     addParameter(sc = new AudioParameterBool("sc","SC",false));
@@ -182,12 +183,14 @@ void AutoVocalCtrlAudioProcessor::updateVectors()
             rms2.push_back(0.0);
             gain.push_back(0.0);
             alphaGain.push_back(0.0);
+            output.push_back(0.0);
         }
     } else if (diff < 0) {
         for (diff = diff; diff < 0; ++diff) {
             rms2.pop_back();
             gain.pop_back();
             alphaGain.pop_back();
+            output.pop_back();
         }
         
     }
@@ -304,12 +307,41 @@ void AutoVocalCtrlAudioProcessor::updateAutomation()
     lastGain = currGain;
 }
 
-void AutoVocalCtrlAudioProcessor::updateLoudnessGoal()
+double AutoVocalCtrlAudioProcessor::getInputRMSdB()
+{
+    double sum = 0;
+    for (int i = 0; i < getMainBusNumInputChannels(); ++i)
+        sum += rms2[i];
+    return 10 * log10(sum / getMainBusNumInputChannels() + 1e-10);
+}
+
+double AutoVocalCtrlAudioProcessor::getScInputRMSdB()
+{
+//    double sum = 0;
+//    for (int i = 0; i < getMainBusNumInputChannels(); ++i)
+//        sum += scRms2[i];
+    return 10 * log10(scRms2[0] + 1e-10);
+}
+
+double AutoVocalCtrlAudioProcessor::getOutputdB()
+{
+    double sum = 0;
+    for (int i = 0; i < getMainBusNumInputChannels(); ++i)
+        sum += output[i];
+    return 10 * log10(sum / getMainBusNumInputChannels() + 1e-10);
+}
+
+double AutoVocalCtrlAudioProcessor::getAlphaGain()
 {
     double med = 0;
     for (int i = 0; i < getMainBusNumInputChannels(); ++i)
         med += alphaGain[i] / detCount;
-    med = med / getMainBusNumInputChannels();
+    return med / getMainBusNumInputChannels();
+}
+
+void AutoVocalCtrlAudioProcessor::updateLoudnessGoal()
+{
+    double med = getAlphaGain();
     *loudnessGoal = *loudnessGoal - med;
     std::fill(alphaGain.begin(), alphaGain.end(), 0.0);
     detCount = 0;
@@ -319,7 +351,7 @@ double AutoVocalCtrlAudioProcessor::updateGain(double sample, double scSample, d
 {
     const double g = *loudnessGoal - sample;
     if (*sc) {
-        *v2bDiff = (1 - alphaCo) * *v2bDiff + alphaCo * (scSample - *loudnessGoal);
+        *v2bDiff = (1 - alphaCo) * *v2bDiff + alphaCo * ((scSample + *scGainUI) - *loudnessGoal);
 //        *loudnessGoal = (1 - alphaCo) * *loudnessGoal + alphaCo * (*loudnessGoal - *v2bDiff);
     }
     const double co = g < lastGn ? compressTCo:expandTCo;
@@ -368,13 +400,13 @@ void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
                 delayData[dpw] = channelData[sample]; //kann andersrum also erst read dann write falls immer mit lookahead (fest?) nur damit 0 geht
                 if (*sc)
                     g = g * pow(10, *v2bDiff/20);
-                if (*detect) {
+                if (*detect && (abs(gain[channel]) > 0.1)) {
                     alphaGain[channel] += gain[channel];
                     detCount++;
                     g = 1.0;
                 }
-                
-                channelData[sample] = delayData[dpr] * g;
+                output[channel] = delayData[dpr] * g;
+                channelData[sample] = output[channel];
                 
                 if (++dpr >= delayBufferLength)
                     dpr = 0;
