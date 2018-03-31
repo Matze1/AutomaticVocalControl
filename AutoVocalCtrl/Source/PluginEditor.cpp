@@ -100,13 +100,13 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     scGainSlider.setValue(processor.scGainUI->get());
     scGainSlider.addListener(this);
     
-    outputSlider.setRange(-60.0, 0.0, 0.1f);
+    outputSlider.setRange(-60.0, 1.0, 0.1f);
     outputSlider.setSliderStyle(Slider::LinearBarVertical);
     outputSlider.setValue(-60.0);
     outputSlider.addListener(this);
     
 
-    rmsLabel.setText ("RMS Window", dontSendNotification);
+    rmsLabel.setText ("SC RMS Window", dontSendNotification);
     rmsLabel.attachToComponent(&rmsSlider, false);
     
     expandTimeLabel.setText ("Expand Time", dontSendNotification);
@@ -279,6 +279,11 @@ void AutoVocalCtrlAudioProcessorEditor::buttonClicked(Button* button)
         scButton.setToggleState(!value, dontSendNotification);
         String buttonLabel = !value ? "SC ACTV":"SC MUTE";
         scButton.setButtonText(buttonLabel);
+        if (value) {
+            scInputGSlider.setValue(-60.0);
+            processor.v2bDiff->operator=(0.0); // sollte wo anders gesetz werden vielleicht?
+            v2bDiffSlider.setValue(0.0);
+        }
     }
 }
 
@@ -336,13 +341,18 @@ void AutoVocalCtrlAudioProcessorEditor::sliderValueChanged (Slider* slider)
 void AutoVocalCtrlAudioProcessorEditor::timerCallback()
 {
     if (processor.detect->get()) {
-        detectLabel.setText(std::to_string(processor.getAlphaGain()), dontSendNotification);
+        stream.str("");
+        const double d = round(processor.getAlphaGain() * 100) / 100;
+        stream << std::setprecision(2) << d;
+        detectLabel.setText(stream.str(), dontSendNotification);
     }
     inputSlider.setValue(processor.getInputRMSdB());
-    scInputGSlider.setValue(processor.getScInputRMSdB() + processor.scGainUI->get());
     outputSlider.setValue(processor.getOutputdB());
+    if (processor.sc->get()) {
+        scInputGSlider.setValue(processor.getScInputRMSdB() + processor.scGainUI->get());
+        v2bDiffSlider.setValue(processor.v2bDiff->get());
+    }
     inputSlider.setValue(processor.getInputRMSdB());
     gainControlSlider.setValue(processor.getCurrentGainControl());
     loudnessGoalSlider.setValue(processor.loudnessGoal->get());
-    v2bDiffSlider.setValue(processor.v2bDiff->get());
 }

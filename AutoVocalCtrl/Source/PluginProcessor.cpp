@@ -22,7 +22,7 @@ AutoVocalCtrlAudioProcessor::AutoVocalCtrlAudioProcessor()
                        )
 #endif
 {
-    addParameter(rmsWindow = new AudioParameterFloat ("rmsWindow", "RMSWindow", 10.0f, 500.0f, 60.0f));
+    addParameter(rmsWindow = new AudioParameterFloat ("rmsWindow", "RMSWindow", 10.0f, 500.0f, 220.0f));
     addParameter(expandTime = new AudioParameterFloat ("expandTime", "ExpandTime", 1.0f, 3000.0f, 1500.0f));
     addParameter(compressTime = new AudioParameterFloat ("compressTime", "CompressTime", 1.0f, 1000.0f, 600.0f));
     addParameter(loudnessGoal = new AudioParameterFloat ("loudnessGoal", "LoudnessGoal", -60.0f, 0.0f, -20.0f));
@@ -30,7 +30,7 @@ AutoVocalCtrlAudioProcessor::AutoVocalCtrlAudioProcessor()
     addParameter(maxIdleTime = new AudioParameterFloat ("maxIdleTime", "MaxIdleTime", 0.0f, 500.0f, 0.0f));
     addParameter(gate1 = new AudioParameterFloat ("gate1", "Gate1", -100.0f, -10.0f, -33.0f));
     addParameter(delayLength = new AudioParameterFloat ("delayLength", "DelayLength", 0.0f, (maxDelayInSec * 1000.0f) - 1.0f, 60.0f));
-    addParameter(alpha = new AudioParameterFloat ("alpha", "Alpha", 100.0f, 4000.0f, 2000.0f));
+    addParameter(alpha = new AudioParameterFloat ("alpha", "Alpha", 100.0f, 4000.0f, 1600.0f));
     addParameter(currentGain = new AudioParameterFloat ("currentGain", "CurrentGain", -10.0f, 10.0f, 0.0f));
     addParameter(v2bDiff = new AudioParameterFloat ("v2bDiff", "V2BDiff", -100.0f, 100.0f, 0.0f));
     addParameter(scGainUI = new AudioParameterFloat ("scGainUI", "SCGainUI", -10.0f, 10.0f, 0.0f));
@@ -141,7 +141,8 @@ void AutoVocalCtrlAudioProcessor::updateExpandTCo()
 
 void AutoVocalCtrlAudioProcessor::updateRmsCo()
 {
-    rmsCo = getTimeConstant(*rmsWindow);
+    rmsCo = getTimeConstant(40.0);
+    scRmsCo = getTimeConstant(*rmsWindow);
 }
 
 void AutoVocalCtrlAudioProcessor::updateAlphaCo()
@@ -181,6 +182,7 @@ void AutoVocalCtrlAudioProcessor::updateVectors()
     if (diff > 0) {
         for (diff = diff; diff > 0; --diff) {
             rms2.push_back(0.0);
+            oRms2.push_back(0.0);
             gain.push_back(0.0);
             alphaGain.push_back(0.0);
             output.push_back(0.0);
@@ -188,6 +190,7 @@ void AutoVocalCtrlAudioProcessor::updateVectors()
     } else if (diff < 0) {
         for (diff = diff; diff < 0; ++diff) {
             rms2.pop_back();
+            oRms2.pop_back();
             gain.pop_back();
             alphaGain.pop_back();
             output.pop_back();
@@ -225,6 +228,8 @@ void AutoVocalCtrlAudioProcessor::prepareToPlay (double sampleRate, int samplesP
     highshelf.setCoefficientsShelf(1681.0, sampleRate, 4.0);
     scLowcut.setCoefficients(38.0, sampleRate, (1.0/2.0));
     scHighshelf.setCoefficientsShelf(1681.0, sampleRate, 4.0);
+    oLowcut.setCoefficients(38.0, sampleRate, (1.0/2.0));
+    oHighshelf.setCoefficientsShelf(1681.0, sampleRate, 4.0);
     delayBufferLength = (int)(maxDelayInSec*sampleRate);
     if(delayBufferLength < 1)
         delayBufferLength = 1;
@@ -268,15 +273,15 @@ double AutoVocalCtrlAudioProcessor::updateFilterSample(double sample, AutoVocalC
     return hs.process(lc.process(sample)); //eingehen darauf das sich über die zeit selbst zurückstezen?? wie lange dauert?
 }
 
-double AutoVocalCtrlAudioProcessor::updateRMS2(double sample, double last)
+double AutoVocalCtrlAudioProcessor::updateRMS2(double sample, double last, double co)
 {
-    return (1. - rmsCo) * last + rmsCo * (sample * sample);
+    return (1. - co) * last + co * (sample * sample);
     // RMS Calculation based on Book: Digital Audio Signal Processing by Udo Zölzer
 }
 
 double AutoVocalCtrlAudioProcessor::updateGate(double rms2, double gate = -33.0)
 {
-    const double currentRMS = 10 * std::log10(rms2 + 1e-10);
+    const double currentRMS = 10.0 * std::log10(rms2 + 1e-10);
     if (currentRMS < gate)
         return *loudnessGoal;
     else
@@ -309,7 +314,7 @@ void AutoVocalCtrlAudioProcessor::updateAutomation()
 
 double AutoVocalCtrlAudioProcessor::getInputRMSdB()
 {
-    double sum = 0;
+    double sum = 0.0;
     for (int i = 0; i < getMainBusNumInputChannels(); ++i)
         sum += rms2[i];
     return 10 * log10(sum / getMainBusNumInputChannels() + 1e-10);
@@ -333,6 +338,8 @@ double AutoVocalCtrlAudioProcessor::getOutputdB()
 
 double AutoVocalCtrlAudioProcessor::getAlphaGain()
 {
+    if (detCount == 0)
+        return 0;
     double med = 0;
     for (int i = 0; i < getMainBusNumInputChannels(); ++i)
         med += alphaGain[i] / detCount;
@@ -388,12 +395,13 @@ void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
             if (*read) {
                 gain[channel] = *currentGain;
                 const double g = pow(10, gain[channel]/20);
+                oRms2[channel] = updateRMS2(channelData[sample] * g, oRms2[channel], rmsCo);
+                output[channel] = oRms2[channel]; //output dann ja eigentlich redundant oder?
                 channelData[sample] = channelData[sample] * g; //HIER NOCH CLIPPEN!?
             } else {
-                // hier deutlich vereinfachen::
-                rms2[channel] = updateRMS2(updateFilterSample(channelData[sample], highshelf, lowcut), rms2[channel]);
                 if (*sc)
-                    scRms2[0] = updateRMS2(updateFilterSample(sideChainData[sample], scHighshelf, scLowcut), scRms2[0]);
+                    scRms2[0] = updateRMS2(updateFilterSample(sideChainData[sample], scHighshelf, scLowcut), scRms2[0], scRmsCo);
+                rms2[channel] = updateRMS2(updateFilterSample(channelData[sample], highshelf, lowcut), rms2[channel], rmsCo);
                 const double newGate = *loudnessGoal - *gainRange;
                 gain[channel] = updateGain(updateGate(rms2[channel], newGate), updateGate(scRms2[0] * 0.5, newGate), gain[channel]);
                 double g = pow(10, gain[channel]/20);
@@ -405,8 +413,10 @@ void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
                     detCount++;
                     g = 1.0;
                 }
-                output[channel] = delayData[dpr] * g;
-                channelData[sample] = output[channel];
+                const double o = delayData[dpr] * g;
+                oRms2[channel] = updateRMS2(updateFilterSample(o, oHighshelf, oLowcut), oRms2[channel], rmsCo);
+                output[channel] = oRms2[channel]; //output dann ja eigentlich redundant oder?
+                channelData[sample] = o;
                 
                 if (++dpr >= delayBufferLength)
                     dpr = 0;

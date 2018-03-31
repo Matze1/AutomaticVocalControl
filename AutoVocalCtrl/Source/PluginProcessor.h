@@ -85,7 +85,7 @@ public:
     
     //==============================================================================
     double updateFilterSample(double sample, AutoVocalCtrlFilter hs, AutoVocalCtrlFilter lc);
-    double updateRMS2(double sample, double last);
+    double updateRMS2(double sample, double last, double co);
     double updateGate(double rms2, double gate);
     double updateGain(double sample, double scSample, double lastGn);
     
@@ -127,9 +127,12 @@ private:
     AutoVocalCtrlFilter highshelf;
     AutoVocalCtrlFilter scLowcut;
     AutoVocalCtrlFilter scHighshelf;
+    AutoVocalCtrlFilter oLowcut;
+    AutoVocalCtrlFilter oHighshelf;
     Range<double> clipRange;
     double currentSampleRate;
     double rmsCo;
+    double scRmsCo;
     double expandTCo;
     double compressTCo;
     double alphaCo;
@@ -141,6 +144,7 @@ private:
     std::vector<double> gain;
     std::vector<double> rms2;
     std::vector<double> scRms2;
+    std::vector<double> oRms2;
     std::vector<double> alphaGain;
     std::vector<double> output;
     

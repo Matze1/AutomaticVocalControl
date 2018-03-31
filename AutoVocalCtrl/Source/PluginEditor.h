@@ -12,7 +12,8 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
-
+#include <sstream>
+#include <iomanip>
 
 //==============================================================================
 /**
@@ -75,6 +76,7 @@ private:
     Label outputLabel;
     
     float oldGainRange = 6.0;
+    std::stringstream stream;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AutoVocalCtrlAudioProcessorEditor)
 };
