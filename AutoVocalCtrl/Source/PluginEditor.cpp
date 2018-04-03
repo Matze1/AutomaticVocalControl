@@ -18,7 +18,7 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (840, 400);
+    setSize (870, 400);
     
     rmsSlider.setRange(processor.rmsWindow->range.start, processor.rmsWindow->range.end, 1.0f);
     rmsSlider.setSliderStyle(Slider::LinearBarVertical);
@@ -80,15 +80,20 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     alphaSlider.setValue(processor.alpha->get());
     alphaSlider.addListener(this);
     
-    v2bDiffSlider.setRange(processor.v2bDiff->range.start, processor.v2bDiff->range.end, 0.1f);
+    v2bDiffSlider.setRange(-10.0, 10.0, 0.1f);
     v2bDiffSlider.setSliderStyle(Slider::LinearBarVertical);
-    v2bDiffSlider.setValue(processor.v2bDiff->get());
+    v2bDiffSlider.setValue(0.0);
     v2bDiffSlider.addListener(this);
     
     scInputGSlider.setRange(-60.0, 0.0, 0.1f);
     scInputGSlider.setSliderStyle(Slider::LinearBarVertical);
     scInputGSlider.setValue(-60.0);
     scInputGSlider.addListener(this);
+    
+    scInput2GSlider.setRange(-60.0, 0.0, 0.1f);
+    scInput2GSlider.setSliderStyle(Slider::LinearBarVertical);
+    scInput2GSlider.setValue(-60.0);
+    scInput2GSlider.addListener(this);
     
     inputSlider.setRange(-60.0, 0.0, 0.1f);
     inputSlider.setSliderStyle(Slider::LinearBarVertical);
@@ -121,7 +126,7 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     delayLabel.setText ("Lookahead", dontSendNotification);
     delayLabel.attachToComponent(&delaySlider, false);
     
-    loudnessGoalLabel.setText ("Loudness Goal", dontSendNotification);
+    loudnessGoalLabel.setText ("Gol", dontSendNotification);
     loudnessGoalLabel.attachToComponent(&loudnessGoalSlider, false);
     
     gainRangeLabel.setText ("Gain Range", dontSendNotification);
@@ -136,11 +141,14 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     alphaLabel.setText ("Alpha", dontSendNotification);
     alphaLabel.attachToComponent(&alphaSlider, false);
     
-    v2bDiffLabel.setText ("V2B Diff", dontSendNotification);
+    v2bDiffLabel.setText ("V2B", dontSendNotification);
     v2bDiffLabel.attachToComponent(&v2bDiffSlider, false);
     
-    scInputGLabel.setText ("sc", dontSendNotification);
+    scInputGLabel.setText ("sc1", dontSendNotification);
     scInputGLabel.attachToComponent(&scInputGSlider, false);
+    
+    scInput2GLabel.setText ("+ 2", dontSendNotification);
+    scInput2GLabel.attachToComponent(&scInput2GSlider, false);
     
     inputLabel.setText ("I", dontSendNotification);
     inputLabel.attachToComponent(&inputSlider, false);
@@ -151,8 +159,8 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     outputLabel.setText ("O", dontSendNotification);
     outputLabel.attachToComponent(&outputSlider, false);
     
-    detectLabel.setColour(juce::Label::backgroundColourId, juce::Colour(12,13,14));
-    
+    detectLabel.setColour(juce::Label::backgroundColourId, juce::Colour(0,0,0));
+    detectLabel.setJustificationType(Justification::centred);
     
     readButton.addListener(this);
     readButton.setButtonText("Write");
@@ -166,9 +174,14 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     scButton.setButtonText("SC MUTE");
     scButton.setToggleState(processor.sc->get(), dontSendNotification);
     
+    scfButton.addListener(this);
+    scfButton.setButtonText("SCF ON");
+    scfButton.setToggleState(processor.scf->get(), dontSendNotification);
+    
     addAndMakeVisible(readButton);
     addAndMakeVisible(detectButton);
     addAndMakeVisible(scButton);
+    addAndMakeVisible(scfButton);
     
     addAndMakeVisible(rmsSlider);
     addAndMakeVisible(rmsLabel);
@@ -196,6 +209,8 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     addAndMakeVisible(inputLabel);
     addAndMakeVisible(scInputGLabel);
     addAndMakeVisible(scInputGSlider);
+    addAndMakeVisible(scInput2GLabel);
+    addAndMakeVisible(scInput2GSlider);
     addAndMakeVisible(scGainLabel);
     addAndMakeVisible(scGainSlider);
     addAndMakeVisible(detectLabel);
@@ -229,6 +244,7 @@ void AutoVocalCtrlAudioProcessorEditor::resized()
     detectButton.setBounds(260, 290, 180, 40);
     detectLabel.setBounds(450, 290, 60, 40);
     scButton.setBounds(550, 290, 180, 40);
+    scfButton.setBounds(740, 290, 120, 40);
     
     rmsSlider.setBounds(40, 50, 60, 200);
     expandTimeSlider.setBounds(110, 50, 60, 200);
@@ -242,11 +258,12 @@ void AutoVocalCtrlAudioProcessorEditor::resized()
     v2bDiffSlider.setBounds(500, 50, 30, 200);
     scGainSlider.setBounds(540, 50, 30, 200);
     scInputGSlider.setBounds(580, 50, 30, 200);
-    loudnessGoalSlider.setBounds(620, 50, 30, 200);
-    inputSlider.setBounds(660, 50, 30, 200);
-    outputSlider.setBounds(700, 50, 30, 200);
+    scInput2GSlider.setBounds(610, 50, 30, 200);
+    loudnessGoalSlider.setBounds(650, 50, 30, 200);
+    inputSlider.setBounds(690, 50, 30, 200);
+    outputSlider.setBounds(730, 50, 30, 200);
     
-    gainControlSlider.setBounds(740, 50, 60, 200);
+    gainControlSlider.setBounds(770, 50, 60, 200);
 }
 
 void AutoVocalCtrlAudioProcessorEditor::buttonClicked(Button* button)
@@ -281,9 +298,15 @@ void AutoVocalCtrlAudioProcessorEditor::buttonClicked(Button* button)
         scButton.setButtonText(buttonLabel);
         if (value) {
             scInputGSlider.setValue(-60.0);
-            processor.v2bDiff->operator=(0.0); // sollte wo anders gesetz werden vielleicht?
+            scInput2GSlider.setValue(-60.0);
             v2bDiffSlider.setValue(0.0);
         }
+    } else if (button == &scfButton) {
+        const bool value = processor.scf->get();
+        processor.scf->operator=(!value);
+        scfButton.setToggleState(!value, dontSendNotification);
+        String buttonLabel = !value ? "SCF OFF":"SCF ON";
+        scfButton.setButtonText(buttonLabel);
     }
 }
 
@@ -349,8 +372,9 @@ void AutoVocalCtrlAudioProcessorEditor::timerCallback()
     inputSlider.setValue(processor.getInputRMSdB());
     outputSlider.setValue(processor.getOutputdB());
     if (processor.sc->get()) {
-        scInputGSlider.setValue(processor.getScInputRMSdB() + processor.scGainUI->get());
-        v2bDiffSlider.setValue(processor.v2bDiff->get());
+        scInputGSlider.setValue(processor.getScInputRMSdB(0) + processor.scGainUI->get());
+        scInput2GSlider.setValue(processor.getScInputRMSdB(1) + processor.scGainUI->get());
+        v2bDiffSlider.setValue(processor.v2bDiff[0]);
     }
     inputSlider.setValue(processor.getInputRMSdB());
     gainControlSlider.setValue(processor.getCurrentGainControl());

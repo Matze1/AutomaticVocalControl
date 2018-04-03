@@ -49,6 +49,7 @@ private:
     Slider alphaSlider;
     Slider v2bDiffSlider;
     Slider scInputGSlider;
+    Slider scInput2GSlider;
     Slider inputSlider;
     Slider scGainSlider;
     Slider outputSlider;
@@ -56,6 +57,7 @@ private:
     TextButton readButton;
     TextButton detectButton; //verschiedene loudness goal modi in dropdown menü? detect (-> extra button kommt in UI) / SC / selbst einstellen
     TextButton scButton;
+    TextButton scfButton;
     
     Label detectLabel;
     
@@ -71,6 +73,7 @@ private:
     Label alphaLabel;
     Label v2bDiffLabel;
     Label scInputGLabel;
+    Label scInput2GLabel;
     Label inputLabel;
     Label scGainLabel;
     Label outputLabel;

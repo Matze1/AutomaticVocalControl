@@ -32,11 +32,11 @@ AutoVocalCtrlAudioProcessor::AutoVocalCtrlAudioProcessor()
     addParameter(delayLength = new AudioParameterFloat ("delayLength", "DelayLength", 0.0f, (maxDelayInSec * 1000.0f) - 1.0f, 60.0f));
     addParameter(alpha = new AudioParameterFloat ("alpha", "Alpha", 100.0f, 4000.0f, 1600.0f));
     addParameter(currentGain = new AudioParameterFloat ("currentGain", "CurrentGain", -10.0f, 10.0f, 0.0f));
-    addParameter(v2bDiff = new AudioParameterFloat ("v2bDiff", "V2BDiff", -100.0f, 100.0f, 0.0f));
     addParameter(scGainUI = new AudioParameterFloat ("scGainUI", "SCGainUI", -10.0f, 10.0f, 0.0f));
     addParameter(read = new AudioParameterBool("read","Read",false));
     addParameter(detect = new AudioParameterBool("detect","Detect",false));
     addParameter(sc = new AudioParameterBool("sc","SC",false));
+    addParameter(scf = new AudioParameterBool("scf","SCF",true));
     clipRange = Range<double>(-*gainRange, *gainRange);
     delayBufferLength = 1;
     delayReadPos = 0;
@@ -44,8 +44,6 @@ AutoVocalCtrlAudioProcessor::AutoVocalCtrlAudioProcessor()
     count = 0;
     detCount = 0;
     upBefore = false;
-    scRms2.push_back(0.0);
-    scRms2.push_back(0.0);
 }
 
 AutoVocalCtrlAudioProcessor::~AutoVocalCtrlAudioProcessor()
@@ -143,6 +141,7 @@ void AutoVocalCtrlAudioProcessor::updateRmsCo()
 {
     rmsCo = getTimeConstant(40.0);
     scRmsCo = getTimeConstant(*rmsWindow);
+    scRmsCoFast = getTimeConstant(10.0);
 }
 
 void AutoVocalCtrlAudioProcessor::updateAlphaCo()
@@ -182,18 +181,24 @@ void AutoVocalCtrlAudioProcessor::updateVectors()
     if (diff > 0) {
         for (diff = diff; diff > 0; --diff) {
             rms2.push_back(0.0);
+            iRms2.push_back(0.0);
+            scRms2.push_back(0.0);
+            scRms2Fast.push_back(0.0);
             oRms2.push_back(0.0);
             gain.push_back(0.0);
             alphaGain.push_back(0.0);
-            output.push_back(0.0);
+            v2bDiff.push_back(0.0);
         }
     } else if (diff < 0) {
         for (diff = diff; diff < 0; ++diff) {
             rms2.pop_back();
+            iRms2.pop_back();
+            scRms2.pop_back();
+            scRms2Fast.pop_back();
             oRms2.pop_back();
             gain.pop_back();
             alphaGain.pop_back();
-            output.pop_back();
+            v2bDiff.pop_back();
         }
         
     }
@@ -225,11 +230,15 @@ void AutoVocalCtrlAudioProcessor::prepareToPlay (double sampleRate, int samplesP
     updatePrivateParameter();
     updateVectors();
     lowcut.setCoefficients(38.0, sampleRate, (1.0/2.0));
-    highshelf.setCoefficientsShelf(1681.0, sampleRate, 4.0);
+    highshelf.setCoefficientsShelf(1681.0, sampleRate, 4.0); // so oft das selbe? einfacher machen..
     scLowcut.setCoefficients(38.0, sampleRate, (1.0/2.0));
     scHighshelf.setCoefficientsShelf(1681.0, sampleRate, 4.0);
+    scfLowcut.setCoefficients(38.0, sampleRate, (1.0/2.0));
+    scfHighshelf.setCoefficientsShelf(1681.0, sampleRate, 4.0);
     oLowcut.setCoefficients(38.0, sampleRate, (1.0/2.0));
     oHighshelf.setCoefficientsShelf(1681.0, sampleRate, 4.0);
+    iLowcut.setCoefficients(38.0, sampleRate, (1.0/2.0));
+    iHighshelf.setCoefficientsShelf(1681.0, sampleRate, 4.0);
     delayBufferLength = (int)(maxDelayInSec*sampleRate);
     if(delayBufferLength < 1)
         delayBufferLength = 1;
@@ -256,7 +265,10 @@ bool AutoVocalCtrlAudioProcessor::isBusesLayoutSupported (const BusesLayout& lay
     if (layouts.getMainOutputChannelSet() != AudioChannelSet::mono()
         && layouts.getMainOutputChannelSet() != AudioChannelSet::stereo())
         return false;
-
+    
+//    if (layouts.getChannelSet(true, 1) != AudioChannelSet::stereo())
+//        return false;
+    
     // This checks if the input layout matches the output layout
    #if ! JucePlugin_IsSynth
     if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
@@ -316,23 +328,25 @@ double AutoVocalCtrlAudioProcessor::getInputRMSdB()
 {
     double sum = 0.0;
     for (int i = 0; i < getMainBusNumInputChannels(); ++i)
-        sum += rms2[i];
+        sum += iRms2[i];
     return 10 * log10(sum / getMainBusNumInputChannels() + 1e-10);
 }
 
-double AutoVocalCtrlAudioProcessor::getScInputRMSdB()
+double AutoVocalCtrlAudioProcessor::getScInputRMSdB(int j = -1)
 {
-//    double sum = 0;
-//    for (int i = 0; i < getMainBusNumInputChannels(); ++i)
-//        sum += scRms2[i];
-    return 10 * log10(scRms2[0] + 1e-10);
+    if (j > 0 && j < numSCChannels)
+        return 10 * log10(scRms2[j] + 1e-10);
+    double sum = 0;
+    for (int i = 0; i < numSCChannels; ++i)
+        sum += scRms2[i];
+    return 10 * log10(sum / numSCChannels + 1e-10);
 }
 
 double AutoVocalCtrlAudioProcessor::getOutputdB()
 {
     double sum = 0;
     for (int i = 0; i < getMainBusNumInputChannels(); ++i)
-        sum += output[i];
+        sum += oRms2[i];
     return 10 * log10(sum / getMainBusNumInputChannels() + 1e-10);
 }
 
@@ -354,13 +368,9 @@ void AutoVocalCtrlAudioProcessor::updateLoudnessGoal()
     detCount = 0;
 }
 
-double AutoVocalCtrlAudioProcessor::updateGain(double sample, double scSample, double lastGn)
+double AutoVocalCtrlAudioProcessor::updateGain(double sample, double lastGn)
 {
     const double g = *loudnessGoal - sample;
-    if (*sc) {
-        *v2bDiff = (1 - alphaCo) * *v2bDiff + alphaCo * ((scSample + *scGainUI) - *loudnessGoal);
-//        *loudnessGoal = (1 - alphaCo) * *loudnessGoal + alphaCo * (*loudnessGoal - *v2bDiff);
-    }
     const double co = g < lastGn ? compressTCo:expandTCo;
     updateAutomation();
     return clipRange.clipValue((1 - co) * lastGn + co * g);
@@ -370,6 +380,7 @@ void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
 {
     AudioSampleBuffer mainInputOutput = getBusBuffer(buffer, true, 0);
     AudioSampleBuffer sideChainInput  = getBusBuffer(buffer, true, 1);
+    numSCChannels = sideChainInput.getNumChannels();
     
     ScopedNoDenormals noDenormals;
     const int totalNumInputChannels  = getMainBusNumInputChannels();
@@ -386,7 +397,8 @@ void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
     for (channel = 0; channel < totalNumInputChannels; ++channel)
     {
         float* channelData = mainInputOutput.getWritePointer (channel);
-        const float* sideChainData = sideChainInput.getReadPointer(sideChainInput.getNumChannels() - 1);
+        const int scChannel = channel % numSCChannels;
+        const float* sideChainData = sideChainInput.getReadPointer(scChannel);
         float* delayData = delayBuffer.getWritePointer(jmin(channel, delayBuffer.getNumChannels() - 1));
         dpr = delayReadPos;
         dpw = delayWritePos;
@@ -396,26 +408,35 @@ void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
                 gain[channel] = *currentGain;
                 const double g = pow(10, gain[channel]/20);
                 oRms2[channel] = updateRMS2(channelData[sample] * g, oRms2[channel], rmsCo);
-                output[channel] = oRms2[channel]; //output dann ja eigentlich redundant oder?
                 channelData[sample] = channelData[sample] * g; //HIER NOCH CLIPPEN!?
             } else {
-                if (*sc)
-                    scRms2[0] = updateRMS2(updateFilterSample(sideChainData[sample], scHighshelf, scLowcut), scRms2[0], scRmsCo);
+                if (*sc) {
+                    scRms2[channel] = updateRMS2(updateFilterSample(sideChainData[sample], scHighshelf, scLowcut),
+                                                 scRms2[scChannel], scRmsCo);
+                    scRms2Fast[channel] = updateRMS2(updateFilterSample(sideChainData[sample], scfHighshelf, scfLowcut),
+                                                 scRms2Fast[scChannel], scRmsCoFast);
+                }
                 rms2[channel] = updateRMS2(updateFilterSample(channelData[sample], highshelf, lowcut), rms2[channel], rmsCo);
                 const double newGate = *loudnessGoal - *gainRange;
-                gain[channel] = updateGain(updateGate(rms2[channel], newGate), updateGate(scRms2[0] * 0.5, newGate), gain[channel]);
+                gain[channel] = updateGain(updateGate(rms2[channel], newGate), gain[channel]);
                 double g = pow(10, gain[channel]/20);
-                delayData[dpw] = channelData[sample]; //kann andersrum also erst read dann write falls immer mit lookahead (fest?) nur damit 0 geht
-                if (*sc)
-                    g = g * pow(10, *v2bDiff/20);
+                delayData[dpw] = channelData[sample];
+                if (*sc) {
+                    double scGated = updateGate(scRms2Fast[scChannel], newGate);
+                    if (scGated != *loudnessGoal || !*scf)
+                        scGated = updateGate(scRms2[scChannel], newGate);
+                    v2bDiff[channel] = (1 - alphaCo) * v2bDiff[channel] +
+                                       alphaCo * ((scGated + *scGainUI) - *loudnessGoal);
+                    g = g * pow(10, v2bDiff[scChannel]/20); //sinnvoll oder mittelwert aus beiden seiten? auch für zeile darüber?
+                }
                 if (*detect && (abs(gain[channel]) > 0.1)) {
                     alphaGain[channel] += gain[channel];
                     detCount++;
                     g = 1.0;
                 }
                 const double o = delayData[dpr] * g;
+                iRms2[channel] = updateRMS2(updateFilterSample(delayData[dpr], iHighshelf, iLowcut), iRms2[channel], rmsCo);
                 oRms2[channel] = updateRMS2(updateFilterSample(o, oHighshelf, oLowcut), oRms2[channel], rmsCo);
-                output[channel] = oRms2[channel]; //output dann ja eigentlich redundant oder?
                 channelData[sample] = o;
                 
                 if (++dpr >= delayBufferLength)
