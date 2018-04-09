@@ -1,4 +1,18 @@
-\chapter{Background}
+\chapter{Basics}
 \label{chapter:basics}
 
-In this chapter, 
+At the beginning of the development I testes ideas in python, later I used the JUCE\footnote{juce.com} framework which is based on C++. The functionality of the plug-in was mainly tested in Logic Pro 9.\\
+
+\section{Python}
+
+I did not start with a final blueprint for the plug-in. Especially at the beginning I tried several ideas on the basic algorithm, the gate or loudness detection. In consequence I had to rearrange the code very often. So python came in handy as it focuses on code readability. In python code there are fewer steps necessary to write the same program as for example in C++ where the plug-in was finally written in.\\
+Furthermore python provides various packages which extend its scope by useful features. For example the matplotlib.pyplot\footnote{matplotlib.org/api/pyplot\underline{\ }api.html} plotting framework that ables you to draw graphs of your results. This was especially useful for testing on the filter implementation (see chpt. 3.2) and comparing optimisation results later on (see chpt. 4). The numpy\footnote{numpy.org} package was essential for mathematical operations and the scipy\footnote{scipy.org} tools very useful in terms of audio handling and optimization. For this thesis I used python version 3.6.\\
+Still python was not my final choice for the plug-in as the C++ based JUCE framework offers a great predefined interface for audio plug-ins as well as the ability of fast processing due to the hardware-oriented C++ language.  The Speed of calculations can be crucial for real-time audio processing. IRGENDWO NOCHMAL MEIN realtime erläutern (Introduction was es bedeutet!)\\
+
+\section{JUCE framework and C++}
+
+JUCE is a cross-platform framework for audio applications based on C++. The main advantage for me is that it already contains the necessary functions for compiling to a working VST\footnote{Virtual Studio Technology plug-in architectur provided by Steinberg} or AU\footnote{Audio Unit plug-in architectur provided by Apple} plug-in. Therefore my main focus could stay on the algorithm of my plug-in during development. The JUCE audio plug-in template can be easily extended with a simple UI with sliders for the parameters of the algorithm. This is very useful for testing the effects of the individual parameters. JUCE takes over much of the communication with the DAW. Mostly this was fitting my plan and for this reason I just had to overwrite a few parts in which the plug-in had special needs.\\
+
+\section{Test environment}
+
+\section{Sources}

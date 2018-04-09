@@ -3,7 +3,7 @@
 
 \section{Overview}
 
-The basic prototype works in five steps: filter, root mean square (RMS) calculation, gate, gain adaption, delay.\\
+The basic approach works in five steps: filter, root mean square (RMS) calculation, gate, gain adaption, delay.\\
 The processing chain starts with a low-cut and a high-shelf filter which will be applied sample wise on the incoming audio. These filters are a simplified mapping of the perception of sound pressure for human beings. This is the first step to adjust the plug-in to loudness instead of sound pressure (as done in FOOTNTE). However, the plug-in won’t be running with the full loudness detection algorithm (FUTNOT) due to calculation time and real time capability (see SPÄTER? oder hier?).\\
 After the filter section every sample is passed to the RMS calculation.  The goal is to output the squared average of a previously specified period of time. The square root will be determined in the following calculation of the equivalent dB value. The plug-in converts the linear audio samples into the logarithmic dB scale in order to display gain values and loudness goal (see gain part?) in dB in the user interface (UI) as it is the standard scale of DAWs. Thereby the executive sound engineer will intuitively know how to interpret and interact with the UI (see design part?).\\
 When the dB conversion is done, all the samples pass through an initially specified gate. The gate will set all samples with lower dB value as its threshold to the current loudness goal (see gain, see improve). In this way the plug-in will not operate when it is fed with silence or irrelevant noise.\\
@@ -13,7 +13,7 @@ During development most of the parameters described in the following sections we
 
 \section{Filter}
 
-While gathering information on how to improve my idea of the plug-in I got interested in the ITU-R BS.1770-4 [FOOTNOTE pls] algorithm. It classifies an audio file for its humanly perceived loudness. The main use of this algorithm is found in television and music streaming services as they can keep the program loudness steady while switching content. As the human perception is also of interest for mixing a song, I examined how it was done. Due to a good documentation about how to implement the loudness algorithm I build a copy of it in python and decided which elements I would adopt in my plug-in. The first elements were the two filters. Like described above, their use is to mimic the human perception of sound pressure at different frequencies. The first filter is a low cut for the reason that human hearing is insensitive to low frequencies. The second filter is a high shelf and is ”used to account for the acoustic effects of the head” [wie zitiert man]. This imitation of the human hearing is greatly simplified but cost effective in terms of computation. The low cut filter has a cutoff frequency at 38 Hz, the high shelf around 1681 Hz. They are initialised at every plug-in startup in the JUCE method “prepareToPlay” with the current sample rate of the integrating DAW:
+While gathering information on how to improve my idea of the plug-in I got interested in the ITU-R BS.1770-4 [FOOTNOTE pls] algorithm. It classifies an audio file for its humanly perceived loudness. The main use of this algorithm is found in television and music streaming services as they can keep the program loudness steady while switching content. As the human perception is also of interest for mixing a song, I examined how it was done. Due to a good documentation about how to implement the loudness algorithm I build a copy of it in python and decided which elements I would adopt in my plug-in. The first elements were the two filters. Like described above, their use is to mimic the human perception of sound pressure at different frequencies. The first filter is a low cut for the reason that human hearing is insensitive to low frequencies. The second filter is a high shelf and is ”used to account for the acoustic effects of the head” [wie zitiert man]. This imitation of the human hearing is greatly simplified but cost effective in terms of computation. The low cut filter has a cutoff frequency at 38 Hz, the high shelf around 1681 Hz. They are initialised at every plug-in startup in the JUCE method “prepareToPlay” with the current sample rate of the integrating DAW:\\
 
 \lstset{language=C++}
 \begin{lstlisting}[frame=single]
@@ -23,13 +23,22 @@ highshelf.setCoefficientsShelf(1681.0, sampleRate, 4.0);
 
 The implementation is based on the biquad filter from the Book BLA (BLA NOTE auch im code).  I have chosen the second order biquad filter architecture as it is a very flexible and simple solution with just two samples delay. The calculation of filter coefficients is adopted as follows:
 
-berechnung in Math Latex für beide filter wo dran steht wie sie heißen. $$ a = 1 $$
+$f_c = $ cut-off frequency, $f_s = $ sampling frequency (rate), $K = tan(\pi f_{c}/f_{s})$,\\
+$Q = $ factor for height of the resonance, $G = $ gain, $V_0 = 10^{G/20}$
+
+\textbf{Lowcut:}\\
+$b_0 = \frac{Q}{K^{2}Q+K+Q}$ \tab $b_1 = -\frac{2Q}{K^{2}Q+K+Q}$ \tab $b_2 = b_0$\\
+$a_1 = \frac{2Q*(K^{2}-1)}{K^{2}Q+K+Q}$ \tab $a_2 = \frac{K^{2}Q-K+Q}{K^{2}Q+K+Q}$
+
+\textbf{Highshelf:}\\
+$b_0 = \frac{V_0+\sqrt{2V_0}K+K2}{1+\sqrt{2}K+K^2}$ \tab[0.4cm] $b_1 = -\frac{2(K^2-V_0)}{1+\sqrt{2}K+K^2}$ \tab $b_2 = \frac{V_0-\sqrt{2V_0}K+K2}{1+\sqrt{2}K+K^2}$\\
+$a_1 = \frac{2(K^2-1)}{1+\sqrt{2}K+K^2}$ \tab $a_2 = \frac{1-\sqrt{2}K+K^2}{1+\sqrt{2}K+K^2}$\\
 
 Hence the loudness algorithm uses second order filters (with two delay memories) it works like this:
 
 Biquadfilter Bild
 
-It is the same as my implementation in the Filter class:
+It is the same as my implementation in the Filter class:\\
 
 \begin{lstlisting}[frame=single]
 double AutoVocalCtrlFilter::process(double sample)
@@ -44,10 +53,11 @@ double AutoVocalCtrlFilter::process(double sample)
 }
 \end{lstlisting}
 
-The implementation is capable of many filter styles at different cutoff frequencies. For my plug-in it is used for the low cut and high shelf filter described above, which are simply processed one after the other on the current audio sample for each channel Wie VIELE AM ENDE??:
+The implementation is capable of many filter styles at different cutoff frequencies. For my plug-in it is used for the low cut and high shelf filter described above, which are simply processed one after the other on the current audio sample for each channel Wie VIELE AM ENDE??:\\
 
 \begin{lstlisting}[frame=single]
-double AutoVocalCtrlAudioProcessor::updateFilterSample(double sample, AutoVocalCtrlFilter hs, AutoVocalCtrlFilter lc)
+double updateFilterSample(double sample, AutoVocalCtrlFilter hs,
+AutoVocalCtrlFilter lc)
 {
     return hs.process(lc.process(sample));
 }
@@ -59,10 +69,10 @@ The updateFilterSample method returned the filtered samples for further processi
 
 To measure the level of the audio signal at the current position the plug-in calculates a root mean square (RMS) value of the last XX ms. This means it is calculating the root of the average from the squares of each sample in the set time window.\\
 It uses RMS calculation because it is part of the imitation of human perception and because it has the necessary time to calculate an average value as it does not need to react fast. A human will (F. A. Everest, The Master Handbook of Acoustics, New York: McGraw-Hill, 2001.) not interpret a small impulse of a handful of samples as loud as a audio signal at the same level of longer duration.  For example “a 3-msec pulse must have a level about 15 dB higher to sound as loud as a 0.5-sec (500-msec) pulse”. This is also part of the BLABLA loudness standard. Additionally the “RMS is equal to the value of the direct current that would produce the same average power in a resistive load” [wikipdia].\\
-The RMS implementation is based on the Book Digital Audio Signal Processing by Udo Zölzer (123) and can be performed in one line of code:
+The RMS implementation is based on the Book Digital Audio Signal Processing by Udo Zölzer (123) and can be performed in one line of code:\\
 
 \begin{lstlisting}[frame=single]
-double AutoVocalCtrlAudioProcessor::updateRMS2(double sample, double last, double co)
+double updateRMS2(double sample, double last, double co)
 {
     return (1. - co) * last + co * (sample * sample);
 }
@@ -74,8 +84,8 @@ The already filtered samples are used for this calculation and the result is wri
 
 The time coefficients are used for RMS calculation and to realise the compress and expand times (see later). They are determined with a formula by Udo Zölzer (quell):
 
-$$1.f - exp(-2.2*(1./currentSampleRate)/(ms/1000.))$$
-$$=  1.f - exp(-2.2*(1./currentSampleRate)/s)$$
+$$1.f - \exp(-2.2*(1./currentSampleRate)/(ms/1000.))$$
+$$=  1.f - \exp(-2.2*(1./currentSampleRate)/s)$$
 
 Udo Zölzer decided to use the exponential function because it draws a natural decay. He determined -2.2 for the first part in the exponent by solving an equation system to achieve an attack time MATHE ta = t90 - t10. This means that when a calculation similar to the RMS calculation defined above uses such an time coefficient, its reaction on a input change will need the chosen amount of time to get from 10% of the final reaction to 90%. Illustrated in Fig.SIEHE UNTEN.
 The second part in the exponent (1./currentSampleRate)/s) calculates the proportion of one sample to the amount of seconds of the MATH ta. This needs to be done because it will be used on every sample.
@@ -94,7 +104,7 @@ When rms samples are not passing the gate and therefore being replaced by the lo
 Now the most crucial part is happening: the calculation of the final gain value for the current sample.
 
 \begin{lstlisting}[frame=single]
-double AutoVocalCtrlAudioProcessor::updateGain(double sample, double lastGn)
+double updateGain(double sample, double lastGn)
 {
     const double g = *loudnessGoal - sample;
     const double co = g < lastGn ? compressTCo:expandTCo;
@@ -128,23 +138,29 @@ sollte nicht größer als ums sein oder
 verweise zu den Bildern und code
 
 \begin{lstlisting}[frame=single]
-gain[channel] = updateGain(updateGate(rms2[channel], newGate), gain[channel]);
+...
+gain[channel] = updateGain(updateGate(rms2[channel], newGate),
+gain[channel]);
 double g = pow(10, gain[channel]/20);
 delayData[dpw] = channelData[sample];
+...
 const double o = delayData[dpr] * g;
+...
 channelData[sample] = o;
-                
+...
 if (++dpr >= delayBufferLength)
 	dpr = 0;
 if (++dpw >= delayBufferLength)
 	dpw = 0;
+...
 \end{lstlisting}
 
 \begin{lstlisting}[frame=single]
 void AutoVocalCtrlAudioProcessor::updateDelay()
 {
     int delayInSamples = msToSamples(*delayLength);
-    delayReadPos = (int)(delayWritePos - delayInSamples + delayBufferLength) % delayBufferLength;
+    delayReadPos = (int)(delayWritePos - delayInSamples
+    + delayBufferLength) % delayBufferLength;
     setLatencySamples(delayInSamples);
 }
 \end{lstlisting}
