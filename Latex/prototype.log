@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2018.3.8)  9 APR 2018 16:07
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2018.3.8)  10 APR 2018 18:41
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -2031,8 +2031,139 @@ Overfull \hbox (20.0pt too wide) in paragraph at lines 6--13
 []
  []
 
+
+! LaTeX Error: Environment figure undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.14 \begin{figure}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
 ! Undefined control sequence.
-l.14 \section
+l.15 \includegraphics
+                     [width=\textwidth]{images/chain01}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.15 \includegraphics[
+                      width=\textwidth]{images/chain01}
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no [ in font nullfont!
+Missing character: There is no w in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no d in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no = in font nullfont!
+! Missing number, treated as zero.
+<to be read again> 
+                   ]
+l.15 \includegraphics[width=\textwidth]
+                                       {images/chain01}
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Illegal unit of measure (pt inserted).
+<to be read again> 
+                   ]
+l.15 \includegraphics[width=\textwidth]
+                                       {images/chain01}
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+Missing character: There is no ] in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no m in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no / in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no 1 in font nullfont!
+
+! LaTeX Error: \caption outside float.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.16 \caption
+             {Prototype processing chain}
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no P in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no y in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no n in font nullfont!
+
+! LaTeX Error: \begin{document} ended by \end{figure}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.17 \end{figure}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Overfull \hbox (20.0pt too wide) in paragraph at lines 15--18
+[]
+ []
+
+! Undefined control sequence.
+l.19 \section
              {Filter}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2047,7 +2178,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.14 \section{F
+l.19 \section{F
                ilter}
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -2059,7 +2190,7 @@ Missing character: There is no t in font nullfont!
 Missing character: There is no e in font nullfont!
 Missing character: There is no r in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 14--15
+Overfull \hbox (20.0pt too wide) in paragraph at lines 19--20
 [] 
  []
 
@@ -2070,7 +2201,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.16 W
+l.21 W
       hile gathering information on how to improve my idea of the plug-in I ...
 
 You're in trouble here.  Try typing  <return>  to proceed.
@@ -3149,12 +3280,12 @@ Missing character: There is no A in font nullfont!
 Missing character: There is no W in font nullfont!
 Missing character: There is no : in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 16--17
+Overfull \hbox (20.0pt too wide) in paragraph at lines 21--22
 []
  []
 
 ! Undefined control sequence.
-l.18 \lstset
+l.23 \lstset
             {language=C++}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -3169,7 +3300,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.18 \lstset{l
+l.23 \lstset{l
               anguage=C++}
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -3193,7 +3324,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.19 \begin{lstlisting}
+l.24 \begin{lstlisting}
                        [frame=single]
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -3324,14 +3455,14 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.22 \end{lstlisting}
+l.27 \end{lstlisting}
                      
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 18--23
+Overfull \hbox (20.0pt too wide) in paragraph at lines 23--28
 []
  []
 
@@ -3342,7 +3473,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.24 T
+l.29 T
       he implementation is based on the biquad filter from the Book BLA (BLA...
 
 You're in trouble here.  Try typing  <return>  to proceed.
@@ -3586,7 +3717,7 @@ Missing character: There is no w in font nullfont!
 Missing character: There is no s in font nullfont!
 Missing character: There is no : in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 24--25
+Overfull \hbox (20.0pt too wide) in paragraph at lines 29--30
 []
  []
 
@@ -3597,17 +3728,148 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.26 \textbf{Lowcut:}
-                     \\
+l.31 $
+      f_c = $ cut-off frequency, $f_s = $ sampling frequency (rate), $K = ta...
+
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 27.
+(Font)              <7> on input line 31.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 27.
+(Font)              <5> on input line 31.
+Missing character: There is no c in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no - in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no f in font nullfont!
+Missing character: There is no f in font nullfont!
+Missing character: There is no f in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no q in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no y in font nullfont!
+Missing character: There is no , in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no m in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no f in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no q in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no y in font nullfont!
+Missing character: There is no ( in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no ) in font nullfont!
+Missing character: There is no , in font nullfont!
+Missing character: There is no , in font nullfont!
+Missing character: There is no f in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no f in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no f in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no , in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no , in font nullfont!
+
+Overfull \hbox (39.52512pt too wide) in paragraph at lines 31--33
+[]$\OML/cmm/m/it/10 f[] \OT1/cmr/m/n/10 =$
+ []
+
+
+Overfull \hbox (19.7257pt too wide) in paragraph at lines 31--33
+\OML/cmm/m/it/10 f[] \OT1/cmr/m/n/10 =$
+ []
+
+
+Overfull \hbox (19.76384pt too wide) in paragraph at lines 31--33
+\OML/cmm/m/it/10 K \OT1/cmr/m/n/10 =
+ []
+
+
+Overfull \hbox (51.876pt too wide) in paragraph at lines 31--33
+\OML/cmm/m/it/10 tan\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^Yf[]=f[]\OT1/cmr/m/n/10
+ )$ 
+ []
+
+
+Overfull \hbox (18.46106pt too wide) in paragraph at lines 31--33
+\OML/cmm/m/it/10 Q \OT1/cmr/m/n/10 =$
+ []
+
+
+Overfull \hbox (18.418pt too wide) in paragraph at lines 31--33
+\OML/cmm/m/it/10 G \OT1/cmr/m/n/10 =$
+ []
+
+
+Overfull \hbox (20.87497pt too wide) in paragraph at lines 31--33
+\OML/cmm/m/it/10 V[] \OT1/cmr/m/n/10 =
+ []
+
+
+Overfull \hbox (28.7955pt too wide) in paragraph at lines 31--33
+\OT1/cmr/m/n/10 10[]$ 
+ []
+
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.34 \textbf{Lowcut:}
+                     \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 ! Undefined control sequence.
-l.27 $b_0 = \frac{Q}{K^{2}Q+K+Q}$ \tab
+l.35 $b_0 = \frac{Q}{K^{2}Q+K+Q}$ \tab
                                        $b_1 = -\frac{2Q}{K^{2}Q+K+Q}$ \tab $...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -3616,7 +3878,7 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 ! Undefined control sequence.
-l.27 ...$ \tab $b_1 = -\frac{2Q}{K^{2}Q+K+Q}$ \tab
+l.35 ...$ \tab $b_1 = -\frac{2Q}{K^{2}Q+K+Q}$ \tab
                                                    $b_2 = b_0$\\
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -3625,7 +3887,7 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 ! Undefined control sequence.
-l.28 $a_1 = \frac{2Q*(K^{2}-1)}{K^{2}Q+K+Q}$ \tab
+l.36 $a_1 = \frac{2Q*(K^{2}-1)}{K^{2}Q+K+Q}$ \tab
                                                   $a_2 = \frac{K^{2}Q-K+Q}{K...
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -3634,57 +3896,57 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-Overfull \hbox (59.49979pt too wide) in paragraph at lines 26--29
+Overfull \hbox (59.49979pt too wide) in paragraph at lines 34--37
 []\OT1/cmr/bx/n/10 Lowcut: 
  []
 
 
-Overfull \hbox (19.3333pt too wide) in paragraph at lines 26--29
+Overfull \hbox (19.3333pt too wide) in paragraph at lines 34--37
 \OML/cmm/m/it/10 b[] \OT1/cmr/m/n/10 =
  []
 
 
-Overfull \hbox (45.59573pt too wide) in paragraph at lines 26--29
+Overfull \hbox (45.59573pt too wide) in paragraph at lines 34--37
 []$
  []
 
 
-Overfull \hbox (19.3333pt too wide) in paragraph at lines 26--29
+Overfull \hbox (19.3333pt too wide) in paragraph at lines 34--37
 \OML/cmm/m/it/10 b[] \OT1/cmr/m/n/10 =
  []
 
 
-Overfull \hbox (53.37354pt too wide) in paragraph at lines 26--29
+Overfull \hbox (53.37354pt too wide) in paragraph at lines 34--37
 \OMS/cmsy/m/n/10 ^^@[]$
  []
 
 
-Overfull \hbox (19.3333pt too wide) in paragraph at lines 26--29
+Overfull \hbox (19.3333pt too wide) in paragraph at lines 34--37
 \OML/cmm/m/it/10 b[] \OT1/cmr/m/n/10 =
  []
 
 
-Overfull \hbox (8.77779pt too wide) in paragraph at lines 26--29
+Overfull \hbox (8.77779pt too wide) in paragraph at lines 34--37
 \OML/cmm/m/it/10 b[]$ 
  []
 
 
-Overfull \hbox (20.32753pt too wide) in paragraph at lines 26--29
+Overfull \hbox (20.32753pt too wide) in paragraph at lines 34--37
 \OML/cmm/m/it/10 a[] \OT1/cmr/m/n/10 =
  []
 
 
-Overfull \hbox (45.59573pt too wide) in paragraph at lines 26--29
+Overfull \hbox (45.59573pt too wide) in paragraph at lines 34--37
 []$
  []
 
 
-Overfull \hbox (20.32753pt too wide) in paragraph at lines 26--29
+Overfull \hbox (20.32753pt too wide) in paragraph at lines 34--37
 \OML/cmm/m/it/10 a[] \OT1/cmr/m/n/10 =
  []
 
 
-Overfull \hbox (45.70683pt too wide) in paragraph at lines 26--29
+Overfull \hbox (45.70683pt too wide) in paragraph at lines 34--37
 []$ 
  []
 
@@ -3695,14 +3957,98 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.30 \textbf{Highshelf:}
+l.38 \textbf{Highshelf:}
                         \\
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
+! Undefined control sequence.
+l.39 ..._0+\sqrt{2V_0}K+K2}{1+\sqrt{2}K+K^2}$ \tab
+                                                  [0.4cm] $b_1 = -\frac{2(K^...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
 
-Overfull \hbox (70.43167pt too wide) in paragraph at lines 30--31
+Missing character: There is no [ in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no 4 in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no m in font nullfont!
+Missing character: There is no ] in font nullfont!
+! Undefined control sequence.
+l.39 ... -\frac{2(K^2-V_0)}{1+\sqrt{2}K+K^2}$ \tab
+                                                   $b_2 = \frac{V_0-\sqrt{2V...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.40 $a_1 = \frac{2(K^2-1)}{1+\sqrt{2}K+K^2}$ \tab
+                                                   $a_2 = \frac{1-\sqrt{2}K+...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Overfull \hbox (70.43167pt too wide) in paragraph at lines 38--41
 []\OT1/cmr/bx/n/10 Highshelf: 
+ []
+
+
+Overfull \hbox (19.3333pt too wide) in paragraph at lines 38--41
+\OML/cmm/m/it/10 b[] \OT1/cmr/m/n/10 =
+ []
+
+
+Overfull \hbox (60.88924pt too wide) in paragraph at lines 38--41
+[]$
+ []
+
+
+Overfull \hbox (19.3333pt too wide) in paragraph at lines 38--41
+\OML/cmm/m/it/10 b[] \OT1/cmr/m/n/10 =
+ []
+
+
+Overfull \hbox (55.31972pt too wide) in paragraph at lines 38--41
+\OMS/cmsy/m/n/10 ^^@[]$
+ []
+
+
+Overfull \hbox (19.3333pt too wide) in paragraph at lines 38--41
+\OML/cmm/m/it/10 b[] \OT1/cmr/m/n/10 =
+ []
+
+
+Overfull \hbox (61.00034pt too wide) in paragraph at lines 38--41
+[]$ 
+ []
+
+
+Overfull \hbox (20.32753pt too wide) in paragraph at lines 38--41
+\OML/cmm/m/it/10 a[] \OT1/cmr/m/n/10 =
+ []
+
+
+Overfull \hbox (47.54192pt too wide) in paragraph at lines 38--41
+[]$
+ []
+
+
+Overfull \hbox (20.32753pt too wide) in paragraph at lines 38--41
+\OML/cmm/m/it/10 a[] \OT1/cmr/m/n/10 =
+ []
+
+
+Overfull \hbox (47.65302pt too wide) in paragraph at lines 38--41
+[]$ 
  []
 
 
@@ -3712,7 +4058,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.32 H
+l.42 H
       ence the loudness algorithm uses second order filters (with two delay ...
 
 You're in trouble here.  Try typing  <return>  to proceed.
@@ -3804,7 +4150,7 @@ Missing character: There is no i in font nullfont!
 Missing character: There is no s in font nullfont!
 Missing character: There is no : in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 32--33
+Overfull \hbox (20.0pt too wide) in paragraph at lines 42--43
 []
  []
 
@@ -3815,7 +4161,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.34 B
+l.44 B
       iquadfilter Bild
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -3837,7 +4183,7 @@ Missing character: There is no i in font nullfont!
 Missing character: There is no l in font nullfont!
 Missing character: There is no d in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 34--35
+Overfull \hbox (20.0pt too wide) in paragraph at lines 44--45
 []
  []
 
@@ -3848,8 +4194,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.36 I
-      t is the same as my implementation in the Filter class:
+l.46 I
+      t is the same as my implementation in the Filter class:\\
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
@@ -3900,7 +4246,7 @@ Missing character: There is no s in font nullfont!
 Missing character: There is no s in font nullfont!
 Missing character: There is no : in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 36--37
+Overfull \hbox (20.0pt too wide) in paragraph at lines 46--47
 []
  []
 
@@ -3911,7 +4257,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.38 \begin{lstlisting}
+l.48 \begin{lstlisting}
                        [frame=single]
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -3924,7 +4270,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.38 \begin{lstlisting}[
+l.48 \begin{lstlisting}[
                         frame=single]
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -4020,7 +4366,7 @@ Missing character: There is no z in font nullfont!
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.41     const double mid = sample - a1 * z_
+l.51     const double mid = sample - a1 * z_
                                             1 - a2 * z_2;
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -4028,59 +4374,59 @@ you left one out. Proceed, with fingers crossed.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.43 
+l.53 
      
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 38--43
+Overfull \hbox (20.0pt too wide) in paragraph at lines 48--53
 []
  []
 
 
-Overfull \hbox (12.26393pt too wide) in paragraph at lines 38--43
+Overfull \hbox (12.26393pt too wide) in paragraph at lines 48--53
 [] \OMS/cmsy/m/n/10 ^^@
  []
 
 
-Overfull \hbox (15.28592pt too wide) in paragraph at lines 38--43
+Overfull \hbox (15.28592pt too wide) in paragraph at lines 48--53
 \OML/cmm/m/it/10 a\OT1/cmr/m/n/10 2 \OMS/cmsy/m/n/10 ^^C
  []
 
 
-Overfull \hbox (89.7004pt too wide) in paragraph at lines 38--43
+Overfull \hbox (89.7004pt too wide) in paragraph at lines 48--53
 \OML/cmm/m/it/10 z[]\OT1/cmr/m/n/10 ; \OML/cmm/m/it/10 constdoubleout \OT1/cmr/
 m/n/10 =
  []
 
 
-Overfull \hbox (14.29169pt too wide) in paragraph at lines 38--43
+Overfull \hbox (14.29169pt too wide) in paragraph at lines 48--53
 \OML/cmm/m/it/10 b\OT1/cmr/m/n/10 0 \OMS/cmsy/m/n/10 ^^C
  []
 
 
-Overfull \hbox (25.20793pt too wide) in paragraph at lines 38--43
+Overfull \hbox (25.20793pt too wide) in paragraph at lines 48--53
 \OML/cmm/m/it/10 mid \OT1/cmr/m/n/10 +
  []
 
 
-Overfull \hbox (14.29169pt too wide) in paragraph at lines 38--43
+Overfull \hbox (14.29169pt too wide) in paragraph at lines 48--53
 \OML/cmm/m/it/10 b\OT1/cmr/m/n/10 1 \OMS/cmsy/m/n/10 ^^C
  []
 
 
-Overfull \hbox (16.91443pt too wide) in paragraph at lines 38--43
+Overfull \hbox (16.91443pt too wide) in paragraph at lines 48--53
 \OML/cmm/m/it/10 z[] \OT1/cmr/m/n/10 +
  []
 
 
-Overfull \hbox (14.29169pt too wide) in paragraph at lines 38--43
+Overfull \hbox (14.29169pt too wide) in paragraph at lines 48--53
 \OML/cmm/m/it/10 b\OT1/cmr/m/n/10 2 \OMS/cmsy/m/n/10 ^^C
  []
 
 
-Overfull \hbox (11.91441pt too wide) in paragraph at lines 38--43
+Overfull \hbox (11.91441pt too wide) in paragraph at lines 48--53
 \OML/cmm/m/it/10 z[]\OT1/cmr/m/n/10 ;$ 
  []
 
@@ -4091,7 +4437,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.44     z
+l.54     z
           _2 = z_1;
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -4100,7 +4446,7 @@ Missing character: There is no z in font nullfont!
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.44     z_
+l.54     z_
            2 = z_1;
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -4108,23 +4454,23 @@ you left one out. Proceed, with fingers crossed.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.46 
+l.56 
      
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (35.04164pt too wide) in paragraph at lines 44--46
+Overfull \hbox (35.04164pt too wide) in paragraph at lines 54--56
 []$[] \OT1/cmr/m/n/10 =
  []
 
 
-Overfull \hbox (33.27318pt too wide) in paragraph at lines 44--46
+Overfull \hbox (33.27318pt too wide) in paragraph at lines 54--56
 \OML/cmm/m/it/10 z[]\OT1/cmr/m/n/10 ; \OML/cmm/m/it/10 z[] \OT1/cmr/m/n/10 =
  []
 
 
-Overfull \hbox (20.20792pt too wide) in paragraph at lines 44--46
+Overfull \hbox (20.20792pt too wide) in paragraph at lines 54--56
 \OML/cmm/m/it/10 mid\OT1/cmr/m/n/10 ;$ 
  []
 
@@ -4135,7 +4481,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.47     r
+l.57     r
           eturn out;
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -4157,14 +4503,14 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.49 \end{lstlisting}
+l.59 \end{lstlisting}
                      
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 47--50
+Overfull \hbox (20.0pt too wide) in paragraph at lines 57--60
 []
  []
 
@@ -4175,12 +4521,387 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.51 T
-      he implementation is capable of many filter styles at different cutoff...
+l.61 B
+      efore implementing in C++ I testen my filter class in python. Therefor...
 
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
+Missing character: There is no B in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no f in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no m in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no m in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no C in font nullfont!
+Missing character: There is no + in font nullfont!
+Missing character: There is no + in font nullfont!
+Missing character: There is no I in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no m in font nullfont!
+Missing character: There is no y in font nullfont!
+Missing character: There is no f in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no y in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no T in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no f in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no I in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no d in font nullfont!
+Missing character: There is no d in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no f in font nullfont!
+Missing character: There is no f in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no w in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no f in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no q in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no b in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no w in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no d in font nullfont!
+Missing character: There is no 2 in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no H in font nullfont!
+Missing character: There is no z in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no b in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no f in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no d in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no d in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no m in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no d in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no v in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no y in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no ( in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no f in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no Ã in font nullfont!
+Missing character: There is no Ÿ in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no v in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no w in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no ? in font nullfont!
+Missing character: There is no ) in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no T in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no m in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no d in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no ( in font nullfont!
+Missing character: There is no F in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no 3 in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no 2 in font nullfont!
+Missing character: There is no N in font nullfont!
+Missing character: There is no O in font nullfont!
+Missing character: There is no C in font nullfont!
+Missing character: There is no H in font nullfont!
+Missing character: There is no Ã in font nullfont!
+Missing character: There is no „ in font nullfont!
+Missing character: There is no N in font nullfont!
+Missing character: There is no D in font nullfont!
+Missing character: There is no E in font nullfont!
+Missing character: There is no R in font nullfont!
+Missing character: There is no N in font nullfont!
+Missing character: There is no ) in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no T in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no C in font nullfont!
+Missing character: There is no + in font nullfont!
+Missing character: There is no + in font nullfont!
+Missing character: There is no v in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no f in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no f in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no I in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no m in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no d in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no f in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no m in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no w in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no v in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no y in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no d in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no y in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no m in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no m in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no . in font nullfont!
 Missing character: There is no T in font nullfont!
 Missing character: There is no h in font nullfont!
 Missing character: There is no e in font nullfont!
@@ -4413,8 +5134,141 @@ Missing character: There is no ? in font nullfont!
 Missing character: There is no ? in font nullfont!
 Missing character: There is no : in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 51--52
+! LaTeX Error: Environment figure undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.63 \begin{figure}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+! Undefined control sequence.
+l.64 \includegraphics
+                     [width=\textwidth]{images/filter_test}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+Missing character: There is no [ in font nullfont!
+Missing character: There is no w in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no d in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no = in font nullfont!
+! Missing number, treated as zero.
+<to be read again> 
+                   ]
+l.64 \includegraphics[width=\textwidth]
+                                       {images/filter_test}
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Illegal unit of measure (pt inserted).
+<to be read again> 
+                   ]
+l.64 \includegraphics[width=\textwidth]
+                                       {images/filter_test}
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+Missing character: There is no ] in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no m in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no / in font nullfont!
+Missing character: There is no f in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no r in font nullfont!
+! Missing $ inserted.
+<inserted text> 
+                $
+l.64 ...egraphics[width=\textwidth]{images/filter_
+                                                  test}
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Extra }, or forgotten $.
+l.64 ...hics[width=\textwidth]{images/filter_test}
+                                                  
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+
+! LaTeX Error: \caption outside float.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.65 \caption
+             {Plotted filter test}
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: \begin{document} ended by \end{figure}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.66 \end{figure}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.66 \end{figure}
+                 
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.66 \end{figure}
+                 
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+
+Overfull \hbox (20.0pt too wide) in paragraph at lines 61--67
 []
+ []
+
+
+Overfull \hbox (89.94995pt too wide) in paragraph at lines 61--67
+[]\OML/cmm/m/it/10 est[]$ 
  []
 
 
@@ -4424,7 +5278,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.53 \begin{lstlisting}
+l.68 \begin{lstlisting}
                        [frame=single]
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -4437,7 +5291,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.53 \begin{lstlisting}[
+l.68 \begin{lstlisting}[
                         frame=single]
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -4462,35 +5316,6 @@ Missing character: There is no u in font nullfont!
 Missing character: There is no b in font nullfont!
 Missing character: There is no l in font nullfont!
 Missing character: There is no e in font nullfont!
-Missing character: There is no A in font nullfont!
-Missing character: There is no u in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no V in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no C in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no A in font nullfont!
-Missing character: There is no u in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no P in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no : in font nullfont!
-Missing character: There is no : in font nullfont!
 Missing character: There is no u in font nullfont!
 Missing character: There is no p in font nullfont!
 Missing character: There is no d in font nullfont!
@@ -4611,14 +5436,14 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.58 \end{lstlisting}
+l.74 \end{lstlisting}
                      
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 53--59
+Overfull \hbox (20.0pt too wide) in paragraph at lines 68--75
 []
  []
 
@@ -4629,7 +5454,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.60 T
+l.76 T
       he updateFilterSample method returned the filtered samples for further...
 
 You're in trouble here.  Try typing  <return>  to proceed.
@@ -4710,12 +5535,12 @@ Missing character: There is no n in font nullfont!
 Missing character: There is no g in font nullfont!
 Missing character: There is no . in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 60--61
+Overfull \hbox (20.0pt too wide) in paragraph at lines 76--77
 []
  []
 
 ! Undefined control sequence.
-l.62 \section
+l.78 \section
              {RMS}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -4730,7 +5555,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.62 \section{R
+l.78 \section{R
                MS}
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -4739,7 +5564,7 @@ Missing character: There is no R in font nullfont!
 Missing character: There is no M in font nullfont!
 Missing character: There is no S in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 62--63
+Overfull \hbox (20.0pt too wide) in paragraph at lines 78--79
 [] 
  []
 
@@ -4750,7 +5575,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.64 T
+l.80 T
       o measure the level of the audio signal at the current position the pl...
 
 You're in trouble here.  Try typing  <return>  to proceed.
@@ -5652,7 +6477,7 @@ Missing character: There is no d in font nullfont!
 Missing character: There is no e in font nullfont!
 Missing character: There is no : in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 64--67
+Overfull \hbox (20.0pt too wide) in paragraph at lines 80--83
 []
  []
 
@@ -5663,7 +6488,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.68 \begin{lstlisting}
+l.84 \begin{lstlisting}
                        [frame=single]
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -5676,7 +6501,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.68 \begin{lstlisting}[
+l.84 \begin{lstlisting}[
                         frame=single]
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -5701,35 +6526,6 @@ Missing character: There is no u in font nullfont!
 Missing character: There is no b in font nullfont!
 Missing character: There is no l in font nullfont!
 Missing character: There is no e in font nullfont!
-Missing character: There is no A in font nullfont!
-Missing character: There is no u in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no V in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no C in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no A in font nullfont!
-Missing character: There is no u in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no P in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no : in font nullfont!
-Missing character: There is no : in font nullfont!
 Missing character: There is no u in font nullfont!
 Missing character: There is no p in font nullfont!
 Missing character: There is no d in font nullfont!
@@ -5819,14 +6615,14 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.73 \end{lstlisting}
+l.89 \end{lstlisting}
                      
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 68--74
+Overfull \hbox (20.0pt too wide) in paragraph at lines 84--90
 []
  []
 
@@ -5837,7 +6633,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.75 T
+l.91 T
       he already filtered samples are used for this calculation and the resu...
 
 You're in trouble here.  Try typing  <return>  to proceed.
@@ -6375,12 +7171,12 @@ Missing character: There is no m in font nullfont!
 Missing character: There is no e in font nullfont!
 Missing character: There is no . in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 75--76
+Overfull \hbox (20.0pt too wide) in paragraph at lines 91--92
 []
  []
 
 ! Undefined control sequence.
-l.77 \section
+l.93 \section
              {Time Coefficients}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -6395,7 +7191,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.77 \section{T
+l.93 \section{T
                ime Coefficients}
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -6417,7 +7213,7 @@ Missing character: There is no n in font nullfont!
 Missing character: There is no t in font nullfont!
 Missing character: There is no s in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 77--78
+Overfull \hbox (20.0pt too wide) in paragraph at lines 93--94
 []
  []
 
@@ -6428,7 +7224,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.79 T
+l.95 T
       he time coefficients are used for RMS calculation and to realise the c...
 
 You're in trouble here.  Try typing  <return>  to proceed.
@@ -6575,7 +7371,7 @@ Missing character: There is no l in font nullfont!
 Missing character: There is no ) in font nullfont!
 Missing character: There is no : in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 79--80
+Overfull \hbox (20.0pt too wide) in paragraph at lines 95--96
 []
  []
 
@@ -6586,31 +7382,31 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.81 $
-      $1.f - exp(-2.2*(1./currentSampleRate)/(ms/1000.))$$
+l.97 $
+      $1.f - \exp(-2.2*(1./currentSampleRate)/(ms/1000.))$$
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 81--81
+Overfull \hbox (20.0pt too wide) in paragraph at lines 97--97
 [] 
  []
 
 
-Overfull \hbox (233.60947pt too wide) detected at line 81
-\OT1/cmr/m/n/10 1\OML/cmm/m/it/10 :f \OMS/cmsy/m/n/10 ^^@ \OML/cmm/m/it/10 exp\
-OT1/cmr/m/n/10 (\OMS/cmsy/m/n/10 ^^@\OT1/cmr/m/n/10 2\OML/cmm/m/it/10 :\OT1/cmr
-/m/n/10 2 \OMS/cmsy/m/n/10 ^^C \OT1/cmr/m/n/10 (1\OML/cmm/m/it/10 :=currentSamp
-leRate\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 =\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ms=\
-OT1/cmr/m/n/10 1000\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 ))
+Overfull \hbox (233.4845pt too wide) detected at line 97
+\OT1/cmr/m/n/10 1\OML/cmm/m/it/10 :f \OMS/cmsy/m/n/10 ^^@ []\OT1/cmr/m/n/10 (\O
+MS/cmsy/m/n/10 ^^@\OT1/cmr/m/n/10 2\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 2 \OMS/cms
+y/m/n/10 ^^C \OT1/cmr/m/n/10 (1\OML/cmm/m/it/10 :=currentSampleRate\OT1/cmr/m/n
+/10 )\OML/cmm/m/it/10 =\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ms=\OT1/cmr/m/n/10 100
+0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 ))
  []
 
 
-Overfull \hbox (199.82918pt too wide) detected at line 82
-\OT1/cmr/m/n/10 = 1\OML/cmm/m/it/10 :f \OMS/cmsy/m/n/10 ^^@ \OML/cmm/m/it/10 ex
-p\OT1/cmr/m/n/10 (\OMS/cmsy/m/n/10 ^^@\OT1/cmr/m/n/10 2\OML/cmm/m/it/10 :\OT1/c
-mr/m/n/10 2 \OMS/cmsy/m/n/10 ^^C \OT1/cmr/m/n/10 (1\OML/cmm/m/it/10 :=currentSa
-mpleRate\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 =s\OT1/cmr/m/n/10 )
+Overfull \hbox (199.70421pt too wide) detected at line 98
+\OT1/cmr/m/n/10 = 1\OML/cmm/m/it/10 :f \OMS/cmsy/m/n/10 ^^@ []\OT1/cmr/m/n/10 (
+\OMS/cmsy/m/n/10 ^^@\OT1/cmr/m/n/10 2\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 2 \OMS/c
+msy/m/n/10 ^^C \OT1/cmr/m/n/10 (1\OML/cmm/m/it/10 :=currentSampleRate\OT1/cmr/m
+/n/10 )\OML/cmm/m/it/10 =s\OT1/cmr/m/n/10 )
  []
 
 
@@ -6620,8 +7416,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.84 U
-      do ZÃ¶lzer decided to use the exponential function because it draws a ...
+l.100 U
+       do ZÃ¶lzer decided to use the exponential function because it draws a...
 
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -7130,7 +7926,7 @@ Missing character: There is no l in font nullfont!
 Missing character: There is no e in font nullfont!
 Missing character: There is no . in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 84--86
+Overfull \hbox (20.0pt too wide) in paragraph at lines 100--102
 []
  []
 
@@ -7141,8 +7937,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.87 B
-      ILD MIT ATTACK ZEIT ODER RMS MITTEL DURCH IMPLUSE VERÃ„NDERUNG t90 und...
+l.103 B
+       ILD MIT ATTACK ZEIT ODER RMS MITTEL DURCH IMPLUSE VERÃ„NDERUNG t90 un...
 
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -7211,13 +8007,13 @@ Missing character: There is no t in font nullfont!
 Missing character: There is no 1 in font nullfont!
 Missing character: There is no 0 in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 87--88
+Overfull \hbox (20.0pt too wide) in paragraph at lines 103--104
 []
  []
 
 ! Undefined control sequence.
-l.89 \section
-             {Gate}
+l.105 \section
+              {Gate}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
@@ -7231,8 +8027,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.89 \section{G
-               ate}
+l.105 \section{G
+                ate}
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
@@ -7241,7 +8037,7 @@ Missing character: There is no a in font nullfont!
 Missing character: There is no t in font nullfont!
 Missing character: There is no e in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 89--90
+Overfull \hbox (20.0pt too wide) in paragraph at lines 105--106
 [] 
  []
 
@@ -7252,8 +8048,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.91 T
-      he plug-in should operate while there are vocals and stop if there are...
+l.107 T
+       he plug-in should operate while there are vocals and stop if there ar...
 
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -8342,83 +9138,83 @@ Missing character: There is no n in font nullfont!
 Missing character: There is no ) in font nullfont!
 Missing character: There is no . in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 91--95
+Overfull \hbox (20.0pt too wide) in paragraph at lines 107--111
 []
  []
 
 
-Overfull \hbox (22.74313pt too wide) in paragraph at lines 91--95
+Overfull \hbox (22.74313pt too wide) in paragraph at lines 107--111
 \OML/cmm/m/it/10 rms[]$
  []
 
 
-Overfull \hbox (22.77785pt too wide) in paragraph at lines 91--95
+Overfull \hbox (22.77785pt too wide) in paragraph at lines 107--111
 \OT1/cmr/m/n/10 10\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 0 \OMS/cmsy/m/n/10 ^^C
  []
 
 
-Overfull \hbox (21.83676pt too wide) in paragraph at lines 91--95
+Overfull \hbox (21.83676pt too wide) in paragraph at lines 107--111
 \OML/cmm/m/it/10 std \OT1/cmr/m/n/10 ::
  []
 
 
-Overfull \hbox (58.08002pt too wide) in paragraph at lines 91--95
+Overfull \hbox (58.08002pt too wide) in paragraph at lines 107--111
 \OML/cmm/m/it/10 log\OT1/cmr/m/n/10 10(\OML/cmm/m/it/10 rms\OT1/cmr/m/n/10 2 +
  []
 
 
-Overfull \hbox (17.43408pt too wide) in paragraph at lines 91--95
+Overfull \hbox (17.43408pt too wide) in paragraph at lines 107--111
 \OT1/cmr/m/n/10 1\OML/cmm/m/it/10 e \OMS/cmsy/m/n/10 ^^@
  []
 
 
-Overfull \hbox (13.88893pt too wide) in paragraph at lines 91--95
+Overfull \hbox (13.88893pt too wide) in paragraph at lines 107--111
 \OT1/cmr/m/n/10 10)$
  []
 
 
-Overfull \hbox (22.77785pt too wide) in paragraph at lines 91--95
+Overfull \hbox (22.77785pt too wide) in paragraph at lines 107--111
 \OT1/cmr/m/n/10 20\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 0 \OMS/cmsy/m/n/10 ^^C
  []
 
 
-Overfull \hbox (21.83676pt too wide) in paragraph at lines 91--95
+Overfull \hbox (21.83676pt too wide) in paragraph at lines 107--111
 \OML/cmm/m/it/10 std \OT1/cmr/m/n/10 ::
  []
 
 
-Overfull \hbox (53.08pt too wide) in paragraph at lines 91--95
+Overfull \hbox (53.08pt too wide) in paragraph at lines 107--111
 \OML/cmm/m/it/10 log\OT1/cmr/m/n/10 10(\OML/cmm/m/it/10 rms \OT1/cmr/m/n/10 +
  []
 
 
-Overfull \hbox (17.43408pt too wide) in paragraph at lines 91--95
+Overfull \hbox (17.43408pt too wide) in paragraph at lines 107--111
 \OT1/cmr/m/n/10 1\OML/cmm/m/it/10 e \OMS/cmsy/m/n/10 ^^@
  []
 
 
-Overfull \hbox (13.88893pt too wide) in paragraph at lines 91--95
+Overfull \hbox (13.88893pt too wide) in paragraph at lines 107--111
 \OT1/cmr/m/n/10 10)$
  []
 
 
-Overfull \hbox (25.21188pt too wide) in paragraph at lines 91--95
+Overfull \hbox (25.21188pt too wide) in paragraph at lines 107--111
 \OT1/cmr/m/n/10 +1\OML/cmm/m/it/10 e \OMS/cmsy/m/n/10 ^^@
  []
 
 
-Overfull \hbox (10.00003pt too wide) in paragraph at lines 91--95
+Overfull \hbox (10.00003pt too wide) in paragraph at lines 107--111
 \OT1/cmr/m/n/10 10$
  []
 
 
-Overfull \hbox (35.93411pt too wide) in paragraph at lines 91--95
+Overfull \hbox (35.93411pt too wide) in paragraph at lines 107--111
 \OML/cmm/m/it/10 log\OT1/cmr/m/n/10 10(0)$
  []
 
 ! Undefined control sequence.
-l.96 \section
-             {Gain}
+l.112 \section
+              {Gain}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
@@ -8432,8 +9228,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.96 \section{G
-               ain}
+l.112 \section{G
+                ain}
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
@@ -8442,7 +9238,7 @@ Missing character: There is no a in font nullfont!
 Missing character: There is no i in font nullfont!
 Missing character: There is no n in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 96--97
+Overfull \hbox (20.0pt too wide) in paragraph at lines 112--113
 [] 
  []
 
@@ -8453,8 +9249,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.98 N
-      ow the most crucial part is happening: the calculation of the final ga...
+l.114 N
+       ow the most crucial part is happening: the calculation of the final g...
 
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -8546,7 +9342,7 @@ Missing character: There is no l in font nullfont!
 Missing character: There is no e in font nullfont!
 Missing character: There is no . in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 98--99
+Overfull \hbox (20.0pt too wide) in paragraph at lines 114--115
 []
  []
 
@@ -8557,7 +9353,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.100 \begin{lstlisting}
+l.116 \begin{lstlisting}
                         [frame=single]
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -8570,7 +9366,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.100 \begin{lstlisting}[
+l.116 \begin{lstlisting}[
                          frame=single]
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -8595,35 +9391,6 @@ Missing character: There is no u in font nullfont!
 Missing character: There is no b in font nullfont!
 Missing character: There is no l in font nullfont!
 Missing character: There is no e in font nullfont!
-Missing character: There is no A in font nullfont!
-Missing character: There is no u in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no V in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no C in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no A in font nullfont!
-Missing character: There is no u in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no P in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no : in font nullfont!
-Missing character: There is no : in font nullfont!
 Missing character: There is no u in font nullfont!
 Missing character: There is no p in font nullfont!
 Missing character: There is no d in font nullfont!
@@ -8812,14 +9579,14 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.108 \end{lstlisting}
+l.124 \end{lstlisting}
                       
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 100--109
+Overfull \hbox (20.0pt too wide) in paragraph at lines 116--125
 []
  []
 
@@ -8830,7 +9597,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.110 A
+l.126 A
        t first it computes the difference between the loudnessGoal and the c...
 
 You're in trouble here.  Try typing  <return>  to proceed.
@@ -9979,7 +10746,7 @@ Missing character: There is no o in font nullfont!
 Missing character: There is no n in font nullfont!
 Missing character: There is no . in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 110--113
+Overfull \hbox (20.0pt too wide) in paragraph at lines 126--129
 []
  []
 
@@ -9990,7 +10757,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.114 E
+l.130 E
        XPAND VIELLEICGHT SCHWEIRIGES WORT DAFÃœR WEIL SCHON BESETZT
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -10100,7 +10867,7 @@ Missing character: There is no a in font nullfont!
 Missing character: There is no u in font nullfont!
 Missing character: There is no s in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 114--116
+Overfull \hbox (20.0pt too wide) in paragraph at lines 130--132
 []
  []
 
@@ -10111,7 +10878,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.117 A
+l.133 A
        fter calculating the smoothed gain it gets clipped at the user chosen...
 
 You're in trouble here.  Try typing  <return>  to proceed.
@@ -10779,12 +11546,12 @@ Missing character: There is no l in font nullfont!
 Missing character: There is no e in font nullfont!
 Missing character: There is no . in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 117--120
+Overfull \hbox (20.0pt too wide) in paragraph at lines 133--136
 []
  []
 
 ! Undefined control sequence.
-l.121 \section
+l.137 \section
               {Lookahead}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -10799,7 +11566,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.121 \section{L
+l.137 \section{L
                 ookahead}
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -10814,7 +11581,7 @@ Missing character: There is no e in font nullfont!
 Missing character: There is no a in font nullfont!
 Missing character: There is no d in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 121--122
+Overfull \hbox (20.0pt too wide) in paragraph at lines 137--138
 [] 
  []
 
@@ -10825,7 +11592,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.123 T
+l.139 T
        o achieve its goal the plug-in is designed to react slow and therefor...
 
 You're in trouble here.  Try typing  <return>  to proceed.
@@ -11313,6 +12080,177 @@ Missing character: There is no i in font nullfont!
 Missing character: There is no n in font nullfont!
 Missing character: There is no t in font nullfont!
 Missing character: There is no . in font nullfont!
+
+Overfull \hbox (20.0pt too wide) in paragraph at lines 139--140
+[]
+ []
+
+
+! LaTeX Error: Environment figure undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.141 \begin{figure}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+! Undefined control sequence.
+l.142 \includegraphics
+                      [width=\textwidth]{images/lookahead_w_o}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.142 \includegraphics[
+                       width=\textwidth]{images/lookahead_w_o}
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no [ in font nullfont!
+Missing character: There is no w in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no d in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no = in font nullfont!
+! Missing number, treated as zero.
+<to be read again> 
+                   ]
+l.142 \includegraphics[width=\textwidth]
+                                        {images/lookahead_w_o}
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+! Illegal unit of measure (pt inserted).
+<to be read again> 
+                   ]
+l.142 \includegraphics[width=\textwidth]
+                                        {images/lookahead_w_o}
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+Missing character: There is no ] in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no m in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no / in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no k in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no d in font nullfont!
+! Missing $ inserted.
+<inserted text> 
+                $
+l.142 ...phics[width=\textwidth]{images/lookahead_
+                                                  w_o}
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Double subscript.
+l.142 ...ics[width=\textwidth]{images/lookahead_w_
+                                                  o}
+I treat `x_1_2' essentially like `x_1{}_2'.
+
+! Extra }, or forgotten $.
+l.142 ...s[width=\textwidth]{images/lookahead_w_o}
+                                                  
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+
+! LaTeX Error: \caption outside float.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.143 \caption
+              {Gain adaption with and w/o lookahead}
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: \begin{document} ended by \end{figure}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.144 \end{figure}
+                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.144 \end{figure}
+                  
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.144 \end{figure}
+                  
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+
+Overfull \hbox (190.83524pt too wide) in paragraph at lines 142--145
+[]$[][][]$ 
+ []
+
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.146 T
+       o compensate the adaption time I implemented a simple lookahead featu...
+
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 Missing character: There is no T in font nullfont!
 Missing character: There is no o in font nullfont!
 Missing character: There is no c in font nullfont!
@@ -12357,9 +13295,31 @@ Missing character: There is no n in font nullfont!
 Missing character: There is no d in font nullfont!
 Missing character: There is no : in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 123--126
+Overfull \hbox (20.0pt too wide) in paragraph at lines 146--148
 []
  []
+
+
+! LaTeX Error: Environment figure undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.149 \begin{figure}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+! Undefined control sequence.
+l.150 \includegraphics
+                      [width=\textwidth]{images/ring_buffer}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
 
 
 ! LaTeX Error: Missing \begin{document}.
@@ -12368,98 +13328,118 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.127 B
-       ILDER GAIN ADAPTION MIT UND OHNE LOOKAHEAD OK GRAPH UND ARRAY BILD VO...
-
+l.150 \includegraphics[
+                       width=\textwidth]{images/ring_buffer}
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-Missing character: There is no B in font nullfont!
-Missing character: There is no I in font nullfont!
-Missing character: There is no L in font nullfont!
-Missing character: There is no D in font nullfont!
-Missing character: There is no E in font nullfont!
-Missing character: There is no R in font nullfont!
-Missing character: There is no G in font nullfont!
-Missing character: There is no A in font nullfont!
-Missing character: There is no I in font nullfont!
-Missing character: There is no N in font nullfont!
-Missing character: There is no A in font nullfont!
-Missing character: There is no D in font nullfont!
-Missing character: There is no A in font nullfont!
-Missing character: There is no P in font nullfont!
-Missing character: There is no T in font nullfont!
-Missing character: There is no I in font nullfont!
-Missing character: There is no O in font nullfont!
-Missing character: There is no N in font nullfont!
-Missing character: There is no M in font nullfont!
-Missing character: There is no I in font nullfont!
-Missing character: There is no T in font nullfont!
-Missing character: There is no U in font nullfont!
-Missing character: There is no N in font nullfont!
-Missing character: There is no D in font nullfont!
-Missing character: There is no O in font nullfont!
-Missing character: There is no H in font nullfont!
-Missing character: There is no N in font nullfont!
-Missing character: There is no E in font nullfont!
-Missing character: There is no L in font nullfont!
-Missing character: There is no O in font nullfont!
-Missing character: There is no O in font nullfont!
-Missing character: There is no K in font nullfont!
-Missing character: There is no A in font nullfont!
-Missing character: There is no H in font nullfont!
-Missing character: There is no E in font nullfont!
-Missing character: There is no A in font nullfont!
-Missing character: There is no D in font nullfont!
-Missing character: There is no O in font nullfont!
-Missing character: There is no K in font nullfont!
-Missing character: There is no G in font nullfont!
-Missing character: There is no R in font nullfont!
-Missing character: There is no A in font nullfont!
-Missing character: There is no P in font nullfont!
-Missing character: There is no H in font nullfont!
-Missing character: There is no U in font nullfont!
-Missing character: There is no N in font nullfont!
-Missing character: There is no D in font nullfont!
-Missing character: There is no A in font nullfont!
-Missing character: There is no R in font nullfont!
-Missing character: There is no R in font nullfont!
-Missing character: There is no A in font nullfont!
-Missing character: There is no Y in font nullfont!
-Missing character: There is no B in font nullfont!
-Missing character: There is no I in font nullfont!
-Missing character: There is no L in font nullfont!
-Missing character: There is no D in font nullfont!
-Missing character: There is no V in font nullfont!
-Missing character: There is no O in font nullfont!
-Missing character: There is no N in font nullfont!
-Missing character: There is no R in font nullfont!
-Missing character: There is no I in font nullfont!
-Missing character: There is no N in font nullfont!
-Missing character: There is no G in font nullfont!
-Missing character: There is no B in font nullfont!
-Missing character: There is no U in font nullfont!
-Missing character: There is no F in font nullfont!
-Missing character: There is no F in font nullfont!
-Missing character: There is no E in font nullfont!
-Missing character: There is no R in font nullfont!
-Missing character: There is no M in font nullfont!
-Missing character: There is no I in font nullfont!
-Missing character: There is no T in font nullfont!
-Missing character: There is no 0 in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no v in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no r in font nullfont!
+Missing character: There is no [ in font nullfont!
+Missing character: There is no w in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no d in font nullfont!
+Missing character: There is no t in font nullfont!
 Missing character: There is no h in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no ? in font nullfont!
-Missing character: There is no ? in font nullfont!
+Missing character: There is no = in font nullfont!
+! Missing number, treated as zero.
+<to be read again> 
+                   ]
+l.150 \includegraphics[width=\textwidth]
+                                        {images/ring_buffer}
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 127--128
-[]
+! Illegal unit of measure (pt inserted).
+<to be read again> 
+                   ]
+l.150 \includegraphics[width=\textwidth]
+                                        {images/ring_buffer}
+Dimensions can be in units of em, ex, in, pt, pc,
+cm, mm, dd, cc, nd, nc, bp, or sp; but yours is a new one!
+I'll assume that you meant to say pt, for printer's points.
+To recover gracefully from this error, it's best to
+delete the erroneous units; e.g., type `2' to delete
+two letters. (See Chapter 27 of The TeXbook.)
+
+Missing character: There is no ] in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no m in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no / in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+! Missing $ inserted.
+<inserted text> 
+                $
+l.150 ...degraphics[width=\textwidth]{images/ring_
+                                                  buffer}
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Extra }, or forgotten $.
+l.150 ...ics[width=\textwidth]{images/ring_buffer}
+                                                  
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+
+! LaTeX Error: \caption outside float.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.151 \caption
+              {Initialized ring buffer with read and write pointers}
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: \begin{document} ended by \end{figure}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.152 \end{figure}
+                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.152 \end{figure}
+                  
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.152 \end{figure}
+                  
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+
+Overfull \hbox (268.12628pt too wide) in paragraph at lines 150--153
+[]$[]\OML/cmm/m/it/10 uffer[]$ 
  []
 
 
@@ -12469,7 +13449,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.129 v
+l.154 v
        ocals wichtig am Anfang erster push sollte nicht leiser gemacht sein ...
 
 You're in trouble here.  Try typing  <return>  to proceed.
@@ -12654,7 +13634,7 @@ Missing character: There is no o in font nullfont!
 Missing character: There is no d in font nullfont!
 Missing character: There is no e in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 129--133
+Overfull \hbox (20.0pt too wide) in paragraph at lines 154--158
 []
  []
 
@@ -12665,7 +13645,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.134 \begin{lstlisting}
+l.159 \begin{lstlisting}
                         [frame=single]
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -12678,7 +13658,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.134 \begin{lstlisting}[
+l.159 \begin{lstlisting}[
                          frame=single]
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -12981,14 +13961,14 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.149 \end{lstlisting}
+l.175 \end{lstlisting}
                       
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 134--150
+Overfull \hbox (20.0pt too wide) in paragraph at lines 159--176
 []
  []
 
@@ -12999,7 +13979,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.151 \begin{lstlisting}
+l.177 \begin{lstlisting}
                         [frame=single]
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -13012,7 +13992,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.151 \begin{lstlisting}[
+l.177 \begin{lstlisting}[
                          frame=single]
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -13222,7 +14202,7 @@ Missing character: There is no s in font nullfont!
 Missing character: There is no ) in font nullfont!
 Missing character: There is no ; in font nullfont!
 
-Overfull \hbox (20.0pt too wide) in paragraph at lines 151--157
+Overfull \hbox (20.0pt too wide) in paragraph at lines 177--184
 []
  []
 
@@ -13233,7 +14213,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.158 \end{lstlisting}
+l.185 \end{lstlisting}
                       
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -13247,10 +14227,10 @@ or  <return>  to continue without it.
 
  
 Here is how much of TeX's memory you used:
- 12 strings out of 492995
- 211 string characters out of 6132705
- 60074 words of memory out of 5000000
- 3664 multiletter control sequences out of 15000+600000
+ 14 strings out of 492995
+ 226 string characters out of 6132705
+ 61074 words of memory out of 5000000
+ 3666 multiletter control sequences out of 15000+600000
  3948 words of font info for 15 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  18i,3n,12p,1312b,66s stack positions out of 5000i,500n,10000p,200000b,80000s

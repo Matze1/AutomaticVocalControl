@@ -11,6 +11,11 @@ Next step after the gate is the gain adaption. In this step the gated RMS value 
 Lastly the new gain is multiplied with the current sample. Because the plugins behaviour is smoothed as it shall sound natural, it will not react instantly to the input. To compensate the reaction time it delays the input signal before multiplying the calculated gain. This delay is later offset by the DAW.\\ 
 During development most of the parameters described in the following sections were settable in a basic dummy UI. This was realised with the standard JUCE slider and button objects and used for tests and fast adjustments.\\
 
+\begin{figure}
+\includegraphics[width=\textwidth]{images/chain01}
+\caption{Prototype processing chain}
+\end{figure}
+
 \section{Filter}
 
 While gathering information on how to improve my idea of the plug-in I got interested in the ITU-R BS.1770-4 [FOOTNOTE pls] algorithm. It classifies an audio file for its humanly perceived loudness. The main use of this algorithm is found in television and music streaming services as they can keep the program loudness steady while switching content. As the human perception is also of interest for mixing a song, I examined how it was done. Due to a good documentation about how to implement the loudness algorithm I build a copy of it in python and decided which elements I would adopt in my plug-in. The first elements were the two filters. Like described above, their use is to mimic the human perception of sound pressure at different frequencies. The first filter is a low cut for the reason that human hearing is insensitive to low frequencies. The second filter is a high shelf and is ”used to account for the acoustic effects of the head” [wie zitiert man]. This imitation of the human hearing is greatly simplified but cost effective in terms of computation. The low cut filter has a cutoff frequency at 38 Hz, the high shelf around 1681 Hz. They are initialised at every plug-in startup in the JUCE method “prepareToPlay” with the current sample rate of the integrating DAW:\\
@@ -53,7 +58,12 @@ double AutoVocalCtrlFilter::process(double sample)
 }
 \end{lstlisting}
 
+Before implementing in C++ I testen my filter class in python. Therefor I send different signals with frequencies between 0 and 20000Hz through both filters and plotted the resulting amplitudes in a graph via pyplot(alter fußnoten verweis?). The current algorithm results in a descent graph (Fig. 3.2 NOCH ÄNDERN). To test the C++ version of the filter I compared the results of the same input with the previously tested python implementation.\\
 The implementation is capable of many filter styles at different cutoff frequencies. For my plug-in it is used for the low cut and high shelf filter described above, which are simply processed one after the other on the current audio sample for each channel Wie VIELE AM ENDE??:\\
+\begin{figure}
+\includegraphics[width=\textwidth]{images/filter_test}
+\caption{Plotted filter test}
+\end{figure}
 
 \begin{lstlisting}[frame=single]
 double updateFilterSample(double sample, AutoVocalCtrlFilter hs,
@@ -126,11 +136,19 @@ When the gain is finally determined it will be converted back to the linear numb
 
 \section{Lookahead}
 
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{images/lookahead_w_o}
+\caption{Gain adaption with and w/o lookahead}
+\end{figure}
+
 To achieve its goal the plug-in is designed to react slow and therefore needs some time adapt on a change in the average signal level. If it multiplies every sample with the gain value calculated form the same sample, the plug-in will be adjusted after the RMS has changed to the new average and the smoothed gain has slowly adapted. This will take some ms and consequently the first part of the alternate signal is not perfectly gained. While in particular this part introduces a new section in a song for example a chorus, it is desirable to have an adapted gain already at this point.\\
 To compensate the adaption time I implemented a simple lookahead feature which allows the plug-in to calculate the gain for the current samples while looking at future samples.  This is realised by a ring buffer with two pointers at different locations. One write pointer to write the current sample transferred from the DAW into the buffer which is also used to determine the gain adaption and one read buffer ahead of it which is pointing on the sample that will be multiplied with the determined gain. To make this possible the gap between both pointers is as large as the set samples of the lookahead (converted from ms) and filled with zeros at the initialisation of the plug-in. In order to avoid that the whole plug-ins output is delayed I use the setLatencySamples()(see code besipel) method from JUCE to  communicate the resulting delay with the embedding DAW. Therefore a correct woking DAW will send the signal earlier to the plug-in and the output remains at the correct position despite the lookahead.\\
 For the development I realised a fader in the UI to adjust the lookahead at runtime but in the final build the amount of samples is constant as I want the plug-in to be as simple to work with as possible. naja und weil ichja gewählt habe aus grund:
 
-BILDER GAIN ADAPTION MIT UND OHNE LOOKAHEAD OK GRAPH UND ARRAY BILD VON RING BUFFER MIT 0en vorher??
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{images/ring_buffer}
+\caption{Initialized ring buffer with read and write pointers}
+\end{figure}
 
 vocals wichtig am Anfang erster push sollte nicht leiser gemacht sein weil vorher laut war oder andersrum
 finale größe von delay sagen LOL

@@ -15,4 +15,8 @@ JUCE is a cross-platform framework for audio applications based on C++. The main
 
 \section{Test environment}
 
+The JUCE framework brings along two ways to run your plug-in. The fastest one is to build the plug-in as standalone which can be done directly from the IDE\footnote{integrated development environment}. The plug-in starts immediately and you can choose the main input and output channels. This is perfect for testing small bug fixes or visual changes. The standalone has its limitation in terms of for example a side chain input as it is not embedded in an surrounding DAW. But for this case JUCE has the Audio Plugin Host as solution. The Audio Plugin Host can host different plug-ins at the same time and visualises all inputs and outputs. It lets you draw connections between those ports and the currently active audio interface of the operating computer. The advantage over a real DAW is that you still get debugging output through runtime.\\
+Still it is reasonably necessary to test it in a real DAW for a realistic environment and to be able to use all considered features for instance writing an automation or comfortably feeding a real backtrack into the side chain input. I used Logic Pro 9 to run my plug-in for the reason that it works with AU plug-ins which are per default supported by JUCE. Due to the custom UI it was still possible to change calculation parameters at runtime.\\
+Before there was a plug-in I have done basic algorithmic tests. Those I used python for, because of its simplicity and great visual possibilities. Therefore I could efficiently try different approaches and visualise if they have done their task correctly.\\
+
 \section{Sources}

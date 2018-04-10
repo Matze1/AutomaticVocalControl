@@ -1,0 +1,21 @@
+\chapter{Optimisation}
+\label{chapter:optimisation}
+
+After finishing the prototype of the plug-in I was interested in comparing the main functionality with the equivalent from WAVES. I wanted to know how likely the results can get with fitting parameters at my version of the gain adaption. Not only to see if I may have forgotten a important part so far but also to find out how flexible my plug-in is and to gather thoughts about how to set my own parameters and constants later on.\\
+
+\section{How}
+
+It would not be very effective to try different picks for the parameters by hand and compare the outcome as there are at least a handful of parameters which can be adjusted to a huge amount of possible combinations. Therefore I had to give this task to the computer.\\
+Conveniently there is the scipy.optimize package for python which deals with optimisation tasks for example the algorithmic minimisation of a problem according to the result of a self defined function.\\
+To make use of this package I primarily transferred the current code of the plug-in from C++ back to python were I just tested algorithmic ideas so far. After the python duplicate was ready to use I wrote a function to compare the resulting audio files after processed with the “Vocal Rider” and my own plug-in. It returns a value describing the deviation.\\
+Through the optimisation process the parameter adjustments of the “Vocal Rider” differed between attempts but stayed constant in the process. The parameters of my plug-in were changed continuously to achieve a preferably small deviation.\\
+
+\section{Circumstances}
+
+In order to let the optimisation algorithm have the option of adjustment on different parts of my plug-in, I declared the loudnessGoal, RMS time, compress time, expand time, gate and lookahead as variables. At start I set a guessed values for each of the parameters and set them in a array which was altered thru optimisation process and fed into my deviation function at every step of it.\\
+For measuring the deviation for the current parameter array my function sums up the squared difference between both resulting audio files at every sample. The result from the “Vocal Rider” was therefore created in the DAW Pro Tools 11. My own implementation is called in the deviation function with the current parameter array.\\
+When the optimisation search is done I feed the outcome into another function which displays the gain adaption from each plug-in in a collective graph. This gives a great overview of the result and remaining diversion of the implementations.\\
+
+\section{Approaches}
+
+The first tries unfortunately did not achieve a reasonable solution. Algorithmically the optimisation tests small variations in the parameter array and watches the outcome. If the initial guess is not well set, the differences are of very little amount in my comparison function and the scipy.minimize algorithm will not know were continue its search. WAUM=?\\

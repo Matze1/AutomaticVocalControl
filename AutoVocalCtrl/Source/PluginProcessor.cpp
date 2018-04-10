@@ -372,7 +372,7 @@ double AutoVocalCtrlAudioProcessor::updateGain(double sample, double lastGn)
 {
     const double g = *loudnessGoal - sample;
     const double co = g < lastGn ? compressTCo:expandTCo;
-    updateAutomation();
+    updateAutomation(); //position hier und im text ändern ;-) damit smoothing mit drin is.
     return clipRange.clipValue((1 - co) * lastGn + co * g);
 }
 
