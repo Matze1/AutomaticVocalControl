@@ -53,6 +53,7 @@ private:
     Slider inputSlider;
     Slider scGainSlider;
     Slider outputSlider;
+    Slider outputGainSlider;
     
     TextButton readButton;
     TextButton detectButton; //verschiedene loudness goal modi in dropdown menü? detect (-> extra button kommt in UI) / SC / selbst einstellen
@@ -77,6 +78,7 @@ private:
     Label inputLabel;
     Label scGainLabel;
     Label outputLabel;
+    Label outputGainLabel;
     
     float oldGainRange = 6.0;
     std::stringstream stream;

@@ -33,11 +33,13 @@ AutoVocalCtrlAudioProcessor::AutoVocalCtrlAudioProcessor()
     addParameter(alpha = new AudioParameterFloat ("alpha", "Alpha", 100.0f, 4000.0f, 1600.0f));
     addParameter(currentGain = new AudioParameterFloat ("currentGain", "CurrentGain", -10.0f, 10.0f, 0.0f));
     addParameter(scGainUI = new AudioParameterFloat ("scGainUI", "SCGainUI", -10.0f, 10.0f, 0.0f));
+    addParameter(oGain = new AudioParameterFloat ("oGain", "OGain", -10.0f, 10.0f, 0.0f));
     addParameter(read = new AudioParameterBool("read","Read",false));
     addParameter(detect = new AudioParameterBool("detect","Detect",false));
     addParameter(sc = new AudioParameterBool("sc","SC",false));
     addParameter(scf = new AudioParameterBool("scf","SCF",true));
     clipRange = Range<double>(-*gainRange, *gainRange);
+    scClipRange = Range<double>(-10.0, 10.0);
     delayBufferLength = 1;
     delayReadPos = 0;
     delayWritePos = 0;
@@ -139,8 +141,8 @@ void AutoVocalCtrlAudioProcessor::updateExpandTCo()
 
 void AutoVocalCtrlAudioProcessor::updateRmsCo()
 {
-    rmsCo = getTimeConstant(40.0);
-    scRmsCo = getTimeConstant(*rmsWindow);
+    rmsCo = getTimeConstant(30.0);
+    scRmsCo = getTimeConstant(30.0);
     scRmsCoFast = getTimeConstant(10.0);
 }
 
@@ -172,7 +174,7 @@ void AutoVocalCtrlAudioProcessor::updateMaxIdleSamples()
 void AutoVocalCtrlAudioProcessor::updatePrivateParameter()
 {
     updateTimeConstants();
-    updateMaxIdleSamples();
+//    updateMaxIdleSamples();
 }
 
 void AutoVocalCtrlAudioProcessor::updateVectors()
@@ -187,6 +189,7 @@ void AutoVocalCtrlAudioProcessor::updateVectors()
             oRms2.push_back(0.0);
             gain.push_back(0.0);
             alphaGain.push_back(0.0);
+            betaGain.push_back(0.0);
             v2bDiff.push_back(0.0);
         }
     } else if (diff < 0) {
@@ -198,6 +201,7 @@ void AutoVocalCtrlAudioProcessor::updateVectors()
             oRms2.pop_back();
             gain.pop_back();
             alphaGain.pop_back();
+            betaGain.pop_back();
             v2bDiff.pop_back();
         }
         
@@ -245,6 +249,8 @@ void AutoVocalCtrlAudioProcessor::prepareToPlay (double sampleRate, int samplesP
     delayBuffer.setSize(2, delayBufferLength);
     delayBuffer.clear();
     updateDelay();
+    maxIdleSamples = sampleRate/2;
+    scMaxIdleSamples = sampleRate*2;
 }
 
 void AutoVocalCtrlAudioProcessor::releaseResources()
@@ -291,9 +297,9 @@ double AutoVocalCtrlAudioProcessor::updateRMS2(double sample, double last, doubl
     // RMS Calculation based on Book: Digital Audio Signal Processing by Udo Zölzer
 }
 
-double AutoVocalCtrlAudioProcessor::updateGate(double rms2, double gate = -33.0)
+double AutoVocalCtrlAudioProcessor::updateGate(double rms2, double gate = -33.0, double gain = 0.0)
 {
-    const double currentRMS = 10.0 * std::log10(rms2 + 1e-10);
+    const double currentRMS = 10.0 * std::log10(rms2 + 1e-10) + gain; //in text ändern zumindest bei sc part
     if (currentRMS < gate)
         return *loudnessGoal;
     else
@@ -355,9 +361,17 @@ double AutoVocalCtrlAudioProcessor::getAlphaGain()
     if (detCount == 0)
         return 0;
     double med = 0;
+    const double cdC = detCount/getMainBusNumInputChannels();
     for (int i = 0; i < getMainBusNumInputChannels(); ++i)
-        med += alphaGain[i] / detCount;
+        med += alphaGain[i] / cdC;
     return med / getMainBusNumInputChannels();
+}
+
+double AutoVocalCtrlAudioProcessor::getBetaGain()
+{
+    if (bDetCount == 0)
+        return 0;
+    return betaGain[0] / (bDetCount/getMainBusNumInputChannels());
 }
 
 void AutoVocalCtrlAudioProcessor::updateLoudnessGoal()
@@ -368,12 +382,37 @@ void AutoVocalCtrlAudioProcessor::updateLoudnessGoal()
     detCount = 0;
 }
 
+void AutoVocalCtrlAudioProcessor::updateSCGain()
+{
+    double med = getBetaGain();
+    *scGainUI = *scGainUI - med;
+    std::fill(betaGain.begin(), betaGain.end(), 0.0);
+    bDetCount = 0;
+}
+
 double AutoVocalCtrlAudioProcessor::updateGain(double sample, double lastGn)
 {
+    if (sample != *loudnessGoal) {
+        idleCount = 0;
+    } else if (idleCount < maxIdleSamples) {
+        idleCount++;
+        return lastGn;
+    }
     const double g = *loudnessGoal - sample;
     const double co = g < lastGn ? compressTCo:expandTCo;
-    updateAutomation(); //position hier und im text ändern ;-) damit smoothing mit drin is.
+    updateAutomation(); //position hier und im text ändern ;-) damit smoothing mit drin is. vielleicht in process block?
     return clipRange.clipValue((1 - co) * lastGn + co * g);
+}
+
+double AutoVocalCtrlAudioProcessor::updateV2BDiff(double sample, double lastGn)
+{
+    if (sample != *loudnessGoal) {
+        scIdleCount = 0;
+    } else if (scIdleCount < scMaxIdleSamples) {
+        scIdleCount++;
+        return lastGn;
+    }
+    return scClipRange.clipValue((1 - alphaCo) * lastGn + alphaCo * (sample - *loudnessGoal));
 }
 
 void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
@@ -422,18 +461,23 @@ void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
                 double g = pow(10, gain[channel]/20);
                 delayData[dpw] = channelData[sample];
                 if (*sc) {
-                    double scGated = updateGate(scRms2Fast[scChannel], newGate);
-                    if (scGated != *loudnessGoal || !*scf)
-                        scGated = updateGate(scRms2[scChannel], newGate);
-                    v2bDiff[channel] = (1 - alphaCo) * v2bDiff[channel] +
-                                       alphaCo * ((scGated + *scGainUI) - *loudnessGoal);
+//                    const double scGatedf = updateGate(scRms2Fast[scChannel], newGate);
+                    const double scGated = updateGate(scRms2[scChannel], newGate, *scGainUI); //vielleciht immer -6 statt newGate
+                    v2bDiff[channel] = updateV2BDiff(scGated, v2bDiff[channel]);
                     g = g * pow(10, v2bDiff[scChannel]/20); //sinnvoll oder mittelwert aus beiden seiten? auch für zeile darüber?
                 }
-                if (*detect && (abs(gain[channel]) > 0.1)) {
-                    alphaGain[channel] += gain[channel];
-                    detCount++;
+                if (*detect) {
+                    if (abs(gain[channel]) > 0.1) {
+                        alphaGain[channel] += gain[channel];
+                        detCount++;
+                    }
+                    if (abs(v2bDiff[channel]) > 0.1) {
+                        betaGain[channel] += v2bDiff[channel];
+                        bDetCount++;
+                    }
                     g = 1.0;
                 }
+                g = g * pow(10, *oGain/20);
                 const double o = delayData[dpr] * g;
                 iRms2[channel] = updateRMS2(updateFilterSample(delayData[dpr], iHighshelf, iLowcut), iRms2[channel], rmsCo);
                 oRms2[channel] = updateRMS2(updateFilterSample(o, oHighshelf, oLowcut), oRms2[channel], rmsCo);

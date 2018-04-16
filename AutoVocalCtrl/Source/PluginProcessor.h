@@ -70,6 +70,7 @@ public:
     void updateDelay();
     void updateAutomation();
     void updateLoudnessGoal();
+    void updateSCGain();
     void automateCurrentGain();
 
     //==============================================================================
@@ -79,6 +80,7 @@ public:
     //==============================================================================
     double getCurrentGainControl();
     double getAlphaGain();
+    double getBetaGain();
     double getInputRMSdB();
     double getScInputRMSdB(int j);
     double getOutputdB();
@@ -86,8 +88,9 @@ public:
     //==============================================================================
     double updateFilterSample(double sample, AutoVocalCtrlFilter hs, AutoVocalCtrlFilter lc);
     double updateRMS2(double sample, double last, double co);
-    double updateGate(double rms2, double gate);
+    double updateGate(double rms2, double gate, double gain);
     double updateGain(double sample, double lastGn);
+    double updateV2BDiff(double sample, double lastGn);
     
     //==============================================================================
     void numChannelsChanged() override;
@@ -104,6 +107,7 @@ public:
     AudioParameterFloat* alpha;
     AudioParameterFloat* currentGain;
     AudioParameterFloat* scGainUI;
+    AudioParameterFloat* oGain;
     AudioParameterBool* read;
     AudioParameterBool* detect;
     AudioParameterBool* sc;
@@ -121,6 +125,7 @@ private:
     int count;
     int count2;
     int detCount;
+    int bDetCount;
     int numSCChannels;
     bool upBefore;
     double lastGain;
@@ -136,6 +141,7 @@ private:
     AutoVocalCtrlFilter iLowcut;
     AutoVocalCtrlFilter iHighshelf;
     Range<double> clipRange;
+    Range<double> scClipRange;
     double currentSampleRate;
     double rmsCo;
     double scRmsCo;
@@ -147,7 +153,10 @@ private:
     double scGain;
     int lastNumInputChannels = 0;
     int maxIdleSamples;
+    int scMaxIdleSamples;
     int idleCount = 0;
+    int scIdleCount = 0;
+    int newIdle = 0;
     std::vector<double> gain;
     std::vector<double> rms2;
     std::vector<double> iRms2;
@@ -155,6 +164,7 @@ private:
     std::vector<double> scRms2Fast;
     std::vector<double> oRms2;
     std::vector<double> alphaGain;
+    std::vector<double> betaGain;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AutoVocalCtrlAudioProcessor)
 };
