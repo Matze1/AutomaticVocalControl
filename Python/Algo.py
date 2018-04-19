@@ -6,6 +6,33 @@ from Filter import Filter
 from Helper import Helper
 
 helper = Helper()
+
+r,d1 = helper.readFile("../Vergleich/ex3in.wav")
+r,d2 = helper.readFile("../Vergleich/ex3out.wav")
+#r,d1 = helper.readFile("../Vergleich/ex3in_26_puffer.wav")
+#r,d2 = helper.readFile("../Vergleich/ex3out_26_puffer.wav")
+#r,d2 = helper.readFile("../Vergleich/ex3out_26_puffer_live.wav")
+#r,d2 = helper.readFile("../Vergleich/ex3out_26_puffer_auto.wav")
+#r,d2 = helper.readFile("../Vergleich/ex3out_26_puffer_own_auto.wav")
+#r,d2 = helper.readFile("../Vergleich/logic_neu_own_auto.wav")
+#r,d2 = helper.readFile("../Vergleich/logic2plugin.wav")
+#r,d1 = helper.readFile("../Vergleich/sine.wav")
+#r,d2 = helper.readFile("../Vergleich/sine-3.wav")
+#r,d1 = helper.readFile("../Vergleich/neu_var_mid.wav")
+#r,d2 = helper.readFile("../Vergleich/neu_var_mid_rider.wav")
+#r,d1 = helper.readFile("../Vergleich/neu_var_short.wav")
+#r,d2 = helper.readFile("../Vergleich/neu_var_short_rider.wav")
+#r,d1 = helper.readFile("../Vergleich/neu_var_lol.wav")
+#r,d2 = helper.readFile("../Vergleich/neu_var_lol_rofl.wav")
+#r,d2 = helper.readFile("../Vergleich/neu_var_lol_rofl_20.wav")
+#r,d1 = helper.readFile("../Vergleich/long.wav")
+#r,d2 = helper.readFile("../Vergleich/long_r.wav")
+#r,d1 = helper.readFile("../Vergleich/supertest1.wav")
+#r,d2 = helper.readFile("../Vergleich/supertest1_r.wav")
+
+cRatio = 1/2
+idleCount = 0
+maxIdleSamples = r/2
 gain = 0.
 rms = 0.
 dpr = 0
@@ -17,6 +44,9 @@ highshelf = Filter()
 cutoff = 38.
 cutoff_hs = 1681.
 test = 0.
+lowcut.set_coefficients("lowcut", cutoff, r, (1. / 2.))
+highshelf.set_coefficients_shelf("highshelf", cutoff_hs, r, 4.)
+delayBufferLength = r
 
 def updateFilterSample(sample):
     global highshelf
@@ -37,10 +67,19 @@ def updateMLS(sample, gate, goal):
         return currentRMS
 
 def updateGain(sample, goal, compressTCo, expandTCo, maxGain):
+    global idleCount
+    global maxIdleSamples
     global gain
-    g = goal - sample;
+    global cRatio
+    if (sample != goal):
+        idleCount = 0
+    elif (idleCount < maxIdleSamples):
+        idleCount = idleCount + 1
+        return gain
+    g = goal - sample
     if (g < gain):
         co = compressTCo
+        g = (goal - sample) * cRatio
     else:
         co = expandTCo
     gain = np.clip(((1 - co) * gain + co * g), -maxGain, maxGain)
@@ -91,40 +130,49 @@ def useAlgorithmOn(rate, data, goal, rmsWindow, compressTime, expandTime, gate, 
     #delaybuffer abziehen???
     return data
 
-r,d1 = helper.readFile("../Vergleich/ex3in.wav")
-r,d2 = helper.readFile("../Vergleich/ex3out.wav")
-#r,d1 = helper.readFile("../Vergleich/ex3in_26_puffer.wav")
-#r,d2 = helper.readFile("../Vergleich/ex3out_26_puffer.wav")
-#r,d2 = helper.readFile("../Vergleich/ex3out_26_puffer_live.wav")
-#r,d2 = helper.readFile("../Vergleich/ex3out_26_puffer_auto.wav")
-#r,d2 = helper.readFile("../Vergleich/ex3out_26_puffer_own_auto.wav")
-#r,d2 = helper.readFile("../Vergleich/logic_neu_own_auto.wav")
-#r,d2 = helper.readFile("../Vergleich/logic2plugin.wav")
-#r,d1 = helper.readFile("../Vergleich/sine.wav")
-#r,d2 = helper.readFile("../Vergleich/sine-3.wav")
+def reRMS(x0, rate):
+    x = np.copy(x0)
+    global rms
+    rms = 0.0
+    avCo = helper.getTimeConstant(20, rate)
+    i = 0
+    for y in x:
+        x[i] = np.sqrt(updateRMS(y, avCo))
+        i += 1
+    return x
+
+d2rms = reRMS(d2,r)
 
 def compareGainCurve(x, displayPS=False):
     global r
     global d1
-    global d2
+    #global d2
+    global d2rms
+    global cRatio
+    cRatio = np.clip(abs(x[5]), 0.0, 1.0)
     print(x)
     d1_copy = np.copy(d1)
-#    d = useAlgorithmOn(r, d1_copy, -19, x[0], x[1], x[2], x[3], 6, x[4])
-    d = useAlgorithmOn(r, d1_copy, x[0], abs(x[1]), abs(x[2]), abs(x[3]), x[4], 6, abs(x[5]))
-#    d = useAlgorithmOn(r, d1_copy, -19, 60, x[0], x[1], -35, 6, x[2])
-#    d = useAlgorithmOn(r, d1_copy, -19, 60, 300, 500, x[0], 6, x[1])
+#    d = useAlgorithmOn(r, d1_copy, x[0], abs(x[1]), abs(x[2]), abs(x[3]), x[4], 6, abs(x[5]))
+    d = useAlgorithmOn(r, d1_copy, x[0], abs(x[1]), abs(x[2]), abs(x[3]), x[4], 6, 0)
     sum = 0
     i = 0
+    #    rms part:
+    d = reRMS(d, r)
     for sample in d:
-        diff = abs(sample - d2[i])
+#        if i > 44100:
+#            diff = (abs(sample - d2rms[i]) * 2)**2
+#        else:
+#            diff = 0
+        diff = (abs(sample - d2rms[i]) * 2)**2
         sum += diff
         i += 1
-    print(sum)
+#    print(sum)
     if displayPS:
         print(sum / d2.size)
 #    return np.sqrt(sum) / d2.size
-    test = sum + x[1]/5
-#    print(test)
+#    test = sum + x[1]/5
+    test = sum * 10
+    print(test)
     return test
 
 def deNull(x0):
@@ -136,17 +184,6 @@ def deNull(x0):
                 x[i] = x[i-1]
             else:
                 x[i] = 1.0
-        i += 1
-    return x
-
-def reRMS(x0, rate):
-    x = np.copy(x0)
-    global rms
-    rms = 0.0
-    avCo = helper.getTimeConstant(20, rate)
-    i = 0
-    for y in x:
-        x[i] = np.sqrt(updateRMS(y, avCo))
         i += 1
     return x
 
@@ -173,24 +210,27 @@ def specialDeNull(x0, x1, x2):
                 x2[i] = 0.0
         i += 1
 
-def gainCurveGraph(x, delaySamples):
+def gainCurveGraph(x, delaySamples = 0):
     global rms
     rms = 0.0
     global r
     global d1
     global d2
+    global cRatio
+    cRatio = np.clip(abs(x[5]), 0.0, 1.0)
 #    d2 = np.resize(d2,(1,d1.size))[0]
-    if (delaySamples > 0):
-        d2 = d2[:-delaySamples]
-        d2 = np.append(np.zeros(delaySamples),d2)
-    elif (delaySamples < 0):
-        d2 = d2[abs(delaySamples):]
-        d2 = np.append(d2, np.zeros(abs(delaySamples)))
+#    if (delaySamples > 0):
+#        d2 = d2[:-delaySamples]
+#        d2 = np.append(np.zeros(delaySamples),d2)
+#    elif (delaySamples < 0):
+#        d2 = d2[abs(delaySamples):]
+#        d2 = np.append(d2, np.zeros(abs(delaySamples)))
     d1_copy = np.copy(d1)
-    d3 = useAlgorithmOn(r, d1_copy, x[0], abs(x[1]), abs(x[2]), abs(x[3]), x[4], 6, abs(x[5]))
+    d3 = useAlgorithmOn(r, d1_copy, x[0], abs(x[1]), abs(x[2]), abs(x[3]), x[4], 6, 0)
     d1_abs = abs(d1)
 #    d1_abs[d1_abs == 0] = -1e-10
-    d2_abs = abs(d2)
+    d2_copy = np.copy(d2)
+    d2_abs = abs(d2_copy)
     d3_abs = abs(d3)
     d1_rms = reRMS(d1_abs, r)
     d2_rms = reRMS(d2_abs, r)
@@ -223,9 +263,6 @@ def gainCurveGraph(x, delaySamples):
     plt.show()
 
 
-lowcut.set_coefficients("lowcut", cutoff, r, (1. / 2.))
-highshelf.set_coefficients_shelf("highshelf", cutoff_hs, r, 4.)
-delayBufferLength = r
 #x=rmsWindow, compressTime, expandTime, gate, delay
 #x0 = np.array([60, 50, 110, -28, 50])
 #bnds = ((10,120),(1,200),(10,300),(-50,-20),(20,150))
@@ -242,6 +279,10 @@ delayBufferLength = r
 
 #bnds = (slice(-29.0, -27.0, 1.0), slice(5.0, 7.0, 2.0), slice(100.0, 130.0, 10.0), slice(2000.0, 2100.0, 22.0), slice(-35.0, -33.0, 1.0), slice(0.0, 10.0, 5.0))
 
+#bnds = (slice(-22.0, -20.0, 1.0), slice(3.0, 5.0, 1.0), slice(290.0, 310.0, 10.0), slice(2700.0, 2900.0, 100.0), slice(-30.0, -25.0, 2.0), slice(0.0, 1.0, 1.0))
+
+#bnds = (slice(-24.0, -22.0, 1.0), slice(2.0, 4.0, 1.0), slice(90, 110.0, 10.0), slice(1500.0, 1700.0, 100.0), slice(-32.0, -28.0, 2.0), slice(0.3, 0.7, 0.1))
+
 #x0 = np.array([-28.0, 50.0])
 #x1 = np.array([-17.0, 60.0])
 #compareGainCurve(x0)
@@ -251,7 +292,20 @@ delayBufferLength = r
 #print(res[0])
 #print(res[1])
 #compareGainCurve(res[0], True)
+#x0 = np.array([-28.38, 11.49, 120.14, 1906.79, -33.42, 0.0])
+#x0 = np.array([-20, 0.0, 75.97, 1800, -21.52, 0.0])
+#x0 = np.array([-26, 60.0, 300, 1200, -32, 0.0])
+#x0 = np.array([-26, 60.0, 600, 1200, -32, 0.0])
+#x0 = np.array([-20, 3.93, 154.08, 2800, -32.34, 0.0])
+#x0 = np.array([-21, 3.93, 300.08, 2800, -30.0, 0.0])
+#x0 = np.array([-20, 3, 133, 1230, -24.0, 0.0])
+#x0 = np.array([-23.5, 3, 100, 1600, -30.0, 0.0])
+#ab hier mit neuem ratio statt lookahead
+#x0 = np.array([-23.5, 1, 90, 500, -29.5, 1])
+x0 = np.array([-29.2, 2, 56, 1848.8, -32, 0.28])
 #gainCurveGraph(res[0])
+#compareGainCurve(x0, True)
+gainCurveGraph(x0)
 #bnds = ((-32.0, -26.0), (1.0, 30.0), (90.0, 150.0), (1900.0, 2100.0), (-35.0, -30.0), (0.0, 10.0))
 #res = optmze.minimize(compareGainCurve, x0, bounds=bnds, options={'disp': True, 'eps': 0.5})
 #res = optmze.minimize(compareGainCurve, x0, bounds=bnds, options={'disp': True, 'eps': 20.0})
@@ -265,9 +319,9 @@ delayBufferLength = r
 #gainCurveGraph(x1)
 
 #x1 = np.array([-27.63, 5.01, 113.63, 1604.81, -33.73, 5.76])
-x1 = np.array([-28.22, 5.65, 110.14, 2044.41, -33.94, 0.])
+#x1 = np.array([-28.22, 5.65, 110.14, 2044.41, -33.94, 0.])
 #compareGainCurve(x1, True)
-gainCurveGraph(x1, 0)
+#gainCurveGraph(x1, 0)
 
 
 #d = useAlgorithmOn(r, d, -23, 100, 500, 500, -35, 6, 100)

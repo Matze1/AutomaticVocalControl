@@ -308,7 +308,7 @@ double AutoVocalCtrlAudioProcessor::updateGate(double rms2, double gate = -33.0,
 
 void AutoVocalCtrlAudioProcessor::automateCurrentGain()
 {
-    *currentGain = getCurrentGainControl();
+//    *currentGain = getCurrentGainControl();
     beginParameterChangeGesture(currentGain->getParameterIndex());
     endParameterChangeGesture(currentGain->getParameterIndex());
 }
@@ -316,13 +316,14 @@ void AutoVocalCtrlAudioProcessor::automateCurrentGain()
 void AutoVocalCtrlAudioProcessor::updateAutomation()
 {
     const double currGain = getCurrentGainControl();
-    const bool up = lastGain < currGain;
-    const bool dChange = up != upBefore;
-    const bool jump = 1.0 < abs(gainAtPoint - currGain);
-//    const bool waited = count > (currentSampleRate / 4);
-    if (dChange || jump) {
+//    const bool up = lastGain < currGain;
+//    const bool dChange = up != upBefore;
+    const bool jump = 0.1 < abs(gainAtPoint - currGain);
+    const bool waited = count > (currentSampleRate * 0.08);
+    *currentGain = getCurrentGainControl();
+    if (waited && jump) {
         automateCurrentGain();
-        upBefore = up;
+//        upBefore = up;
         gainAtPoint = currGain;
         count = 0;
     }
@@ -400,7 +401,6 @@ double AutoVocalCtrlAudioProcessor::updateGain(double sample, double lastGn)
     }
     const double g = *loudnessGoal - sample;
     const double co = g < lastGn ? compressTCo:expandTCo;
-    updateAutomation(); //position hier und im text ändern ;-) damit smoothing mit drin is. vielleicht in process block?
     return clipRange.clipValue((1 - co) * lastGn + co * g);
 }
 
@@ -487,6 +487,9 @@ void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
                     dpr = 0;
                 if (++dpw >= delayBufferLength)
                     dpw = 0;
+                
+                //neue position auch im text ändern:
+                updateAutomation();
             }
         }
     }
