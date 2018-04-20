@@ -64,7 +64,6 @@ public:
     void updateBetaCo();
     void updateTimeConstants();
     void updatePrivateParameter();
-    void updateMaxIdleSamples();
     void updateVectors();
     void updateClipRange();
     void updateDelay();
@@ -72,6 +71,7 @@ public:
     void updateLoudnessGoal();
     void updateSCGain();
     void automateCurrentGain();
+    void setLoudnessGoal(double newGoal);
 
     //==============================================================================
     void getStateInformation (MemoryBlock& destData) override;
@@ -87,7 +87,7 @@ public:
     
     //==============================================================================
     double updateFilterSample(double sample, AutoVocalCtrlFilter hs, AutoVocalCtrlFilter lc);
-    double updateRMS2(double sample, double last, double co);
+    double updateRMS2(double sample, double last);
     double updateGate(double rms2, double gate, double gain);
     double updateGain(double sample, double lastGn);
     double updateV2BDiff(double sample, double lastGn);
@@ -96,23 +96,17 @@ public:
     void numChannelsChanged() override;
     
     //==============================================================================
-    AudioParameterFloat* rmsWindow;
-    AudioParameterFloat* expandTime;
-    AudioParameterFloat* compressTime;
     AudioParameterFloat* loudnessGoal;
     AudioParameterFloat* gainRange;
-    AudioParameterFloat* maxIdleTime;
-    AudioParameterFloat* gate1;
-    AudioParameterFloat* delayLength;
-    AudioParameterFloat* alpha;
     AudioParameterFloat* currentGain;
     AudioParameterFloat* scGainUI;
     AudioParameterFloat* oGain;
     AudioParameterBool* read;
     AudioParameterBool* detect;
+    AudioParameterBool* scDetect;
     AudioParameterBool* sc;
-    AudioParameterBool* scf;
     std::vector<double> v2bDiff;
+    bool refresh;
     
 
 private:
@@ -121,7 +115,11 @@ private:
     int delayBufferLength;
     int delayReadPos, delayWritePos;
     double maxDelayInSec = 1.0; // kann dann später auch weg ;-) wenn nicht mehr änderbar
-    
+    double expandTime;
+    double compressTime;
+    double delayLength;
+    double alpha;
+    double newGate;
     int count;
     int count2;
     int detCount;

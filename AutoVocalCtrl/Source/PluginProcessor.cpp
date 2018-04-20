@@ -22,30 +22,29 @@ AutoVocalCtrlAudioProcessor::AutoVocalCtrlAudioProcessor()
                        )
 #endif
 {
-    addParameter(rmsWindow = new AudioParameterFloat ("rmsWindow", "RMSWindow", 10.0f, 500.0f, 220.0f));
-    addParameter(expandTime = new AudioParameterFloat ("expandTime", "ExpandTime", 1.0f, 3000.0f, 1500.0f));
-    addParameter(compressTime = new AudioParameterFloat ("compressTime", "CompressTime", 1.0f, 1000.0f, 600.0f));
+    expandTime = 1500.0;
+    compressTime = 600.0;
+    delayLength = 50.0;
+    alpha = 1600.0;
     addParameter(loudnessGoal = new AudioParameterFloat ("loudnessGoal", "LoudnessGoal", -60.0f, 0.0f, -20.0f));
     addParameter(gainRange = new AudioParameterFloat ("gainRange", "GainRange", 0.0f, 10.0f, 6.0f));
-    addParameter(maxIdleTime = new AudioParameterFloat ("maxIdleTime", "MaxIdleTime", 0.0f, 500.0f, 0.0f));
-    addParameter(gate1 = new AudioParameterFloat ("gate1", "Gate1", -100.0f, -10.0f, -33.0f));
-    addParameter(delayLength = new AudioParameterFloat ("delayLength", "DelayLength", 0.0f, (maxDelayInSec * 1000.0f) - 1.0f, 60.0f));
-    addParameter(alpha = new AudioParameterFloat ("alpha", "Alpha", 100.0f, 4000.0f, 1600.0f));
     addParameter(currentGain = new AudioParameterFloat ("currentGain", "CurrentGain", -10.0f, 10.0f, 0.0f));
     addParameter(scGainUI = new AudioParameterFloat ("scGainUI", "SCGainUI", -10.0f, 10.0f, 0.0f));
     addParameter(oGain = new AudioParameterFloat ("oGain", "OGain", -10.0f, 10.0f, 0.0f));
     addParameter(read = new AudioParameterBool("read","Read",false));
     addParameter(detect = new AudioParameterBool("detect","Detect",false));
+    addParameter(scDetect = new AudioParameterBool("scDetect","SCDetect",false));
     addParameter(sc = new AudioParameterBool("sc","SC",false));
-    addParameter(scf = new AudioParameterBool("scf","SCF",true));
     clipRange = Range<double>(-*gainRange, *gainRange);
     scClipRange = Range<double>(-10.0, 10.0);
+    newGate = *loudnessGoal - *gainRange;
     delayBufferLength = 1;
     delayReadPos = 0;
     delayWritePos = 0;
     count = 0;
     detCount = 0;
     upBefore = false;
+    refresh = true;
 }
 
 AutoVocalCtrlAudioProcessor::~AutoVocalCtrlAudioProcessor()
@@ -131,29 +130,27 @@ int AutoVocalCtrlAudioProcessor::msToSamples(float ms)
 
 void AutoVocalCtrlAudioProcessor::updateCompressTCo()
 {
-    compressTCo = getTimeConstant(*compressTime);
+    compressTCo = getTimeConstant(compressTime);
 }
 
 void AutoVocalCtrlAudioProcessor::updateExpandTCo()
 {
-    expandTCo = getTimeConstant(*expandTime);
+    expandTCo = getTimeConstant(expandTime);
 }
 
 void AutoVocalCtrlAudioProcessor::updateRmsCo()
 {
     rmsCo = getTimeConstant(30.0);
-    scRmsCo = getTimeConstant(30.0);
-    scRmsCoFast = getTimeConstant(10.0);
 }
 
 void AutoVocalCtrlAudioProcessor::updateAlphaCo()
 {
-    alphaCo = getTimeConstant(*alpha);
+    alphaCo = getTimeConstant(alpha);
 }
 
 void AutoVocalCtrlAudioProcessor::updateBetaCo()
 {
-    double sec = (*alpha / 1000.);
+    double sec = (alpha / 1000.);
     betaCo = 1.f - exp(-2.2*(1./sec)/5.);
 }
 
@@ -164,11 +161,6 @@ void AutoVocalCtrlAudioProcessor::updateTimeConstants()
     updateCompressTCo();
     updateAlphaCo();
     updateBetaCo();
-}
-
-void AutoVocalCtrlAudioProcessor::updateMaxIdleSamples()
-{
-    maxIdleSamples = msToSamples(*maxIdleTime);
 }
 
 void AutoVocalCtrlAudioProcessor::updatePrivateParameter()
@@ -212,6 +204,7 @@ void AutoVocalCtrlAudioProcessor::updateVectors()
 void AutoVocalCtrlAudioProcessor::updateClipRange()
 {
     clipRange = Range<double>(-*gainRange, *gainRange);
+    refresh = true;
 }
 
 
@@ -222,7 +215,7 @@ void AutoVocalCtrlAudioProcessor::numChannelsChanged()
 
 void AutoVocalCtrlAudioProcessor::updateDelay()
 {
-    int delayInSamples = msToSamples(*delayLength);
+    int delayInSamples = msToSamples(delayLength);
     delayReadPos = (int)(delayWritePos - delayInSamples + delayBufferLength) % delayBufferLength;
     setLatencySamples(delayInSamples);
 }
@@ -291,9 +284,9 @@ double AutoVocalCtrlAudioProcessor::updateFilterSample(double sample, AutoVocalC
     return hs.process(lc.process(sample)); //eingehen darauf das sich über die zeit selbst zurückstezen?? wie lange dauert?
 }
 
-double AutoVocalCtrlAudioProcessor::updateRMS2(double sample, double last, double co)
+double AutoVocalCtrlAudioProcessor::updateRMS2(double sample, double last)
 {
-    return (1. - co) * last + co * (sample * sample);
+    return (1. - rmsCo) * last + rmsCo * (sample * sample);
     // RMS Calculation based on Book: Digital Audio Signal Processing by Udo Zölzer
 }
 
@@ -375,10 +368,16 @@ double AutoVocalCtrlAudioProcessor::getBetaGain()
     return betaGain[0] / (bDetCount/getMainBusNumInputChannels());
 }
 
+void AutoVocalCtrlAudioProcessor::setLoudnessGoal(double newGoal)
+{
+    *loudnessGoal = newGoal;
+    newGate = *loudnessGoal - *gainRange;
+}
+
 void AutoVocalCtrlAudioProcessor::updateLoudnessGoal()
 {
     double med = getAlphaGain();
-    *loudnessGoal = *loudnessGoal - med;
+    setLoudnessGoal(*loudnessGoal - med);
     std::fill(alphaGain.begin(), alphaGain.end(), 0.0);
     detCount = 0;
 }
@@ -446,23 +445,19 @@ void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
             if (*read) {
                 gain[channel] = *currentGain;
                 const double g = pow(10, gain[channel]/20);
-                oRms2[channel] = updateRMS2(channelData[sample] * g, oRms2[channel], rmsCo);
+                oRms2[channel] = updateRMS2(channelData[sample] * g, oRms2[channel]);
                 channelData[sample] = channelData[sample] * g; //HIER NOCH CLIPPEN!?
             } else {
                 if (*sc) {
                     scRms2[channel] = updateRMS2(updateFilterSample(sideChainData[sample], scHighshelf, scLowcut),
-                                                 scRms2[scChannel], scRmsCo);
-                    scRms2Fast[channel] = updateRMS2(updateFilterSample(sideChainData[sample], scfHighshelf, scfLowcut),
-                                                 scRms2Fast[scChannel], scRmsCoFast);
+                                                 scRms2[scChannel]);
                 }
-                rms2[channel] = updateRMS2(updateFilterSample(channelData[sample], highshelf, lowcut), rms2[channel], rmsCo);
-                const double newGate = *loudnessGoal - *gainRange;
+                rms2[channel] = updateRMS2(updateFilterSample(channelData[sample], highshelf, lowcut), rms2[channel]);
                 gain[channel] = updateGain(updateGate(rms2[channel], newGate), gain[channel]);
                 double g = pow(10, gain[channel]/20);
                 delayData[dpw] = channelData[sample];
                 if (*sc) {
-//                    const double scGatedf = updateGate(scRms2Fast[scChannel], newGate);
-                    const double scGated = updateGate(scRms2[scChannel], newGate, *scGainUI); //vielleciht immer -6 statt newGate
+                    const double scGated = updateGate(scRms2[scChannel], *loudnessGoal - 6.0, *scGainUI); //vielleciht immer -6 statt newGate
                     v2bDiff[channel] = updateV2BDiff(scGated, v2bDiff[channel]);
                     g = g * pow(10, v2bDiff[scChannel]/20); //sinnvoll oder mittelwert aus beiden seiten? auch für zeile darüber?
                 }
@@ -471,6 +466,9 @@ void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
                         alphaGain[channel] += gain[channel];
                         detCount++;
                     }
+                    g = 1.0;
+                }
+                if (*scDetect) {
                     if (abs(v2bDiff[channel]) > 0.1) {
                         betaGain[channel] += v2bDiff[channel];
                         bDetCount++;
@@ -479,8 +477,8 @@ void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
                 }
                 g = g * pow(10, *oGain/20);
                 const double o = delayData[dpr] * g;
-                iRms2[channel] = updateRMS2(updateFilterSample(delayData[dpr], iHighshelf, iLowcut), iRms2[channel], rmsCo);
-                oRms2[channel] = updateRMS2(updateFilterSample(o, oHighshelf, oLowcut), oRms2[channel], rmsCo);
+                iRms2[channel] = updateRMS2(updateFilterSample(delayData[dpr], iHighshelf, iLowcut), iRms2[channel]);
+                oRms2[channel] = updateRMS2(updateFilterSample(o, oHighshelf, oLowcut), oRms2[channel]);
                 channelData[sample] = o;
                 
                 if (++dpr >= delayBufferLength)
@@ -512,15 +510,36 @@ AudioProcessorEditor* AutoVocalCtrlAudioProcessor::createEditor()
 //==============================================================================
 void AutoVocalCtrlAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    ScopedPointer<XmlElement> xml (new XmlElement ("AutoVocalCtrl"));
+    xml->setAttribute ("sc", (bool) *sc);
+    xml->setAttribute ("read", (bool) *read);
+    xml->setAttribute ("scDetect", (bool) *scDetect);
+    xml->setAttribute ("detect", (bool) *detect);
+    xml->setAttribute ("loudnessGoal", (float) *loudnessGoal);
+    xml->setAttribute ("gainRange", (float) *gainRange);
+    xml->setAttribute ("scGainUI", (float) *scGainUI);
+    xml->setAttribute ("oGain", (float) *oGain);
+    copyXmlToBinary (*xml, destData);
 }
 
 void AutoVocalCtrlAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+    ScopedPointer<XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
+    if (xmlState != nullptr)
+    {
+        if (xmlState->hasTagName ("AutoVocalCtrl"))
+        {
+            *sc = (float) xmlState->getDoubleAttribute ("sc", 0.);
+            *read = (float) xmlState->getDoubleAttribute ("read", 0.);
+            *scDetect = (float) xmlState->getDoubleAttribute ("scDetect", 5.);
+            *detect = (float) xmlState->getDoubleAttribute ("detect", 200.);
+            *loudnessGoal = (float) xmlState->getDoubleAttribute ("loudnessGoal", 60.);
+            *gainRange = (float) xmlState->getDoubleAttribute ("gainRange", 0.);
+            *scGainUI = (float) xmlState->getDoubleAttribute ("scGainUI", 0.);
+            *oGain = (float) xmlState->getDoubleAttribute ("oGain", 1.);
+        }
+    }
+    refresh = true;
 }
 
 //==============================================================================
