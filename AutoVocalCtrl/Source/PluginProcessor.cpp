@@ -398,8 +398,14 @@ double AutoVocalCtrlAudioProcessor::updateGain(double sample, double lastGn)
         idleCount++;
         return lastGn;
     }
-    const double g = *loudnessGoal - sample;
-    const double co = g < lastGn ? compressTCo:expandTCo;
+    double g = *loudnessGoal - sample;
+//    const double co = g < lastGn ? compressTCo:expandTCo;
+    double co;
+    if (g < lastGn) {
+        g = g * 0.66;
+        co = compressTCo;
+    } else
+        co = expandTCo;
     return clipRange.clipValue((1 - co) * lastGn + co * g);
 }
 
