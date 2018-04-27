@@ -72,7 +72,7 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     outputGainSlider.setValue(processor.oGain->get());
     outputGainSlider.addListener(this);
     
-    loudnessGoalLabel.setText ("Gole", dontSendNotification);
+    loudnessGoalLabel.setText ("Goal", dontSendNotification);
     loudnessGoalLabel.attachToComponent(&loudnessGoalSlider, false);
     
     gainRangeLabel.setText ("RNG", dontSendNotification);

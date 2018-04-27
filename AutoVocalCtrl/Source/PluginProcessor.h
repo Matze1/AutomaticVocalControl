@@ -98,7 +98,7 @@ public:
     //==============================================================================
     AudioParameterFloat* loudnessGoal;
     AudioParameterFloat* gainRange;
-    AudioParameterFloat* currentGain;
+    AudioParameterFloat* automationGain;
     AudioParameterFloat* scGainUI;
     AudioParameterFloat* oGain;
     AudioParameterBool* read;

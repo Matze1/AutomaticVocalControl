@@ -28,7 +28,7 @@ AutoVocalCtrlAudioProcessor::AutoVocalCtrlAudioProcessor()
     alpha = 1600.0;
     addParameter(loudnessGoal = new AudioParameterFloat ("loudnessGoal", "LoudnessGoal", -60.0f, 0.0f, -20.0f));
     addParameter(gainRange = new AudioParameterFloat ("gainRange", "GainRange", 0.0f, 10.0f, 6.0f));
-    addParameter(currentGain = new AudioParameterFloat ("currentGain", "CurrentGain", -10.0f, 10.0f, 0.0f));
+    addParameter(automationGain = new AudioParameterFloat ("automationGain", "AutomationGain", -15.0f, 15.0f, 0.0f));
     addParameter(scGainUI = new AudioParameterFloat ("scGainUI", "SCGainUI", -10.0f, 10.0f, 0.0f));
     addParameter(oGain = new AudioParameterFloat ("oGain", "OGain", -10.0f, 10.0f, 0.0f));
     addParameter(read = new AudioParameterBool("read","Read",false));
@@ -302,8 +302,8 @@ double AutoVocalCtrlAudioProcessor::updateGate(double rms2, double gate = -33.0,
 void AutoVocalCtrlAudioProcessor::automateCurrentGain()
 {
 //    *currentGain = getCurrentGainControl();
-    beginParameterChangeGesture(currentGain->getParameterIndex());
-    endParameterChangeGesture(currentGain->getParameterIndex());
+    beginParameterChangeGesture(automationGain->getParameterIndex());
+    endParameterChangeGesture(automationGain->getParameterIndex());
 }
 
 void AutoVocalCtrlAudioProcessor::updateAutomation()
@@ -313,7 +313,7 @@ void AutoVocalCtrlAudioProcessor::updateAutomation()
 //    const bool dChange = up != upBefore;
     const bool jump = 0.1 < abs(gainAtPoint - currGain);
     const bool waited = count > (currentSampleRate * 0.08);
-    *currentGain = getCurrentGainControl();
+    *automationGain = getCurrentGainControl() + v2bDiff[0];
     if (waited && jump) {
         automateCurrentGain();
 //        upBefore = up;
@@ -449,7 +449,7 @@ void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
         
         for (int sample = 0; sample < mainInputOutput.getNumSamples(); ++sample) {
             if (*read) {
-                gain[channel] = *currentGain;
+                gain[channel] = *automationGain;
                 const double g = pow(10, gain[channel]/20);
                 oRms2[channel] = updateRMS2(channelData[sample] * g, oRms2[channel]);
                 channelData[sample] = channelData[sample] * g; //HIER NOCH CLIPPEN!?
@@ -463,7 +463,7 @@ void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
                 double g = pow(10, gain[channel]/20);
                 delayData[dpw] = channelData[sample];
                 if (*sc) {
-                    const double scGated = updateGate(scRms2[scChannel], *loudnessGoal - 6.0, *scGainUI); //vielleciht immer -6 statt newGate
+                    const double scGated = updateGate(scRms2[scChannel], *loudnessGoal - 6.0, *scGainUI);
                     v2bDiff[channel] = updateV2BDiff(scGated, v2bDiff[channel]);
                     g = g * pow(10, v2bDiff[scChannel]/20); //sinnvoll oder mittelwert aus beiden seiten? auch für zeile darüber?
                 }
@@ -557,6 +557,9 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 
 double AutoVocalCtrlAudioProcessor::getCurrentGainControl()
 {
+    if (*read) {
+        return *automationGain;
+    }
     double gainControl = 0.0;
     for (int i = 0; i < getMainBusNumInputChannels(); i++) {
         gainControl += gain[i];
