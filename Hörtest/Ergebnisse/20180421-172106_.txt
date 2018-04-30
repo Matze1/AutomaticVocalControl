@@ -1,0 +1,27 @@
+[{"TestID":"vk1_leise","Runtime":68412,"rating":{"1":12,"2":100,"3":100,"Reference":99},"filename":{"1":"audio/1_leise_anchor.wav","2":"audio/1_leise_sc.wav","3":"audio/1_leise_leise.wav","Reference":"audio/1_leise_oc.wav"}},
+
+{"TestID":"vk1_break","Runtime":65262,"rating":{"1":0,"2":40,"3":72,"Reference":73},"filename":{"1":"audio/1_break_anchor.wav","2":"audio/1_break_leise.wav","3":"audio/1_break_sc.wav","Reference":"audio/1_break_oc.wav"}},
+
+{"TestID":"vk2_laut_break","Runtime":54162,"rating":{"1":100,"2":93,"3":71,"Reference":93},"filename":{"1":"audio/2_laut_break_sc.wav","2":"audio/2_laut_break_laut.wav","3":"audio/2_laut_break_anchor.wav","Reference":"audio/2_laut_break_oc.wav"}},
+
+{"TestID":"vk3_uebergang","Runtime":114212,"rating":{"1":100,"2":0,"3":100,"Reference":81},"filename":{"1":"audio/3_uebergang_sc.wav","2":"audio/3_uebergang_anchor.wav","3":"audio/3_uebergang_laut.wav","Reference":"audio/3_uebergang_oc.wav"}},
+
+{"TestID":"l1_leise","Runtime":151474,"rating":{"1":19,"2":100,"3":100,"Reference":100},"filename":{"1":"audio/1_leise_anchor.wav","2":"audio/1_leise_sc.wav","3":"audio/1_leise_leise.wav","Reference":"audio/1_leise_oc.wav"}},
+
+{"TestID":"l1_laut","Runtime":63136,"rating":{"1":0,"2":50,"3":72,"Reference":99},"filename":{"1":"audio/1_laut_anchor.wav","2":"audio/1_laut_leise.wav","3":"audio/1_laut_sc.wav","Reference":"audio/1_laut_oc.wav"}},
+
+{"TestID":"l1_break","Runtime":95942,"rating":{"1":12,"2":51,"3":81,"Reference":99},"filename":{"1":"audio/1_break_anchor.wav","2":"audio/1_break_leise.wav","3":"audio/1_break_sc.wav","Reference":"audio/1_break_oc.wav"}},
+
+{"TestID":"l1_uebergang","Runtime":79684,"rating":{"1":22,"2":78,"3":60,"Reference":89},"filename":{"1":"audio/1_uebergang_anchor.wav","2":"audio/1_uebergang_sc.wav","3":"audio/1_uebergang_leise.wav","Reference":"audio/1_uebergang_oc.wav"}},
+
+{"TestID":"l2_leise","Runtime":77346,"rating":{"1":74,"2":0,"3":82,"Reference":85},"filename":{"1":"audio/2_leise_laut.wav","2":"audio/2_leise_anchor.wav","3":"audio/2_leise_sc.wav","Reference":"audio/2_leise_oc.wav"}},
+
+{"TestID":"l2_laut_break","Runtime":61838,"rating":{"1":95,"2":95,"3":9,"Reference":95},"filename":{"1":"audio/2_laut_break_sc.wav","2":"audio/2_laut_break_laut.wav","3":"audio/2_laut_break_anchor.wav","Reference":"audio/2_laut_break_oc.wav"}},
+
+{"TestID":"l2_uebergang","Runtime":100946,"rating":{"1":38,"2":0,"3":20,"Reference":60},"filename":{"1":"audio/2_uebergang_sc.wav","2":"audio/2_uebergang_laut.wav","3":"audio/2_uebergang_anchor.wav","Reference":"audio/2_uebergang_oc.wav"}},
+
+{"TestID":"l3_uebergang","Runtime":110916,"rating":{"1":76,"2":18,"3":33,"Reference":82},"filename":{"1":"audio/3_uebergang_sc.wav","2":"audio/3_uebergang_anchor.wav","3":"audio/3_uebergang_laut.wav","Reference":"audio/3_uebergang_oc.wav"}},
+
+{"TestID":"l3_laut","Runtime":63422,"rating":{"1":51,"2":0,"3":76,"Reference":64},"filename":{"1":"audio/3_laut_sc.wav","2":"audio/3_laut_anchor.wav","3":"audio/3_laut_laut.wav","Reference":"audio/3_laut_oc.wav"}},
+
+{"TestID":"l3_leise","Runtime":62164,"rating":{"1":91,"2":0,"3":22,"Reference":71},"filename":{"1":"audio/3_leise_sc.wav","2":"audio/3_leise_anchor.wav","3":"audio/3_leise_laut.wav","Reference":"audio/3_leise_oc.wav"}},{"UserName":"","UserEmail":"","UserComment":"Your comment..."}]
