@@ -17,28 +17,48 @@ The outcome of finally 18 test candidates was transferred into a table and subse
 \section{Vocal Level}
 
 Due to the initialisation of the different set plug-ins for the test vocal tracks, the audio clips from the beginning of the songs have similar backtrack/vocal relations. Especially the oracle track and the plug-in without side chain have the same outcome at start. Despite the additional influence of the side chain algorithm the plug-in with the side chain feature enabled was ranked very close to the other two. The backtrack/vocal relation was judged not even differing a whole percent on average from the plug-in without side chain. As follows the side chain feature seems to have no bad influence on the level outcome in comparison to a well gained (using the output gain to compensate the level gap between backtrack and vocals) plug-in without side chain.\\
-At a backtrack level change the side chain feature has to adapt the level of the outcome and the plug-in without side chain will stay on the same output gain. As expected the vocal level results at backtrack level changes from the plug-in with side chain enabled were rated closer to the optimal reference. In average the side chain feature got the according test snippets rated 29\% closer to 100\% similarity with the reference as the plug-in without this feature. This average rating is very close to the rating of the reference copy. As consequence it is to conclude that the side chain feature leads to gain automations with similar results like a mixing engineer would draw. Additionally a advantage over the plug-in without a side chain input can be noticeably observed.\\
-The audio clips with the vocal level already adapted by the side chain feature got ratings with even more advantage over the the plug-in without side chain. In average the side chain enabled plug-in was 35\% closer to the optimal result for each of those test files.\\
+At a backtrack level change the side chain feature has to adapt the level of the vocals and the plug-in without side chain will stay on the same output gain. As expected the vocal level results at backtrack level changes from the plug-in with side chain enabled were rated closer to the optimal reference. In average the side chain feature got the according test snippets rated 29\% closer to 100\% similarity with the reference as the plug-in without this feature. This average rating is very close to the rating of the reference copy. As consequence it is to conclude that the side chain feature leads to gain automations with similar results like a mixing engineer would draw. Additionally a advantage over the plug-in without a side chain input can be observed.\\
+The audio clips after the backtrack level change, with the vocal level already adapted by the side chain feature, got ratings with even more advantage over the the plug-in without a side chain input. In average the side chain enabled plug-in was 35\% closer to the optimal result for each of those test files.\\
 At instrumental breaks the ratings for the side chain adaption where about 5\% behind the total average but still better than the plug-in without side chain.\\
 In total the similarity to the reference in terms of vocal/backtrack relation was rated 62\% for the plug-in without side chain. The side chain enabled plug-in got with an average value of 84\% very close to the copy of the optimal reference which was rated with 87\% similarity to itself on average.\\
 
 \section{Comprehensibility}
 
+Enhancing the comprehensibility and clarity of the vocals is a effect of the prototype plug-in in a professional mix as the vocals with lesser dynamics have fewer or no parts which are getting lost in a backtrack due to sectional lower loudness. Therefore it was important to test if the advanced comprehensibility and clarity of the vocals is decreased by the side chain feature which alters the outcome with an additional gain. As the relevant testing was done with audio snippets from the beginning of the song where the plug-in without side chain was initialised for the backtrack level, the question was if the additional side chain gain would have a bad effect or get similar results in comprehensibility and clarity.\\
+In the according tests the participants had to rate comprehensibility and clarity also in comparison to a reference but with the exception that better clarity was rated with 100\% too. As result of the tests both main testimonials where rated for 90\% clarity in average. As conclusion the side chain feature does not seem to have a bad influence on clarity and comprehensibility as it got the same average test results as the plug-in without this feature.\\
+
 \section{Result}
+
+All in all the side chain feature proofed it self well in the accomplished testing. The clarity and comprehensibility of vocals does not seem to be effected in bad manners by the enabled feature. In terms of backtrack level adaption it got the expected advantage, over the plug-in without this feature, verified (see table 6.1) and even rated close to the optimal drawn level automation with oracle knowledge.\\
+
+\begin{table}[H]
+\centering
+	\begin{tabular}{ p{2cm} | p{3.5cm} | p{2cm} | p{2.5cm} | p{2cm} }
+		& comprehensibility & \multicolumn{3}{ | c }{backtrack/vocal level relation} \\ \hline
+		& before level change & before level change & during level change & after level change\\ \hline
+		side chain advantage & 0\% & 0\% & 29\% & 35\% \\
+	\end{tabular}
+	\caption{Side chain advantages for different song parts}
+\end{table}
+
+In terms of the instrumental breaks the side chain feature could not continue its lead completely but still stays in advantage over the plug-in with out these additional information. This is not the best result it could get but due to the initial difficulties it is still ranked as a success. While in the first versions of the side chain implementation it lowered the vocal level a lot during instrumental breaks, now there is very little to no level change observable under correct settings. Additionally this is no reason against using the side chain feature for those song parts, as in average it is still rated as advantage over the plug-in without the side chain feature, also by just considering instrumental breaks.\\
+As the main backtrack level-changes in the accomplished tests were artificially induced its results may not speak for all possible circumstances. But as this supported the oracle knowledge of the reference track and made differences for the participants able to hear more clearly it seemed to be a good choice to do so. Additionally it is questioned if every participant would be able to hear the differences if they had not been artificially induced differing enough.\\
+The test results could be corroborated with additional participants but the 18 which had done the testing already revealed a plausible trend (see table 6.2).\\
+
+\begin{table}[H]
+\centering
+	\begin{tabular}{ p{4cm} | c | c | p{4cm} }
+		& plug-in & plug-in + sc & plug-in + oracle gain (copy of reference) \\ \hline
+		similarity to reference on average & 68\% & 86\% & 89\% \\
+	\end{tabular}
+	\caption{Similarity to reference of test candidates}
+\end{table}
+
+Thereby it can be observed that the side chain feature got near the optimal result and in any case validated its advantages over a plug-in without this feature. It was ranked better than its direct opponent in most of the cases (see Fig. 6.1).\\
+As conclusion it seems to work properly and has legitimacy to be a part of the final product.\\
 
 \begin{figure}[H]
 \includegraphics[width=0.55\textwidth]{images/betterRating}
 \centering
 \caption{Which plug-in setting got better rating (all tests)}
 \end{figure}
-
-\begin{tabular}{ p{4cm} | c | c | p{4cm} }
-& plug-in & plug-in + sc & plug-in + oracle gain (copy of reference) \\ \hline
-similarity to reference on average & 68\% & 86\% & 89\% \\
-\end{tabular}
-
-\begin{tabular}{ p{2cm} | p{3.5cm} | p{2cm} | p{2.5cm} | p{2cm} }
-& comprehensibility & \multicolumn{3}{ | c }{backtrack/vocal level relation} \\ \hline
-& before level change & before level change & during level change & after level change\\ \hline
-side chain advantage & 0\% & 0\% & 29\% & 35\% \\
-\end{tabular}

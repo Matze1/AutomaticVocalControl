@@ -140,6 +140,7 @@ private:
     AutoVocalCtrlFilter iHighshelf;
     Range<double> clipRange;
     Range<double> scClipRange;
+    Range<double> finalClipRange;
     double currentSampleRate;
     double rmsCo;
     double scRmsCo;

@@ -37,6 +37,7 @@ AutoVocalCtrlAudioProcessor::AutoVocalCtrlAudioProcessor()
     addParameter(sc = new AudioParameterBool("sc","SC",false));
     clipRange = Range<double>(-*gainRange, *gainRange);
     scClipRange = Range<double>(-10.0, 10.0);
+    finalClipRange = Range<double>(0.0, 6.0);
     newGate = *loudnessGoal - *gainRange;
     delayBufferLength = 1;
     delayReadPos = 0;
@@ -450,9 +451,10 @@ void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
         for (int sample = 0; sample < mainInputOutput.getNumSamples(); ++sample) {
             if (*read) {
                 gain[channel] = *automationGain;
-                const double g = pow(10, gain[channel]/20);
-                oRms2[channel] = updateRMS2(channelData[sample] * g, oRms2[channel]);
-                channelData[sample] = channelData[sample] * g; //HIER NOCH CLIPPEN!?
+                double g = pow(10, gain[channel]/20);
+                const double fg = finalClipRange.clipValue(g * pow(10, *oGain/20));
+                oRms2[channel] = updateRMS2(channelData[sample] * fg, oRms2[channel]);
+                channelData[sample] = channelData[sample] * fg; //HIER NOCH CLIPPEN!?
             } else {
                 if (*sc) {
                     scRms2[channel] = updateRMS2(updateFilterSample(sideChainData[sample], scHighshelf, scLowcut),
@@ -481,8 +483,8 @@ void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
                     }
                     g = 1.0;
                 }
-                g = g * pow(10, *oGain/20);
-                const double o = delayData[dpr] * g;
+                const double fg = finalClipRange.clipValue(g * pow(10, *oGain/20));
+                const double o = delayData[dpr] * fg;
                 iRms2[channel] = updateRMS2(updateFilterSample(delayData[dpr], iHighshelf, iLowcut), iRms2[channel]);
                 oRms2[channel] = updateRMS2(updateFilterSample(o, oHighshelf, oLowcut), oRms2[channel]);
                 channelData[sample] = o;
