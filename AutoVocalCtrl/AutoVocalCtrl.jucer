@@ -23,6 +23,10 @@
       <FILE id="BdznyU" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="OR7tza" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="G6t5lM" name="newLookAndFeel.h" compile="0" resource="0"
+            file="Source/newLookAndFeel.h"/>
+      <FILE id="IwUaRf" name="newLookAndFeel.cpp" compile="1" resource="0"
+            file="Source/newLookAndFeel.cpp"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>

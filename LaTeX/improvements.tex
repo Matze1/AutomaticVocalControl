@@ -92,6 +92,41 @@ The gate just adapts with the loudnessGoal like described in 5.2 and is not sett
 \section{Final Gain Clipping}
 
 Due to the problems of a possible disproportional gain (see 3.6) caused by an unexpected error, it needs to be checked before it is finally multiplied with the plug-in’s input signal. This includes the gain of the plug-ins main functionality the additional side chain gain and the user set output gain. It is not easy to set a good clip range as with 3 different gain values multiplied it can result in high amplification which can still be wanted. In todays DAWs usually clipping at 1.0 in linear number space is only happening at the master fader. As consequence it is unproblematic to mix a single audio track above this threshold as long as the final mix will happen below. Therefore it is not reasonable to clip the gain*input product for +/- 1.0 sample values.\\
+As consequence not the final outcome could be clipped but the final multiplied gain which includes all three gain variables. The clip was set to operate in the linear number space as last instance before the final multiplication. It clips the final gain for the range of 0.0 to 6.0. The clipping range starts at 0.0 because negative gain in the linear number space does not make sense in this context as it would only invert the phase of the input signal in addition to the compression or amplification. 6.0 is the clip in terms of amplification which is similar to a approximately 15dB gain boost. This is lower than the highest value that can be achieved with all gain sliders on maximum setting but this is not expected to happen in reasonable use. With a clip at 6.0 the input signal is already able to be amplified by 600\%. If a signal needs stronger amplification in professional mixing it is presumable that the setting was done wrong or the recording is bad and should be replaced. If this could not be done or is not wanted it is necessary to edit the audio track before the start of the mixing session as the plug-in is not able to handle it alone. Since this case is still unlikely to occur in professional mixing the plug-in stays within the safety clipping range that will fit its intended use cases.\\
+
+\section{Store Settings}
+
+At startup the plug-in regularly initialises with settings that may fit some use cases but always have to be checked and adjusted properly for the current audio tracks. As a mixing engineer could start a mixing process on one day and finish it on another he may save and close the project and the used DAW for the night. Therefore the plug-in needs to get its latest settings saved or else it would initialise with the unchanged startup setting. This problem already effects the UI at runtime when it is closed and opened again. While the parameters for processing still stay correct in this case the UI could show wrong values at sliders which are not correctly refreshed.\\
+To prevent this problem the getStateInformation() and setStateInformation() which will be called by the DAWs are filled with the necessary save commands.\\
+
+\begin{lstlisting}[frame=single]
+void AutoVocalCtrlAudioProcessor::setStateInformation (const 
+void* data, int sizeInBytes)
+{
+    ScopedPointer<XmlElement> xmlState (getXmlFromBinary (data, 
+    sizeInBytes));
+    if (xmlState != nullptr)
+    {
+        if (xmlState->hasTagName ("AutoVocalCtrl"))
+        {
+            *sc = (bool) xmlState
+            ->getBoolAttribute ("sc", false);
+            *read = (bool) xmlState
+            ->getBoolAttribute ("read", false);
+           ...
+            *loudnessGoal = (float) xmlState
+            ->getDoubleAttribute ("loudnessGoal", -20.0);
+            *gainRange = (float) xmlState
+            ->getDoubleAttribute ("gainRange", 6.0);
+            ...
+        }
+    }
+    ...
+}
+\end{lstlisting}
+
+The plug-in creates a new xml file with the values of all settable parameters in the getStateInformation() method and reads the xml file for parameter adjustment in the setStateInformation() method. Finally the setStateInformation() method notices the UI to refresh the according parameter sliders.\\
+As DAWs are calling those methods at different timing but always at startup and before the shutdown of the plug-in or the UI, all user made adjustments are saved and regained at startup. Additional in this way the DAW will be able save presets for the plug-in which can be used in other mixing session for example as orientation for the parameter adjustment.\\
 
 \section{Design}
 

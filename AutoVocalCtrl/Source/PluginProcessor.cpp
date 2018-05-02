@@ -537,14 +537,14 @@ void AutoVocalCtrlAudioProcessor::setStateInformation (const void* data, int siz
     {
         if (xmlState->hasTagName ("AutoVocalCtrl"))
         {
-            *sc = (float) xmlState->getDoubleAttribute ("sc", 0.);
-            *read = (float) xmlState->getDoubleAttribute ("read", 0.);
-            *scDetect = (float) xmlState->getDoubleAttribute ("scDetect", 5.);
-            *detect = (float) xmlState->getDoubleAttribute ("detect", 200.);
-            *loudnessGoal = (float) xmlState->getDoubleAttribute ("loudnessGoal", 60.);
-            *gainRange = (float) xmlState->getDoubleAttribute ("gainRange", 0.);
-            *scGainUI = (float) xmlState->getDoubleAttribute ("scGainUI", 0.);
-            *oGain = (float) xmlState->getDoubleAttribute ("oGain", 1.);
+            *sc = (bool) xmlState->getBoolAttribute ("sc", false);
+            *read = (bool) xmlState->getBoolAttribute ("read", false);
+            *scDetect = (bool) xmlState->getBoolAttribute ("scDetect", false);
+            *detect = (bool) xmlState->getBoolAttribute ("detect", false);
+            *loudnessGoal = (float) xmlState->getDoubleAttribute ("loudnessGoal", -20.0);
+            *gainRange = (float) xmlState->getDoubleAttribute ("gainRange", 6.0);
+            *scGainUI = (float) xmlState->getDoubleAttribute ("scGainUI", 0.0);
+            *oGain = (float) xmlState->getDoubleAttribute ("oGain", 0.0);
         }
     }
     refresh = true;

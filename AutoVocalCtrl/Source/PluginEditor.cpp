@@ -27,12 +27,13 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     loudnessGoalSlider.addListener(this);
     
     gainRangeSlider.setRange(processor.gainRange->range.start, processor.gainRange->range.end, 0.1f);
-    gainRangeSlider.setSliderStyle(Slider::LinearBarVertical);
+    gainRangeSlider.setSliderStyle(Slider::LinearVertical);
     gainRangeSlider.setValue(processor.gainRange->get());
     gainRangeSlider.addListener(this);
+    gainRangeSlider.setLookAndFeel(&newLookAndFeel);
     
     gainRangeSlider2.setRange(-processor.gainRange->range.end, processor.gainRange->range.start, 0.1f);
-    gainRangeSlider2.setSliderStyle(Slider::LinearBarVertical);
+    gainRangeSlider2.setSliderStyle(Slider::LinearVertical);
     gainRangeSlider2.setValue(-processor.gainRange->get());
     gainRangeSlider2.addListener(this);
     
@@ -75,9 +76,6 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     loudnessGoalLabel.setText ("Goal", dontSendNotification);
     loudnessGoalLabel.attachToComponent(&loudnessGoalSlider, false);
     
-    gainRangeLabel.setText ("RNG", dontSendNotification);
-    gainRangeLabel.attachToComponent(&gainRangeSlider, false);
-    
     gainControlLabel.setText ("ADPT", dontSendNotification);
     gainControlLabel.attachToComponent(&gainControlSlider, false);
     
@@ -117,14 +115,6 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     scDetectButton.setButtonText("Detect SC Gain");
     scDetectButton.setToggleState(processor.scDetect->get(), dontSendNotification);
     
-    allDetectButton.addListener(this);
-    allDetectButton.setButtonText("Detect Both");
-    allDetectButton.setToggleState((processor.detect->get() && processor.scDetect->get()), dontSendNotification);
-    if (processor.detect->get() && processor.scDetect->get()) {
-        detectButton.setEnabled(false);
-        scDetectButton.setEnabled(false);
-    }
-    
     scButton.addListener(this);
     scButton.setButtonText("SC MUTE");
     scButton.setToggleState(processor.sc->get(), dontSendNotification);
@@ -133,7 +123,6 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     addAndMakeVisible(detectButton);
     addAndMakeVisible(detectLabel);
     addAndMakeVisible(scDetectButton);
-    addAndMakeVisible(allDetectButton);
     addAndMakeVisible(scDetectLabel);
     addAndMakeVisible(scButton);
     
@@ -141,7 +130,6 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     addAndMakeVisible(loudnessGoalLabel);
     addAndMakeVisible(gainRangeSlider);
     addAndMakeVisible(gainRangeSlider2);
-    addAndMakeVisible(gainRangeLabel);
     addAndMakeVisible(gainControlSlider);
     addAndMakeVisible(gainControlLabel);
     addAndMakeVisible(inputSlider);
@@ -158,6 +146,8 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     addAndMakeVisible(v2bDiffLabel);
     
     startTimer(40);
+    
+    setLookAndFeel(&newLookAndFeel);
 }
 
 AutoVocalCtrlAudioProcessorEditor::~AutoVocalCtrlAudioProcessorEditor()
@@ -184,7 +174,6 @@ void AutoVocalCtrlAudioProcessorEditor::resized()
     readButton.setBounds(220, 260, 160, 40);
     scDetectButton.setBounds(40, 320, 60, 40);
     detectButton.setBounds(120, 320, 60, 40);
-    allDetectButton.setBounds(200, 320, 60, 40);
     scDetectLabel.setBounds(280, 320, 40, 40);
     detectLabel.setBounds(340, 320, 40, 40);
     
@@ -211,24 +200,6 @@ void AutoVocalCtrlAudioProcessorEditor::buttonClicked(Button* button)
         readButton.setToggleState(!value, dontSendNotification);
         String buttonLabel = !value ? "Read":"Write";
         readButton.setButtonText(buttonLabel);
-    } else if (button == &allDetectButton) {
-        const bool value = allDetectButton.getToggleState();
-        if (!value) {
-            processor.detect->operator=(false);
-            processor.detect->operator=(false);
-            detectButton.setToggleState(true, sendNotification);
-            scDetectButton.setToggleState(true, sendNotification);
-            detectButton.setEnabled(false);
-            scDetectButton.setEnabled(false);
-        } else {
-            processor.detect->operator=(true);
-            processor.detect->operator=(true);
-            detectButton.setEnabled(true);
-            scDetectButton.setEnabled(true);
-            detectButton.setToggleState(false, sendNotification);
-            scDetectButton.setToggleState(false, sendNotification);
-        }
-        allDetectButton.setToggleState(!value, dontSendNotification);
     } else if (button == &detectButton) {
         const bool value = processor.detect->get();
         if (value) {

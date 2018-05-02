@@ -14,6 +14,7 @@
 #include "PluginProcessor.h"
 #include <sstream>
 #include <iomanip>
+#include "newLookAndFeel.h"
 
 //==============================================================================
 /**
@@ -53,14 +54,12 @@ private:
     TextButton scButton;
     TextButton detectButton;
     TextButton scDetectButton;
-    TextButton allDetectButton;
     
     
     Label detectLabel;
     Label scDetectLabel;
     
     Label loudnessGoalLabel;
-    Label gainRangeLabel;
     Label gainControlLabel;
     Label v2bDiffLabel;
     Label scInputGLabel;
@@ -71,6 +70,8 @@ private:
     
     float oldGainRange = 6.0;
     std::stringstream stream;
+    
+    newLookAndFeel newLookAndFeel;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AutoVocalCtrlAudioProcessorEditor)
 };
