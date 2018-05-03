@@ -18,10 +18,10 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (420, 400);
+    setSize (400, 400);
     
     loudnessGoalSlider.setRange(processor.loudnessGoal->range.start, processor.loudnessGoal->range.end, 1.0f);
-    loudnessGoalSlider.setSliderStyle(Slider::LinearBarVertical);
+    loudnessGoalSlider.setSliderStyle(Slider::LinearVertical);
     loudnessGoalSlider.setTextValueSuffix(" dB");
     loudnessGoalSlider.setValue(processor.loudnessGoal->get());
     loudnessGoalSlider.addListener(this);
@@ -159,6 +159,8 @@ void AutoVocalCtrlAudioProcessorEditor::paint (Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
+//    Image background = ImageCache::getFromMemory(BinaryData::test_png, BinaryData::test_pngSize);
+//    g.drawImageAt(background, 0, 0);
 
     //g.setColour (Colours::white);
     //g.setFont (15.0f);
@@ -170,26 +172,27 @@ void AutoVocalCtrlAudioProcessorEditor::resized()
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
     
-    scButton.setBounds(40, 260, 160, 40);
-    readButton.setBounds(220, 260, 160, 40);
-    scDetectButton.setBounds(40, 320, 60, 40);
-    detectButton.setBounds(120, 320, 60, 40);
-    scDetectLabel.setBounds(280, 320, 40, 40);
-    detectLabel.setBounds(340, 320, 40, 40);
+    scButton.setBounds(40, 260, 120, 40);
+    readButton.setBounds(40, 320, 120, 40);
+    scDetectButton.setBounds(180, 260, 90, 40);
+    scDetectLabel.setBounds(280, 260, 40, 40);
+    detectButton.setBounds(180, 320, 90, 40);
+    detectLabel.setBounds(280, 320, 40, 40);
     
     scGainSlider.setBounds(40, 40, 20, 200);
-    scInputGSlider.setBounds(60, 40, 40, 200);
+    scInputGSlider.setBounds(60, 40, 30, 200);
     
-    loudnessGoalSlider.setBounds(120, 40, 40, 200);
-    inputSlider.setBounds(160, 40, 40, 200);
+    loudnessGoalSlider.setBounds(116, 33, 14, 214);
+    inputSlider.setBounds(130, 40, 30, 200);
     
-    outputSlider.setBounds(220, 40, 40, 200);
-    outputGainSlider.setBounds(260, 40, 20, 200);
+    outputSlider.setBounds(180, 40, 30, 200);
     
-    gainRangeSlider.setBounds(300, 40, 20, 100);
-    gainRangeSlider2.setBounds(300, 140, 20, 100);
-    gainControlSlider.setBounds(320, 40, 40, 200);
-    v2bDiffSlider.setBounds(360, 40, 20, 200);
+    outputGainSlider.setBounds(210, 40, 20, 200);
+    
+    gainRangeSlider.setBounds(256, 33, 14, 114);
+    gainRangeSlider2.setBounds(256, 133, 14, 114);
+    gainControlSlider.setBounds(270, 40, 30, 200);
+    v2bDiffSlider.setBounds(300, 40, 20, 200);
 }
 
 void AutoVocalCtrlAudioProcessorEditor::buttonClicked(Button* button)

@@ -28,6 +28,7 @@
       <FILE id="IwUaRf" name="newLookAndFeel.cpp" compile="1" resource="0"
             file="Source/newLookAndFeel.cpp"/>
     </GROUP>
+    <FILE id="B74MVF" name="test.png" compile="0" resource="1" file="../../../Desktop/test.png"/>
   </MAINGROUP>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX">

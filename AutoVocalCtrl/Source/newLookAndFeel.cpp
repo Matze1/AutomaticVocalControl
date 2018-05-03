@@ -22,10 +22,33 @@ newLookAndFeel::~newLookAndFeel()
     
 }
 
-void newLookAndFeel::drawLinearSliderThumb (Graphics& g, int x, int y, int width, int height, float sliderPos, float minSliderPos, float maxSliderPos, const Slider::SliderStyle, Slider& slider)
+void newLookAndFeel::drawLinearSlider(Graphics& g,
+                                      int x, int y, int w, int h,
+                                      float sliderPos, float minSliderPos, float maxSliderPos,
+                                      const Slider::SliderStyle style,
+                                      Slider& slider)
 {
-    g.setColour(Colours::red);
-    Path triangle;
-    triangle.addTriangle(x, y, x + width, y + height / 2, x, y + height);
-    g.fillPath(triangle);
+    if (style == Slider::LinearVertical) {
+        g.setColour (slider.findColour (Slider::thumbColourId));
+        Path triangle;
+        triangle.addTriangle(x, sliderPos - (0.5 * w) , x + w, sliderPos, x, sliderPos + (0.5 * w));
+        g.fillPath(triangle);
+    } else if (slider.getMinimum() < -55.0) {
+        g.fillAll(Colours::black);
+        g.setGradientFill(ColourGradient(Colours::skyblue, x, y, Colour(11, 52, 56), x, y + h, false));
+//        g.setColour(Colour(0.5f, 0.8f, 1-sliderPos/h, 1.0f));
+        g.fillRect(x, y + h, w, (int)(-h + sliderPos - 1));
+    } else {
+        g.fillAll(Colours::black);
+        g.setColour(Colours::skyblue);
+        g.fillRect(x, y + h/2, w, (int)(-h/2 + sliderPos - 1));
+    }
+}
+
+void newLookAndFeel::drawLinearSliderBackground(Graphics& g,
+                                                int x, int y, int w, int h,
+                                                float sliderPo, float minSliderPos, float maxSliderPos,
+                                                const Slider::SliderStyle style, Slider& slider)
+{
+    // DRAW NOTHING
 }
