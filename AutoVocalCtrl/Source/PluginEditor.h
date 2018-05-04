@@ -55,21 +55,15 @@ private:
     TextButton detectButton;
     TextButton scDetectButton;
     
+    String buttonLabel;
     
     Label detectLabel;
     Label scDetectLabel;
     
-    Label loudnessGoalLabel;
-    Label gainControlLabel;
-    Label v2bDiffLabel;
-    Label scInputGLabel;
-    Label inputLabel;
-    Label scGainLabel;
-    Label outputLabel;
-    Label outputGainLabel;
-    
     float oldGainRange = 6.0;
     std::stringstream stream;
+    
+    bool a;
     
     newLookAndFeel newLookAndFeel;
     

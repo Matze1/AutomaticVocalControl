@@ -72,6 +72,7 @@ public:
     void updateSCGain();
     void automateCurrentGain();
     void setLoudnessGoal(double newGoal);
+    void clearScDetect();
 
     //==============================================================================
     void getStateInformation (MemoryBlock& destData) override;

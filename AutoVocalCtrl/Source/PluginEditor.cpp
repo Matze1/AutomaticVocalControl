@@ -73,30 +73,6 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     outputGainSlider.setValue(processor.oGain->get());
     outputGainSlider.addListener(this);
     
-    loudnessGoalLabel.setText ("Goal", dontSendNotification);
-    loudnessGoalLabel.attachToComponent(&loudnessGoalSlider, false);
-    
-    gainControlLabel.setText ("ADPT", dontSendNotification);
-    gainControlLabel.attachToComponent(&gainControlSlider, false);
-    
-    v2bDiffLabel.setText ("+", dontSendNotification);
-    v2bDiffLabel.attachToComponent(&v2bDiffSlider, false);
-    
-    scInputGLabel.setText ("SC", dontSendNotification);
-    scInputGLabel.attachToComponent(&scInputGSlider, false);
-    
-    inputLabel.setText ("I", dontSendNotification);
-    inputLabel.attachToComponent(&inputSlider, false);
-    
-    scGainLabel.setText ("G", dontSendNotification);
-    scGainLabel.attachToComponent(&scGainSlider, false);
-    
-    outputLabel.setText ("O", dontSendNotification);
-    outputLabel.attachToComponent(&outputSlider, false);
-    
-    outputGainLabel.setText ("G", dontSendNotification);
-    outputGainLabel.attachToComponent(&outputGainSlider, false);
-    
     detectLabel.setColour(juce::Label::backgroundColourId, juce::Colour(0,0,0));
     detectLabel.setJustificationType(Justification::centred);
     
@@ -104,19 +80,15 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     scDetectLabel.setJustificationType(Justification::centred);
     
     readButton.addListener(this);
-    readButton.setButtonText("Write");
     readButton.setToggleState(processor.read->get(), dontSendNotification);
     
     detectButton.addListener(this);
-    detectButton.setButtonText("Detect LDNS Goal");
     detectButton.setToggleState(processor.detect->get(), dontSendNotification);
     
     scDetectButton.addListener(this);
-    scDetectButton.setButtonText("Detect SC Gain");
     scDetectButton.setToggleState(processor.scDetect->get(), dontSendNotification);
     
     scButton.addListener(this);
-    scButton.setButtonText("SC MUTE");
     scButton.setToggleState(processor.sc->get(), dontSendNotification);
     
     addAndMakeVisible(readButton);
@@ -127,27 +99,24 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     addAndMakeVisible(scButton);
     
     addAndMakeVisible(loudnessGoalSlider);
-    addAndMakeVisible(loudnessGoalLabel);
     addAndMakeVisible(gainRangeSlider);
     addAndMakeVisible(gainRangeSlider2);
     addAndMakeVisible(gainControlSlider);
-    addAndMakeVisible(gainControlLabel);
     addAndMakeVisible(inputSlider);
-    addAndMakeVisible(inputLabel);
     addAndMakeVisible(outputSlider);
-    addAndMakeVisible(outputLabel);
     addAndMakeVisible(outputGainSlider);
-    addAndMakeVisible(outputGainLabel);
-    addAndMakeVisible(scInputGLabel);
     addAndMakeVisible(scInputGSlider);
-    addAndMakeVisible(scGainLabel);
     addAndMakeVisible(scGainSlider);
     addAndMakeVisible(v2bDiffSlider);
-    addAndMakeVisible(v2bDiffLabel);
     
     startTimer(40);
     
     setLookAndFeel(&newLookAndFeel);
+    scInputGSlider.setColour(Slider::textBoxOutlineColourId, Colours::black);
+    inputSlider.setColour(Slider::textBoxOutlineColourId, Colours::black);
+    outputSlider.setColour(Slider::textBoxOutlineColourId, Colours::black);
+    v2bDiffSlider.setColour(Slider::textBoxOutlineColourId, Colours::black);
+    gainControlSlider.setColour(Slider::textBoxOutlineColourId, Colours::black);
 }
 
 AutoVocalCtrlAudioProcessorEditor::~AutoVocalCtrlAudioProcessorEditor()
@@ -158,9 +127,9 @@ AutoVocalCtrlAudioProcessorEditor::~AutoVocalCtrlAudioProcessorEditor()
 void AutoVocalCtrlAudioProcessorEditor::paint (Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
-//    Image background = ImageCache::getFromMemory(BinaryData::test_png, BinaryData::test_pngSize);
-//    g.drawImageAt(background, 0, 0);
+//    g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
+    Image background = ImageCache::getFromMemory(BinaryData::BAPBG09_png, BinaryData::BAPBG09_pngSize);
+    g.drawImageAt(background, 0, 0);
 
     //g.setColour (Colours::white);
     //g.setFont (15.0f);
@@ -175,9 +144,9 @@ void AutoVocalCtrlAudioProcessorEditor::resized()
     scButton.setBounds(40, 260, 120, 40);
     readButton.setBounds(40, 320, 120, 40);
     scDetectButton.setBounds(180, 260, 90, 40);
-    scDetectLabel.setBounds(280, 260, 40, 40);
+    scDetectLabel.setBounds(270, 260, 50, 40);
     detectButton.setBounds(180, 320, 90, 40);
-    detectLabel.setBounds(280, 320, 40, 40);
+    detectLabel.setBounds(270, 320, 50, 40);
     
     scGainSlider.setBounds(40, 40, 20, 200);
     scInputGSlider.setBounds(60, 40, 30, 200);
@@ -201,7 +170,7 @@ void AutoVocalCtrlAudioProcessorEditor::buttonClicked(Button* button)
         const bool value = processor.read->get();
         processor.read->operator=(!value);
         readButton.setToggleState(!value, dontSendNotification);
-        String buttonLabel = !value ? "Read":"Write";
+        buttonLabel = !value ? "Read":"Write";
         readButton.setButtonText(buttonLabel);
     } else if (button == &detectButton) {
         const bool value = processor.detect->get();
@@ -234,12 +203,15 @@ void AutoVocalCtrlAudioProcessorEditor::buttonClicked(Button* button)
         const bool value = processor.sc->get();
         processor.sc->operator=(!value);
         scButton.setToggleState(!value, dontSendNotification);
-        String buttonLabel = !value ? "SC ACTV":"SC MUTE";
+        buttonLabel = !value ? "SC ACTV":"SC";
         scButton.setButtonText(buttonLabel);
         if (value) {
             scInputGSlider.setValue(-60.0);
             v2bDiffSlider.setValue(0.0);
         }
+        scDetectButton.setToggleState(false, sendNotification);
+        processor.clearScDetect();
+        scDetectButton.setEnabled(!value);
     }
 }
 
@@ -269,6 +241,19 @@ void AutoVocalCtrlAudioProcessorEditor::refreshSliderValues()
     gainRangeSlider.setValue(processor.gainRange->get());
     gainRangeSlider2.setValue(-processor.gainRange->get());
     outputGainSlider.setValue(processor.oGain->get());
+    a = processor.scDetect->get();
+    buttonLabel = a ? "Detecting...":"Detect SC Gain";
+    scDetectButton.setButtonText(buttonLabel);
+    a = processor.detect->get();
+    buttonLabel = a ? "Detecting...":"Detect LDNS Goal";
+    detectButton.setButtonText(buttonLabel);
+    a = processor.sc->get();
+    buttonLabel = a ? "SC Active":"SC";
+    scButton.setButtonText(buttonLabel);
+    scDetectButton.setEnabled(a);
+    a = processor.read->get();
+    buttonLabel = a ? "Read":"Write";
+    readButton.setButtonText(buttonLabel);
 }
 
 void AutoVocalCtrlAudioProcessorEditor::timerCallback()
@@ -290,6 +275,9 @@ void AutoVocalCtrlAudioProcessorEditor::timerCallback()
     if (processor.sc->get()) {
         scInputGSlider.setValue(processor.getScInputRMSdB(0) + processor.scGainUI->get());
         v2bDiffSlider.setValue(processor.v2bDiff[0]);
+    } else {
+        scInputGSlider.setValue(-60.0);
+        v2bDiffSlider.setValue(0.0);
     }
     inputSlider.setValue(processor.getInputRMSdB());
     gainControlSlider.setValue(processor.getCurrentGainControl());

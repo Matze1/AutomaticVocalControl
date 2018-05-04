@@ -8,14 +8,20 @@
 
 namespace BinaryData
 {
-    extern const char*   test_png;
-    const int            test_pngSize = 240318;
+    extern const char*   BAPBG08_png;
+    const int            BAPBG08_pngSize = 103887;
+
+    extern const char*   BAPBG07_png;
+    const int            BAPBG07_pngSize = 124091;
+
+    extern const char*   BAPBG09_png;
+    const int            BAPBG09_pngSize = 100653;
 
     // Points to the start of a list of resource names.
     extern const char* namedResourceList[];
 
     // Number of elements in the namedResourceList array.
-    const int namedResourceListSize = 1;
+    const int namedResourceListSize = 3;
 
     // If you provide the name of one of the binary resource variables above, this function will
     // return the corresponding data and its size (or a null pointer if the name isn't found).

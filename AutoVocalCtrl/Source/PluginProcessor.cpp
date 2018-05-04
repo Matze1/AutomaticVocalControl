@@ -29,8 +29,8 @@ AutoVocalCtrlAudioProcessor::AutoVocalCtrlAudioProcessor()
     addParameter(loudnessGoal = new AudioParameterFloat ("loudnessGoal", "LoudnessGoal", -60.0f, 0.0f, -20.0f));
     addParameter(gainRange = new AudioParameterFloat ("gainRange", "GainRange", 0.0f, 10.0f, 6.0f));
     addParameter(automationGain = new AudioParameterFloat ("automationGain", "AutomationGain", -15.0f, 15.0f, 0.0f));
-    addParameter(scGainUI = new AudioParameterFloat ("scGainUI", "SCGainUI", -10.0f, 10.0f, 0.0f));
-    addParameter(oGain = new AudioParameterFloat ("oGain", "OGain", -10.0f, 10.0f, 0.0f));
+    addParameter(scGainUI = new AudioParameterFloat ("scGainUI", "SCGainUI", -9.9f, 9.9f, 0.0f));
+    addParameter(oGain = new AudioParameterFloat ("oGain", "OGain", -9.9f, 9.9f, 0.0f));
     addParameter(read = new AudioParameterBool("read","Read",false));
     addParameter(detect = new AudioParameterBool("detect","Detect",false));
     addParameter(scDetect = new AudioParameterBool("scDetect","SCDetect",false));
@@ -245,6 +245,7 @@ void AutoVocalCtrlAudioProcessor::prepareToPlay (double sampleRate, int samplesP
     updateDelay();
     maxIdleSamples = sampleRate/2;
     scMaxIdleSamples = sampleRate*2;
+    refresh = true;
 }
 
 void AutoVocalCtrlAudioProcessor::releaseResources()
@@ -335,7 +336,7 @@ double AutoVocalCtrlAudioProcessor::getInputRMSdB()
 
 double AutoVocalCtrlAudioProcessor::getScInputRMSdB(int j = -1)
 {
-    if (j > 0 && j < numSCChannels)
+    if (j >= 0 && j < numSCChannels)
         return 10 * log10(scRms2[j] + 1e-10);
     double sum = 0;
     for (int i = 0; i < numSCChannels; ++i)
@@ -360,6 +361,12 @@ double AutoVocalCtrlAudioProcessor::getAlphaGain()
     for (int i = 0; i < getMainBusNumInputChannels(); ++i)
         med += alphaGain[i] / cdC;
     return med / getMainBusNumInputChannels();
+}
+
+void AutoVocalCtrlAudioProcessor::clearScDetect()
+{
+    betaGain[0] = 0.0;
+    bDetCount = 0;
 }
 
 double AutoVocalCtrlAudioProcessor::getBetaGain()
