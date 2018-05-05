@@ -128,5 +128,28 @@ void* data, int sizeInBytes)
 The plug-in creates a new xml file with the values of all settable parameters in the getStateInformation() method and reads the xml file for parameter adjustment in the setStateInformation() method. Finally the setStateInformation() method notices the UI to refresh the according parameter sliders.\\
 As DAWs are calling those methods at different timing but always at startup and before the shutdown of the plug-in or the UI, all user made adjustments are saved and regained at startup. Additional in this way the DAW will be able save presets for the plug-in which can be used in other mixing session for example as orientation for the parameter adjustment.\\
 
-\section{Design}
+\section{UI Design}
 
+The main focus of this study was the algorithm behind the plug-in. Nevertheless it was the intension that a user should be able to work with the plug-in without reading a manual. Therefore the UI was refactored after parameter reduction.\\
+The main problem of the previous UI was the lack of the possibility to differ between sliders for parameter adjustments and elements which were displaying inside information of the plug-in (see Fig. 5.4). Additionally the slider labels had not enough space to display in complete length similar to the slider value displays which could already confuse a user by their large number.\\
+
+\begin{figure}[H]
+\includegraphics[width=0.5\textwidth]{images/designVorher}
+	\centering
+	\caption{UI after parameter reduction}
+\end{figure}
+
+The main change in the UI re-design was the highlighting of usable elements. To set them apart from only informational parts, all the changeable components are coloured red. The colour is chosen as it strongly diverges from its complementary colour green which is the plug-in’s main colour (see Fig. 5.5). Additionally only the usable sliders and buttons got a coloured frame instead of the plain black outline of the pure metering components.\\
+
+\begin{figure}[H]
+\includegraphics[width=0.5\textwidth]{images/designNeuNum}
+	\centering
+	\caption{Final UI in Logic Pro 9}
+\end{figure}
+
+In the new design the gain range and loudness goal are set via red triangles (1) pointing on the corresponding level/gain meter. This was done to let the user to know the connection between these UI elements. The loudnessGoal should be set in consideration of the input level meter (2) right next to it and the gain range is directly modifying the maximal and minimal values of the connected gain reduction meter (3).\\
+The three meters which are displaying the I/O levels (input, side chain input, output) are next to each other and visualising their value with a rising bar where a colour gradient is applied to. Therefore the green tone of the bar is getting brighter with increasing signal level to support a fast assessment of the user.\\
+All UI elements excluding the buttons are divided in different sections: The I (input), O (output), side chain and gain adaption section, containing the belonging components. To know which task the single components fulfil, they have a additional label, on the side which is not adjoining to another UI element.\\
+When the Side Chain feature is disabled, the corresponding gain detection button (4) and the side chain input gain slider (5) become disabled too, as they would have no effect. This can be observed by the user as the red colour of these UI elements gets greyer and the slider loses its green frame which previously signalled a possible interaction. The components which are only for displaying information are disabled for user interaction by default.\\
+For most of the slider elements it is not necessary for the user to know the exact value but to get a approximation and therefore a feeling about what is happening. Clear slider values often seduce users to adjust sliders to pretty numbers (e.g. rounding to 5 or repeated digits) instead of only observing the change of the outcome. As consequence most of the slider values are removed in the new design. A orientation for the input and output meters is still located next to them but in a light green like the element labels in order to not distract from the main information.\\
+The side chain input (6) is chosen in the embedding DAW and therefore not to set in the plug-in’s UI.\\

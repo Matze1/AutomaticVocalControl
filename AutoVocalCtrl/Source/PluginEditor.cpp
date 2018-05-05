@@ -42,21 +42,25 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     gainControlSlider.setTextValueSuffix(" dB");
     gainControlSlider.setValue(processor.getCurrentGainControl());
     gainControlSlider.addListener(this);
+    gainControlSlider.setEnabled(false);
     
     v2bDiffSlider.setRange(-10.0, 10.0, 0.1f);
     v2bDiffSlider.setSliderStyle(Slider::LinearBarVertical);
     v2bDiffSlider.setValue(0.0);
     v2bDiffSlider.addListener(this);
+    v2bDiffSlider.setEnabled(false);
     
     scInputGSlider.setRange(-60.0, 0.0, 0.1f);
     scInputGSlider.setSliderStyle(Slider::LinearBarVertical);
     scInputGSlider.setValue(-60.0);
     scInputGSlider.addListener(this);
+    scInputGSlider.setEnabled(false);
     
     inputSlider.setRange(-60.0, 0.0, 0.1f);
     inputSlider.setSliderStyle(Slider::LinearBarVertical);
     inputSlider.setValue(-60.0);
     inputSlider.addListener(this);
+    inputSlider.setEnabled(false);
     
     scGainSlider.setRange(processor.scGainUI->range.start, processor.scGainUI->range.end, 0.01f);
     scGainSlider.setSliderStyle(Slider::LinearBarVertical);
@@ -67,6 +71,7 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     outputSlider.setSliderStyle(Slider::LinearBarVertical);
     outputSlider.setValue(-60.0);
     outputSlider.addListener(this);
+    outputSlider.setEnabled(false);
     
     outputGainSlider.setRange(processor.oGain->range.start, processor.oGain->range.end, 0.1f);
     outputGainSlider.setSliderStyle(Slider::LinearBarVertical);
@@ -212,6 +217,11 @@ void AutoVocalCtrlAudioProcessorEditor::buttonClicked(Button* button)
         scDetectButton.setToggleState(false, sendNotification);
         processor.clearScDetect();
         scDetectButton.setEnabled(!value);
+        scGainSlider.setEnabled(!value);
+        Colour cGS = !value ? Colour(109, 151, 110):Colours::black;
+        Colour cGSB = !value ? Colour(106, 15, 15):Colour(73, 43, 32);
+        scGainSlider.setColour(Slider::textBoxOutlineColourId, cGS);
+        scGainSlider.setColour(Slider::thumbColourId, cGSB);
     }
 }
 
@@ -241,6 +251,8 @@ void AutoVocalCtrlAudioProcessorEditor::refreshSliderValues()
     gainRangeSlider.setValue(processor.gainRange->get());
     gainRangeSlider2.setValue(-processor.gainRange->get());
     outputGainSlider.setValue(processor.oGain->get());
+    loudnessGoalSlider.setValue(processor.loudnessGoal->get());
+    scGainSlider.setValue(processor.scGainUI->get());
     a = processor.scDetect->get();
     buttonLabel = a ? "Detecting...":"Detect SC Gain";
     scDetectButton.setButtonText(buttonLabel);
@@ -251,6 +263,9 @@ void AutoVocalCtrlAudioProcessorEditor::refreshSliderValues()
     buttonLabel = a ? "SC Active":"SC";
     scButton.setButtonText(buttonLabel);
     scDetectButton.setEnabled(a);
+    scGainSlider.setEnabled(a);
+    Colour cGS = a ? Colour(109, 151, 110):Colours::black;
+    scGainSlider.setColour(Slider::textBoxOutlineColourId, cGS);
     a = processor.read->get();
     buttonLabel = a ? "Read":"Write";
     readButton.setButtonText(buttonLabel);
@@ -270,19 +285,13 @@ void AutoVocalCtrlAudioProcessorEditor::timerCallback()
         stream << std::setprecision(2) << d;
         scDetectLabel.setText(stream.str(), dontSendNotification);
     }
-    inputSlider.setValue(processor.getInputRMSdB());
-    outputSlider.setValue(processor.getOutputdB());
     if (processor.sc->get()) {
         scInputGSlider.setValue(processor.getScInputRMSdB(0) + processor.scGainUI->get());
         v2bDiffSlider.setValue(processor.v2bDiff[0]);
-    } else {
-        scInputGSlider.setValue(-60.0);
-        v2bDiffSlider.setValue(0.0);
     }
     inputSlider.setValue(processor.getInputRMSdB());
+    outputSlider.setValue(processor.getOutputdB());
     gainControlSlider.setValue(processor.getCurrentGainControl());
-    loudnessGoalSlider.setValue(processor.loudnessGoal->get());
-    scGainSlider.setValue(processor.scGainUI->get());
     if (processor.refresh) {
         refreshSliderValues();
         processor.refresh = false;

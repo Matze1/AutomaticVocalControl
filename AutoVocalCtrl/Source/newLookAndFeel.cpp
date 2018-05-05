@@ -16,6 +16,7 @@ newLookAndFeel::newLookAndFeel()
     Colour myGreen = Colour(109, 151, 110);
     Colour myGreenDark = Colour(100,140, 100);
     setColour(Slider::textBoxOutlineColourId, myGreen);
+    setColour(Slider::thumbColourId, myRed);
     setColour(ComboBox::outlineColourId, myRed);
     setColour(TextButton::buttonColourId, myRed);
     setColour(TextButton::buttonOnColourId, myGreenDark);
@@ -35,7 +36,7 @@ void newLookAndFeel::drawLinearSlider(Graphics& g,
                                       Slider& slider)
 {
     if (style == Slider::LinearVertical) {
-        g.setColour (Colour(106, 15, 15));
+        g.setColour (slider.findColour(Slider::thumbColourId));
         Path triangle;
         triangle.addTriangle(x, sliderPos - (0.5 * w) , x + w, sliderPos, x, sliderPos + (0.5 * w));
         g.fillPath(triangle);
@@ -46,7 +47,7 @@ void newLookAndFeel::drawLinearSlider(Graphics& g,
     } else {
         g.fillAll(Colours::black);
         const bool which = (slider.getMinimum() < -9.9);
-        Colour c = which ? Colour(109, 151, 110):Colour(106, 15, 15);
+        Colour c = which ? Colour(109, 151, 110):slider.findColour(Slider::thumbColourId);
         g.setColour(c);
         g.fillRect(x, y + h/2, w, (int)(-h/2 + sliderPos - 1));
         if (!which) {

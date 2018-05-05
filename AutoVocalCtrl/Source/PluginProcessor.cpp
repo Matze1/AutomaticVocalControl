@@ -388,6 +388,7 @@ void AutoVocalCtrlAudioProcessor::updateLoudnessGoal()
     setLoudnessGoal(*loudnessGoal - med);
     std::fill(alphaGain.begin(), alphaGain.end(), 0.0);
     detCount = 0;
+    refresh = true;
 }
 
 void AutoVocalCtrlAudioProcessor::updateSCGain()
@@ -396,6 +397,7 @@ void AutoVocalCtrlAudioProcessor::updateSCGain()
     *scGainUI = *scGainUI - med;
     std::fill(betaGain.begin(), betaGain.end(), 0.0);
     bDetCount = 0;
+    refresh = true;
 }
 
 double AutoVocalCtrlAudioProcessor::updateGain(double sample, double lastGn)
