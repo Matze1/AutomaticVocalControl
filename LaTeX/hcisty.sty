@@ -160,13 +160,12 @@ Hamburg, October 19, 2017
 
 	%{\doublespacing
 	%\newpage\ifpdf\pdfbookmark[1]{Acknowledgement}{label:ack}\fi\input{acknowledge.tex}
-	\ifthenelse{\equal{#1}{1}}
-	{\newpage\ifpdf\pdfbookmark[1]{Abstract}{label:abst}\fi \input{abstract.tex}}
+	%\ifthenelse{\equal{#1}{1}}
+	\newpage\ifpdf\pdfbookmark[1]{Abstract}{label:abst}\fi \input{abstract.tex}
 	{}
 	
-	\ifthenelse{\equal{#2}{1}}
-	{\newpage\ifpdf\pdfbookmark[1]{Zusammenfassung}{label:abstGER}\fi \input{abstractGER.tex}}
-	{}
+	%{\newpage\ifpdf\pdfbookmark[1]{Zusammenfassung}{label:abstGER}\fi \input{abstractGER.tex}}
+	%{}
 	%\newpage\ifpdf\pdfbookmark[1]{Abstract}{label:abst}\fi     \input{abstract.tex}
 	%}
 
