@@ -1,6 +1,24 @@
 \chapter{Realization}
 \label{chapter:realization}
 
+\section{Parameter Reduction}
+
+As the plug-in slowly reached its final state and the comparison to the 'Vocal Rider' was finished, it was necessary to transfer some settable parameters to fixed constants. In development it was useful to be able to change the important parameters while in runtime for example the compress and amplification times. Now it already emphasised which settings will result in the best outcome. Small changes could be slightly better depending on the current circumstances but they are not required for a good result. Additionally with wrong application these parameters could create a poor result. Therefore and with the likely possibilities of a user not knowing what each of these parameters does, it seemed to be advantageous to hide those as constants, invisible at the UI.\\
+This parameter reduction was applied to the lookahead delay, compress time, amplification time, RMS time, idle time, the side chain time constants and like already described, the gate. With the experience from testing the plug-in with many different settings in various circumstances the default choices for the parameters already got to reasonable values.\\
+With a bad lookahead delay the gain adaption could happen to early or it has no noticeable effect. In the process of testing it commuted in at 60ms of delay as a good default value. For the parameter reduction it got set to 50ms as this resulted in the best outcome at additional test with special precision on the lookahead delay. A further test with a comparison of the drawn automation and the vocal signal waveform validated the new setting (see Fig. \ref{auto2look}, \ref{auto}).\\
+The RMS averaging time shouldn’t be to long as this adds up on the total reaction time of the plug-in. On the other hand it needs a big enough time window to calculate a useful average. At the beginning of development it was set to 60ms. The comparison to the Waves “Vocal Rider” resulted in very small time windows (down to 8ms) for the averaging at this plug-in, to imitate the outcome. As this seemed a bit fast in consideration of previous experiences, it got into further tests with altering RMS time in collaboration with changing compress and amplification times. As result the RMS time is finally set to 30ms.\\
+With the initialisation of two different attack times for compression and expansion it was manifested that the expansion time would be greater then the compression time. Still the final settings were not yet set. So again, the comparison to the 'Vocal Rider' served as an inspiration. Though with a expansion time above two seconds it was not reacting fast enough to achieve the planned results, especially compared to the compression. As consequence the expansion time came down to 1500ms for the final build.\\
+The compression time settings from the comparison with the 'Vocal Rider' were similar to a slow compressor and therefore still to fast to fit the idea of this thesis. As follows it had to be tested independently. This lastly resulted in a compression time of 600ms working out and, even though it was not planned, a slope of 1/3 at gain reduction. The reason for a additional slope were some vocal parts which got their level to low after compression. With a slope only at compression the gain adaption is balanced.\\
+The idle time is set after considerations on the small gaps between phrases on vocal tracks. As it should be long enough to endure most of these gaps it is finally set to 500ms. A longer duration for the main functionality of the plug-in seemed unreasonable as it mainly extends the part after a vocal signal where the plug-in would just amplify noise.\\
+For the side chain input the plug-in takes a idle time set to two seconds to be able to ignore instrumental breaks. With a shorter setting it still results in decreasing vocal level while those breaks are happening. Furthermore it uses the same RMS time like the main input and smoothes the resulting gain similar slow to the amplification time with a time coefficient adjusted to 1600ms.\\
+The gate just adapts with the loudnessGoal like described in 5.2 and is not settable in the UI anymore.\\
+
+
+
+
+NEUE SECT
+
+
 At the beginning of development ideas were tested in Python, later JUCE\footnote{juce.com} framework based on C++ was used. The functionality of the plug-in was mainly tested in Logic Pro 9.\\
 
 \section{Python}
@@ -8,6 +26,8 @@ At the beginning of development ideas were tested in Python, later JUCE\footnote
 Development was not started with a final blueprint for the plug-in. Especially at the beginning several ideas on the basic algorithm, the gate or loudness detection were tested. In consequence the code had to be rearranged often. So Python came in handy as it focuses on code readability. In Python code there are fewer steps necessary to write the same program as for example in C++. Nevertheless, the plug-in was finally written in C++ (see below).\\
 Furthermore, Python provides various packages which extend its scope by useful features. For example the matplotlib.pyplot\footnote{matplotlib.org/api/pyplot\_api.html} plotting framework enables to draw graphs of results. This was especially useful for testing on filter implementation (see chpt. 3.2) and subsequently comparing optimisation results later on (see chpt. 4). The numpy\footnote{numpy.org} package was essential for mathematical operations and the scipy\footnote{scipy.org} tools was very useful in terms of audio handling and optimization. For this study Python version 3.6 was used.\\
 Nevertheless Python was not the final choice for the plug-in as the C++ based JUCE framework offers a great predefined interface for audio plug-ins as well as the ability of fast processing due to the hardware-oriented C++ language. Speed of calculations can be crucial for real-time audio processing.\\
+
+To make use of this package the current code of the plug-in was primarily transferred from C++ back to Python (used to test algorithmic ideas so far). After the Python duplicate was ready to use a function to compare the resulting audio files after processed with the “Vocal Rider” and the study plug-in was developed.
 
 \section{JUCE framework and C++}
 
@@ -53,6 +73,132 @@ if (++dpw >= delayBufferLength)
 	dpw = 0;
 ...
 \end{lstlisting}
+
+In order to avoid that the whole plug-ins output is delayed the setLatencySamples() (see first code example) method from JUCE was used to communicate the resulting delay with the embedding DAW. Therefore a correct working DAW will send the signal earlier to the plug-in and the output remains at the correct position despite the lookahead.\\
+For the development a fader in the UI was realised to adjust the lookahead at runtime, but in the final build the amount of samples is constant as the plug-in is designed to be as simple to work with as possible. Therefore the lookahead time is chosen in adaption to the compress/amplification times and the tests with real vocal tracks (see 5.6).
+
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{images/ring_buffer}
+\caption{Initialized ring buffer with read and write pointers}
+\end{figure}
+
+AUTO
+
+In principle automations are supported by the JUCE framework and it can be very simple to implement a standard automation process. The normal case would be a user interacting with the UI and the plug-in communicating these changes to the DAW on write mode. On automation read mode the changes are send back to the plug-in during playback and it does its normal processing chain with changing parameters with the user drawn timing. The study plug-in was a special case which made it more difficult to realise the automation. In case of the study plug-in the write process of the automation should not be influenced by a user at intended use. Furthermore it should just receive and multiply the adapted gain from the drawn automation at read mode.\\
+Like in the Waves plug-in a button was implemented at the UI to switch between read and write mode. Therefore the plug-in always knows if it needs to adapt the gain itself. The read mode implementation was performed quite fast as it just bypasses the regular calculations and multiplies the gain value set by the DAW with the current sample. The communication between DAW and plug-in works well on this part with the predefined parameter class from JUCE. The write mode produced more problems.\\
+The plug-in adapts the gain value at write mode for every sample. When this would be communicated to the DAW like in normal automation process it has to draw at least 44100 adapted gain values each second. This easily overtaxes a DAW and is more accurate as it needs to be for a acceptable result. The DAW expects just a few changes per second for the automation as its normal use case (user modifies parameter at UI) would generate. It follows that the drawn automation had to be simplified.\\
+At the first attempts automation changes were only communicated when the gain adaption changes its direction (compression/amplification) or when the difference to the last drawn automation point became crucial. With this procedure the output in the DAW would have been acceptable but at some spots it made incorrect jumps. These jumps occured in duration of at most 2 samples but they were still unwanted. Due to involvement of several devices in this process the real cause of the jumps could not be figured out. Different timings and positions for the communication to the DAW and also change of the parameter values were tested.\\
+
+RAUS:
+The final solution sets a automation point every 80ms as long the gain changed about at least 0.1dB.
+Therefore the gain adaption is constantly drawn in the automation curve but 12,5 instead of 41000 times a second or more. It does not set a new point when the gain is not adapting as this would be redundant. 
+
+There are still jumps in the curve but this is acceptable as the jumps occur rarely and gain difference is about at most 0.1dB. Additionally these jumps are now located at correct positions without smoothing, which is not essential for such small amounts of adaption.\\
+
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{images/automation}
+\caption{Automation written by the study plug-in into a DAW}
+\label{auto}
+\end{figure}
+
+adapting LDNS goal
+
+To simplify the selection of a fitting loudnessGoal for a user, a input meter was implemented close to the loudnessGoal slider and the current gain adaption. In this way it is easier to check whether the current setting makes sense. 
+
+In conclusion a button was implemented accessible at the UI which switches the plug-in to loudnessGoal detection mode.
+
+
+This is a task predestined to be performed offline, but due to the complexity of offline calculations in a plug-in operating in different DAWs the resources to realise it were not available in this study. For future work it would be possible to make use of the full ITU-R BS.1770-4 algorithm for this task.\\
+
+Side CHain
+
+Side chaining is not part of the standard I/O\footnote{I/O = input/output} layout of JUCE but is supported since JUCE version 4.1. To realise another input, it was added in the BusesProperties() structure from the AudioProcessor class. As for the plug-in it is not necessary to have a side chain input, supported bus layouts had not to be changed.
+
+Therefore the embedding DAW is able to feed it with a signal but does not need to do so. For further testing in Logic Pro 9 the plug-in had to be revalidated for the DAW, before it accepted the new I/O layout. This was not necessary for previous algorithmic changes.\\
+
+To do this the plug-in reads the side chain buffer in its main processBlock() method.
+
+The side chain feature remains an usable addition to the main plug-in but becomes no part of it as it is not automatically profitable in every use case. That is why a button is implemented at the UI to toggle side chain integration on and off. On further term this is useful as different DAWs will handle an undefined (when no input channel/bus is chosen) side chain input in a dissimilar. For example will Logic Pro 9 send an empty signal containing only zero values. This would effect the outcome of the plug-in when side chain integration is active as it would interpret the signal as a quiet backtrack. With the side chain activation button toggled off by default, there is no urgent need of a silence detection always running in the plug-ins side chain processing chain.\\
+
+Idle time
+
+For reasons of simplification everything was implemented in the updateGain method.\\
+
+\begin{lstlisting}[frame=single]
+double AutoVocalCtrlAudioProcessor::updateGain(double sample, 
+double lastGn)
+{
+    if (sample != *loudnessGoal) {
+        idleCount = 0;
+    } else if (idleCount < maxIdleSamples) {
+        idleCount++;
+        return lastGn;
+    }
+...
+}
+\end{lstlisting}
+
+Consequently the UI was expanded with a pre-gain slider for the side chain input which adds up before the comparison to the loudnessGoal. Controlling the input level of the side chain signal was possible before via a level-controlled bus\footnote{A Bus is a single path for multiple audio sources to be routed and processed.} send but now the mixing engineer is able to do it all at one place while check the level meters for both signals right next to each other at the UI. 
+
+\section{Store Settings}
+
+At startup the plug-in regularly initialises with settings that may fit some use cases but always have to be checked and adjusted properly for the current audio tracks. As a mixing engineer could start a mixing process on one day and finish it on another he may save and close the project and the used DAW for the night. Therefore the plug-in needs to get its latest settings saved or else it would initialise with the unchanged startup setting. This problem already effects the UI at runtime when it is closed and opened again. While the parameters for processing still stay correct in this case the UI could show wrong values at sliders which are not correctly refreshed.\\
+To prevent this problem the getStateInformation() and setStateInformation() which will be called by the DAWs are filled with the necessary save commands.\\
+
+\begin{lstlisting}[frame=single]
+void AutoVocalCtrlAudioProcessor::setStateInformation (const 
+void* data, int sizeInBytes)
+{
+    ScopedPointer<XmlElement> xmlState (getXmlFromBinary (data, 
+    sizeInBytes));
+    if (xmlState != nullptr)
+    {
+        if (xmlState->hasTagName ("AutoVocalCtrl"))
+        {
+            *sc = (bool) xmlState
+            ->getBoolAttribute ("sc", false);
+            *read = (bool) xmlState
+            ->getBoolAttribute ("read", false);
+           ...
+            *loudnessGoal = (float) xmlState
+            ->getDoubleAttribute ("loudnessGoal", -20.0);
+            *gainRange = (float) xmlState
+            ->getDoubleAttribute ("gainRange", 6.0);
+            ...
+        }
+    }
+    ...
+}
+\end{lstlisting}
+
+The plug-in creates a new xml file with the values of all settable parameters in the getStateInformation() method and reads the xml file for parameter adjustment in the setStateInformation() method. Finally the setStateInformation() method notices the UI to refresh the according parameter sliders.\\
+As DAWs are calling those methods at different timing but always at startup and before the shutdown of the plug-in or the UI, all user made adjustments are saved and regained at startup. Additional in this way the DAW will be able save presets for the plug-in which can be used in other mixing session for example as orientation for the parameter adjustment.\\
+
+\section{UI Design}
+
+The main focus of this study was the algorithm behind the plug-in. Nevertheless it was the intension that a user should be able to work with the plug-in without reading a manual. Therefore the UI was refactored after parameter reduction.\\
+The main problem of the previous UI was the lack of the possibility to differ between sliders for parameter adjustments and elements which were displaying inside information of the plug-in (see Fig. 5.4). Additionally the slider labels had not enough space to display in complete length similar to the slider value displays which could already confuse a user by their large number.\\
+
+\begin{figure}[H]
+\includegraphics[width=0.5\textwidth]{images/designVorher}
+	\centering
+	\caption{UI after parameter reduction}
+\end{figure}
+
+The main change in the UI re-design was the highlighting of usable elements. To set them apart from only informational parts, all the changeable components are coloured red. The colour is chosen as it strongly diverges from its complementary colour green which is the plug-in’s main colour (see Fig. 5.5). Additionally only the usable sliders and buttons got a coloured frame instead of the plain black outline of the pure metering components.\\
+
+\begin{figure}[H]
+\includegraphics[width=0.5\textwidth]{images/designNeuNum}
+	\centering
+	\caption{Final UI in Logic Pro 9}
+\end{figure}
+
+In the new design the gain range and loudness goal are set via red triangles (1) pointing on the corresponding level/gain meter. This was done to let the user to know the connection between these UI elements. The loudnessGoal should be set in consideration of the input level meter (2) right next to it and the gain range is directly modifying the maximal and minimal values of the connected gain reduction meter (3).\\
+The three meters which are displaying the I/O levels (input, side chain input, output) are next to each other and visualising their value with a rising bar where a colour gradient is applied to. Therefore the green tone of the bar is getting brighter with increasing signal level to support a fast assessment of the user.\\
+All UI elements excluding the buttons are divided in different sections: The I (input), O (output), side chain and gain adaption section, containing the belonging components. To know which task the single components fulfil, they have a additional label, on the side which is not adjoining to another UI element.\\
+When the Side Chain feature is disabled, the corresponding gain detection button (4) and the side chain input gain slider (5) become disabled too, as they would have no effect. This can be observed by the user as the red colour of these UI elements gets greyer and the slider loses its green frame which previously signalled a possible interaction. The components which are only for displaying information are disabled for user interaction by default.\\
+For most of the slider elements it is not necessary for the user to know the exact value but to get a approximation and therefore a feeling about what is happening. Clear slider values often seduce users to adjust sliders to pretty numbers (e.g. rounding to 5 or repeated digits) instead of only observing the change of the outcome. As consequence most of the slider values are removed in the new design. A orientation for the input and output meters is still located next to them but in a light green like the element labels in order to not distract from the main information.\\
+The side chain input (6) is chosen in the embedding DAW and therefore not to set in the plug-in’s UI.\\
 
 \section{Test environment}
 
