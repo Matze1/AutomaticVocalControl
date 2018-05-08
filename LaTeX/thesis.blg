@@ -6,45 +6,45 @@ Database file #1: references.bib
 Warning--empty author and editor in vocalRiderM
 Warning--empty author and editor in ITUalgo
 Warning--empty booktitle in beaqleJS
-You've used 11 entries,
+You've used 12 entries,
             1791 wiz_defined-function locations,
-            493 strings with 4414 characters,
-and the built_in function-call counts, 1363 in all, are:
-= -- 102
-> -- 24
+            496 strings with 4461 characters,
+and the built_in function-call counts, 1452 in all, are:
+= -- 107
+> -- 25
 < -- 1
-+ -- 15
++ -- 16
 - -- 4
 * -- 36
-:= -- 170
-add.period$ -- 22
-call.type$ -- 11
-change.case$ -- 8
+:= -- 176
+add.period$ -- 23
+call.type$ -- 12
+change.case$ -- 9
 chr.to.int$ -- 0
-cite$ -- 14
-duplicate$ -- 91
-empty$ -- 211
+cite$ -- 15
+duplicate$ -- 96
+empty$ -- 229
 format.name$ -- 4
-if$ -- 338
+if$ -- 362
 int.to.chr$ -- 0
-int.to.str$ -- 11
+int.to.str$ -- 12
 missing$ -- 8
-newline$ -- 46
+newline$ -- 49
 num.names$ -- 5
-pop$ -- 69
+pop$ -- 75
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 53
+skip$ -- 61
 stack$ -- 0
 substring$ -- 0
-swap$ -- 11
+swap$ -- 12
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 3
 while$ -- 4
-width$ -- 13
-write$ -- 87
+width$ -- 14
+write$ -- 92
 (There were 3 warnings)
