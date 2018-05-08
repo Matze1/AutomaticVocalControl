@@ -1,0 +1,24 @@
+\chapter{Conclusion}
+\label{chapter:conclusion}
+
+\section{Outcome}
+
+The realisation of the objective could be achieved with a satisfactory result. During the process of development the JUCE Framework emphasises as a good choice by supporting with basic but solid functionality for an audio plug-in which would have been very time-consuming to build up from scratch.\\
+With the first prototype version it was already possible to obtain favourable results (reasonable parameter settings implied). Nevertheless it still had some unfavorable problems and unfinished design decisions. The comparison to “Vocal Rider” approved the functionality of the prototype but also pointed out the differences between the two approaches of the plug-ins. Despite the differences the comparison resulted in ideas for further improvements of the study plug-in.\\
+In retrospective view quite a lot improvements enhanced the early prototype. The additions with most influence on the plug-ins performance where the extra idle time for ignoring small breathing or rhythmic gaps between vocal signals, the arability to draw gain automations into the DAW, the side chain feature and the automatic detection of parameters.\\
+The side chain feature validated its use in the according hearing test where its advantages for the plug-in where observable as well as the outcome of a plug-in with this feature enabled getting quite close to the optimal reference which performed the gain adaption with oracle knowledge.\\
+
+\section{Future Improvements}
+
+The study plug-in meets the requirement of the objective but it could still be improved.\\
+For example, parameter detection is an optional feature which could be useful to set the plug-in correctly, especially at first interactions of a user but as described in the corresponding sections 5.2 and 5.3, it is only able to calculate ‘online’ during playback of the song. An offline calculation is not implemented yet which would be significantly faster. As one purpose of the plug-in is to save time for the mixing engineer, it would be great to enhance the feature with offline calculations in future development. When the offline calculation is possible it would be able to measure the perceived signal level by using the loudness algorithm\cite{ITUalgo} which may improve the plug-in’s outcome.\\
+An other option of a reasonable future improvement would be to extend its scope of application. Currently it is designed to work with vocal signals but other recordings may show similar problems e.g. recordings of the bass guitar. Therefore it would be useful to have the opportunity to chose between different presets for the main constants of the plug-in’s calculation, fitting the different signals.\\
+Additional to possible algorithmic improvements the plug-in could be improved by further testing for increased stability and correctness of the results.\\
+
+\section{Conclusion}
+
+A plug-in for decreasement of long term dynamics was developed. During the work on this study the plug-in’s prototype frequently changes and additional improvements in terms of features, algorithms and parameters were included.\\
+It certainly might get further improvements in different parts but in final conclusion the study resulted in a plug-in mature enough to fulfil its intended task in daily production, and even some features more.\\
+
+
+

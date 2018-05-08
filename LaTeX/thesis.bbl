@@ -1,27 +1,48 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
+
+\bibitem{wikiLoud}
+en.wikipedia.org/wiki/loudness.
+
+\bibitem{vocalRiderM}
+{\em Vocal {Rider User Guide}}.
+\newblock Waves, 2009.
 
 \bibitem{ITUalgo}
 {\em Recommendation {ITU-R BS.1770-4 - Algorithms} to measure audio programme
   loudness and true-peak audio level}.
 \newblock {International Telecommunication Union}, 2015.
 
+\bibitem{masterHA}
+F.~A. Everest.
+\newblock {\em The Master Handbook of Acoustics}.
+\newblock McGraw-Hill, 2001.
+
+\bibitem{scipy}
+scipy.org.
+
+\bibitem{scipyB}
+docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.optimize.brute.html.
+
+\bibitem{scipyM}
+docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html.
+
 \bibitem{DAFX}
 Udo Z\"olzer, editor.
 \newblock {\em DAFX: Digital Audio Effects}, chapter 2 - Filters and delays.
 \newblock John Wiley \& Sons Lid., second edition, 2011.
 
-\bibitem{masterHA}
-F.~A. Everest.
-\newblock {\em The Master Handbook of Acoustics}.
-\newblock McGraw-Hill, 2001.
+\bibitem{wiki}
+en.wikipedia.org/wiki/root\_mean\_square.
 
 \bibitem{DASP}
 Udo Z\"olzer.
 \newblock {\em Digital Audio Signal Processing}.
 \newblock John Wiley \& Sons Lid., second edition, 2008.
 
-\bibitem{vocalRiderM}
-{\em Vocal {Rider User Guide}}.
-\newblock Waves, 2009.
+\bibitem{beaqleJS}
+U.~Z\"olzer S.~Kraft.
+\newblock {BeaqleJS: HTML5 and JavaScript based Framework for the Subjective
+  Evaluation of Audio Quality}.
+\newblock Karlsruhe, Germany, 2014. Linux Audio Conference.
 
 \end{thebibliography}

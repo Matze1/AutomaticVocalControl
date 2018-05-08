@@ -1,0 +1,62 @@
+\chapter{Realization}
+\label{chapter:realization}
+
+At the beginning of development ideas were tested in Python, later JUCE\footnote{juce.com} framework based on C++ was used. The functionality of the plug-in was mainly tested in Logic Pro 9.\\
+
+\section{Python}
+
+Development was not started with a final blueprint for the plug-in. Especially at the beginning several ideas on the basic algorithm, the gate or loudness detection were tested. In consequence the code had to be rearranged often. So Python came in handy as it focuses on code readability. In Python code there are fewer steps necessary to write the same program as for example in C++. Nevertheless, the plug-in was finally written in C++ (see below).\\
+Furthermore, Python provides various packages which extend its scope by useful features. For example the matplotlib.pyplot\footnote{matplotlib.org/api/pyplot\_api.html} plotting framework enables to draw graphs of results. This was especially useful for testing on filter implementation (see chpt. 3.2) and subsequently comparing optimisation results later on (see chpt. 4). The numpy\footnote{numpy.org} package was essential for mathematical operations and the scipy\footnote{scipy.org} tools was very useful in terms of audio handling and optimization. For this study Python version 3.6 was used.\\
+Nevertheless Python was not the final choice for the plug-in as the C++ based JUCE framework offers a great predefined interface for audio plug-ins as well as the ability of fast processing due to the hardware-oriented C++ language. Speed of calculations can be crucial for real-time audio processing.\\
+
+\section{JUCE framework and C++}
+
+JUCE is a cross-platform framework for audio applications based on C++. The main advantage is that it contains the functions needed for compiling to a VST\footnote{Virtual Studio Technology plug-in architectur provided by Steinberg} or AU\footnote{Audio Unit plug-in architectur provided by Apple} plug-in. Therefore, the main focus could stay on the algorithm of the plug-in during development. The JUCE audio plug-in template can be easily extended with a simple UI with sliders for the parameters of the algorithm. This is useful for testing the effects of individual parameters. JUCE covers much of the communication with the DAW. Mostly this was fitting to the study plan and for this reason only a few parts in which the plug-in had special needs had to be overwritten.\\
+
+Dependent on the current set of the buffer size the plug-in will receive buffer blocks of a known amount of samples. These buffer blocks will be processed stepwise using the method processBlock()Inside the method each of the described work steps will be performed directly or by calling a responsible method. Subsequently the processed samples will be written back into the current buffer and the next buffer will be handled.\\
+
+During development most of the parameters described in the following sections were settable in a basic dummy UI. This was realised with the standard JUCE slider and button objects and used for tests and fast adjustments.\\
+
+filters
+ They are initialised at every plug-in startup in the JUCE method “prepareToPlay” with the current sample rate of the integrating DAW:\\
+ 
+ Before implementing in C++ the filter class was tested in Python. Therefore different signals with frequencies between 0 and 20000Hz were send through both filters and the resulting amplitudes were plotted in a graph via pyplot (see 2.1). The current algorithm results in a descent graph (Fig. 3.2). To test the C++ version of the filter the results of the same input with the previously tested Python implementation were compared.\\
+ 
+ This is realised by a ring buffer with two pointers at different locations. One write pointer to write the current sample transferred from the DAW into the buffer which is also used to determine the gain adaption and one read buffer ahead of it which is pointing on the sample that will be multiplied with the determined gain. To make this possible the gap between both pointers is as large as the set samples of the lookahead (converted from ms) and filled with zeros at the initialisation of the plug-in.\\
+
+\begin{lstlisting}[frame=single]
+void AutoVocalCtrlAudioProcessor::updateDelay()
+{
+    int delayInSamples = msToSamples(*delayLength);
+    delayReadPos = (int)(delayWritePos - delayInSamples
+    + delayBufferLength) % delayBufferLength;
+    setLatencySamples(delayInSamples);
+}
+\end{lstlisting}
+
+When a pointer hits the end of the buffer it is set back to the start (see code example below) which leads to the imitation of a ring.\\
+
+\begin{lstlisting}[frame=single]
+...
+gain[channel] = updateGain(updateGate(rms2[channel], newGate),
+gain[channel]);
+double g = pow(10, gain[channel]/20);
+delayData[dpw] = channelData[sample];
+...
+const double o = delayData[dpr] * g;
+...
+channelData[sample] = o;
+...
+if (++dpr >= delayBufferLength)
+	dpr = 0;
+if (++dpw >= delayBufferLength)
+	dpw = 0;
+...
+\end{lstlisting}
+
+\section{Test environment}
+
+The JUCE framework brings along two ways to run the plug-in. The fastest one is to build the plug-in as standalone which can be done directly from the IDE\footnote{integrated development environment}. The plug-in is starting immediately and the main input and output channels could be chosen. This is perfect for testing for small bug fixes or visual changes. The standalone procedure has its limitation in terms of e.g. a side chain input as it is not embedded in an surrounding DAW. But for this case JUCE has the Audio Plugin Host as solution. The Audio Plugin Host can host different plug-ins at the same time and visualises all inputs and outputs. It is enabling draw ing connections between those ports and the currently active audio interface of the operating computer. The advantage compared to a real DAW is that debugging output is provided through runtime.\\
+Still it is necessary to test the plug-in in a real DAW for a realistic environment and to use all considered features, for instance writing an automation or comfortably feeding a real backtrack into the side chain input. Logic Pro 9 was used to run the study plug-in for the reason that it works with AU plug-ins which are per default supported by JUCE. Due to the custom UI it was still possible to change calculation parameters at runtime.\\
+For tests in the DAW professional recorded audio tracks are needed additionally. For testing side chain adaption it was necessary to work with full musical compositions and not only to remain on vocal pieces. Therefore fitting multitrack projects from a online library\footnote{cambridge-mt.com/ms-mtk-newbies.htm} of free educational use were obtained.\\
+Before basic algorithmic tests were performed. Python was used because of its simplicity and helpful visual features. Therefore different approaches could be tested efficiently and visualised whether they have performed their task correctly.\\
