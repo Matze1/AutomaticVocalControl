@@ -3,7 +3,7 @@
 
 \section{Loudness}
 
-Including the human perception in the algorithm is a complex task as for example absolute threshold of hearing and the subjective perception of sound pressure are varying for different frequencies (see \ref{LDNSGraph}).\\
+Including the human perception in the algorithm is a complex task as for example absolute threshold of hearing and the subjective perception of sound pressure are varying for different frequencies (see Fig. \ref{LDNSGraph}).\\
 
 \begin{figure}[H]
 \includegraphics[width=0.5\textwidth]{images/loudnessGraph}
@@ -12,7 +12,7 @@ Including the human perception in the algorithm is a complex task as for example
 	\label{LDNSGraph}
 \end{figure}
 
-While gathering information on how to improve the plug-in in terms of human perception the ITU-R BS.1770-4\cite{ITUalgo} algorithm was evaluated. This algorithm classifies an audio file for its humanly perceived loudness. It is mainly used by television and music streaming services as the program loudness can be kept steady while switching content. As the human perception is of substantial interest for mixing a song, this was interesting for this study. Due to a good documentation about how to implement the loudness algorithm a copy of it was build in Python and it was decided which elements to be adopted in the plug-in. The first and second element were two filters. Their use is to mimic the human perception of sound pressure at different frequencies. The first filter is a low cut for the reason that human hearing is insensitive to low frequencies. The second filter is a high shelf and is ‘\textit{used to account for the acoustic effects of the head}’\cite{ITUalgo}. This imitation of the human hearing is substantially simplified but cost-effective in terms of computation. The low cut filter has a cutoff frequency of 38 Hz, the high shelf of around 1681 Hz.\\
+While gathering information on how to improve the plug-in in terms of human perception the ITU-R BS.1770-4\cite{ITUalgo} algorithm was evaluated. This algorithm classifies an audio file for its humanly perceived loudness. It is mainly used by television and music streaming services as the program loudness can be kept steady while switching content. As the perception is of substantial interest for mixing a song, this was investigated in this study. Due to a good documentation about how to implement the loudness algorithm a copy of it was build in Python and it was decided which elements to be adopted in the plug-in. The first and second element were two filters. Their use is to mimic the human perception of sound pressure at different frequencies. The first filter is a low cut for the reason that human hearing is insensitive to low frequencies. The second filter is a high shelf and is ‘\textit{used to account for the acoustic effects of the head}’\cite{ITUalgo}. This imitation of the human hearing is substantially simplified but cost-effective in terms of computation. The low cut filter has a cutoff frequency of 38 Hz, the high shelf of around 1681 Hz.\\
 
 \begin{figure}[H]
 \includegraphics[width=0.8\textwidth]{images/filter_test}
@@ -23,11 +23,11 @@ While gathering information on how to improve the plug-in in terms of human perc
 
 The filter section is followed by the determination of a root mean square (RMS) value for time windows of 400ms overlaping 75\% (a value is saved every 100ms). This means it is calculating the root of the average from the squares of each sample in the set time window which equals the power of the signal.\\
 RMS calculation is used because it is part of the imitation of human perception: a human will not interpret a small impulse of a handful of samples as loud as a audio signal at the same level of longer duration.  For example ‘\textit{a 3-msec pulse must have a level about 15 dB higher to sound as loud as a 0.5-sec (500-msec) pulse}'\cite{masterHA}.\\
-Subsequently all rms values below a absolute threshold of -70LKFS\footnote{definition in \cite{ITUalgo}} are sorted out by a gate and a average value is determined. Another gate of -10LU below the average is applied on the rms values and a second averaging of measurements is performed. The resulting average is the loudness of the processed audio file.\\
+Subsequently, all RMS values below a absolute threshold of -70LKFS\footnote{definition in \cite{ITUalgo}} are sorted out by a gate and a average value is determined. Another gate of -10LU below the average is applied on the rms values and a second averaging of measurements is performed. The resulting average is the loudness of the processed audio file.\\
 
 \section{Vocal Rider}
 
-The 'Vocal Rider' by Waves is a published audio plug-in which realizes a automatic gain adaption for vocal signals.
+'Vocal Rider' by Waves is a commercially available audio plug-in which realizes a automatic gain adaption for vocal signals.
 
 \begin{figure}[H]
 \includegraphics[width=0.35\textwidth]{images/vocalRiderUI}
@@ -36,7 +36,7 @@ The 'Vocal Rider' by Waves is a published audio plug-in which realizes a automat
 	\label{VRUI}
 \end{figure}
 
-The vocal signal's level is adjusted to the set \textit{target} value (at top of Fig. \ref{VRUI}). The '\textit{target sets the reference range for vocal mix positioning. [It] (…) will move the Rider Fader’s ‘0’ calibration.}'\cite{vocalRiderM}. Additional a user can control the maximal gain adaption with the '\textit{range}' slider and adjust the resulting level to the backtrack via a output gain. For results depending on the instrumental backtrack a side chain input can be used and adjusted with the '\textit{music}' potentiometer.\\
+The vocal signal's level is adjusted to the set \textit{target} value (at top of Fig. \ref{VRUI}). The '\textit{target sets the reference range for vocal mix positioning. [It] (…) will move the Rider Fader’s ‘0’ calibration.}'\cite{vocalRiderM}. Additionally a user can control the maximal gain adaption with the '\textit{range}' slider and adjust the resulting level to the backtrack via a output gain. For results depending on the instrumental backtrack a side chain input can be used and adjusted with the '\textit{music}' potentiometer.\\
 As in this study the same basic idea is realized with a independent approach it is possible to adopt useful results from the comparison (see chapter \ref{chapter:comparison}) of both plug-ins and remain with potential advantages.\\
 
 \section{Optimization}

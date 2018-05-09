@@ -195,7 +195,11 @@ Hamburg, May 9, 2018
 
 	\newpage\phantomsection%
 	\addcontentsline{toc}{chapter}{\bibname}              % add Bibliography to TOC
-	\bibliographystyle{unsrt}\bibliography{references}
+	\bibliographystyle{unsrt}
+	\begingroup
+	\raggedright
+	\bibliography{references}
+	\endgroup
 
 
 	%\newpage\phantomsection%
