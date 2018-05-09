@@ -462,7 +462,8 @@ void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
                 gain[channel] = *automationGain;
                 double g = pow(10, gain[channel]/20);
                 const double fg = finalClipRange.clipValue(g * pow(10, *oGain/20));
-                oRms2[channel] = updateRMS2(channelData[sample] * fg, oRms2[channel]);
+                iRms2[channel] = updateRMS2(updateFilterSample(channelData[sample], iHighshelf, iLowcut), iRms2[channel]);
+                oRms2[channel] = updateRMS2(updateFilterSample(channelData[sample] * fg, oHighshelf, oLowcut), oRms2[channel]);
                 channelData[sample] = channelData[sample] * fg; //HIER NOCH CLIPPEN!?
             } else {
                 if (*sc) {
@@ -568,9 +569,6 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 
 double AutoVocalCtrlAudioProcessor::getCurrentGainControl()
 {
-    if (*read) {
-        return *automationGain;
-    }
     double gainControl = 0.0;
     for (int i = 0; i < getMainBusNumInputChannels(); i++) {
         gainControl += gain[i];

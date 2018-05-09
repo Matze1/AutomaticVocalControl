@@ -43,13 +43,18 @@ void newLookAndFeel::drawLinearSlider(Graphics& g,
     } else if (slider.getMinimum() < -55.0) {
         g.fillAll(Colours::black);
         g.setGradientFill(ColourGradient(Colour(170,215,170), x, y, Colour(43, 63, 43), x, y + h, false));
-        g.fillRect(x, y + h, w, (int)(-h + sliderPos - 1));
+//        g.fillRect(x, y + h, w, (int)(-h + sliderPos - 1));
+        g.fillRect(x,(int)sliderPos,w,(int)(h - sliderPos + 2));
     } else {
         g.fillAll(Colours::black);
         const bool which = (slider.getMinimum() < -9.9);
         Colour c = which ? Colour(109, 151, 110):slider.findColour(Slider::thumbColourId);
         g.setColour(c);
-        g.fillRect(x, y + h/2, w, (int)(-h/2 + sliderPos - 1));
+//        g.fillRect(x, y + h/2, w, (int)(-h/2 + sliderPos - 1));
+        if (sliderPos < h/2)
+            g.fillRect(x,(int)sliderPos,w,(int)(h/2 - sliderPos + 2));
+        else
+            g.fillRect(x,y + h/2,w,(int)(-h/2 + sliderPos));
         if (!which) {
             g.fillRect(x, y + h/2, w, 1.0);
         }

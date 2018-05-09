@@ -1,0 +1,37 @@
+\chapter{Summary}
+\label{chapter:summary}
+
+The objective of this study was to develop a plug-in for digital audio workstations which reduces the long term dynamics of vocal signals to release mixing engineers of this task.\\
+The project started with the creation of a prototype which had the main functionality implemented:
+
+A filter section for a simplified imitation of human perception introduces the algorithm of the prototype. Subsequently an RMS average of the input signal is calculated. A following gate lets only audio samples above of an automatically adjusted threshold pass. This disables the gain adaption for signal sections without vocals. The difference between loudness goal and current RMS average is determined after the gate. This difference is smoothed over a time window and therefore results in the final gain. The duration of the time window is changing in dependency of a positive or negative gain adaption.\\
+
+Subsequently, the prototype was improved by adding additional features
+
+It became able of writing a gain automation into the DAW
+
+idle
+
+ or enable automatic parameters settings. In addition to these improvements a side chain feature was added extending the use of the plug-in by adjusting the vocal signal output level to the side chain input level (in anticipated use: the instrumental backtrack).\\
+
+
+The prototype's outcome was compared to the commercially available plug-in “Vocal Rider”\footnote{waves.com/plugins/vocal-rider} which is a plug-in with similar functions.
+
+Therefore python  algo optimized parameter to fit
+
+Some improvements were based on this comparison as well as it influenced the subsequently parameter setting.\\
+
+Implemented it JUCE as 
+
+ändern
+JUCE Framework emphasises as a good choice by supporting with basic but solid functionality for an audio plug-in which would have been very time-consuming to build up from scratch.
+
+Finally, the advantages of the side chain feature were evaluated by hearing tests with independent participants.\\
+
+\section{Conclusion}
+
+A plug-in for decreasement of long term dynamics was developed. During the work on this study the plug-in’s prototype frequently changes and additional improvements in terms of features, algorithms and parameters were included.\\
+It certainly might get further improvements in different parts but in final conclusion the study resulted in a plug-in mature enough to fulfil its intended task in daily production, and even some features more.\\
+
+
+

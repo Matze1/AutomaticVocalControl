@@ -28,9 +28,7 @@
       <FILE id="IwUaRf" name="newLookAndFeel.cpp" compile="1" resource="0"
             file="Source/newLookAndFeel.cpp"/>
     </GROUP>
-    <FILE id="ClKIXz" name="BAPBG08.png" compile="0" resource="1" file="../../../Library/Containers/com.apple.mail/Data/Library/Mail Downloads/D7721D38-4D2C-474D-BA22-FC1B7D1A4C6E/BAPBG08.png"/>
-    <FILE id="CYaxvy" name="BAPBG07.png" compile="0" resource="1" file="../../../Library/Containers/com.apple.mail/Data/Library/Mail Downloads/DF7F7E18-9F53-4C73-8265-E9D480955075/BAPBG07.png"/>
-    <FILE id="aqztvY" name="BAPBG09.png" compile="0" resource="1" file="../../../Library/Containers/com.apple.mail/Data/Library/Mail Downloads/9FC32AC4-9119-43E0-8F61-EF7E22312C2B/BAPBG09.png"/>
+    <FILE id="KdHOeV" name="BAPBG09.png" compile="0" resource="1" file="BAPBG09.png"/>
   </MAINGROUP>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX">

@@ -177,6 +177,9 @@ void AutoVocalCtrlAudioProcessorEditor::buttonClicked(Button* button)
         readButton.setToggleState(!value, dontSendNotification);
         buttonLabel = !value ? "Read":"Write";
         readButton.setButtonText(buttonLabel);
+        refreshSliderValues();
+        scInputGSlider.setValue(-60.0);
+        v2bDiffSlider.setValue(0.0);
     } else if (button == &detectButton) {
         const bool value = processor.detect->get();
         if (value) {
@@ -285,7 +288,7 @@ void AutoVocalCtrlAudioProcessorEditor::timerCallback()
         stream << std::setprecision(2) << d;
         scDetectLabel.setText(stream.str(), dontSendNotification);
     }
-    if (processor.sc->get()) {
+    if (processor.sc->get() && !processor.read->get()) {
         scInputGSlider.setValue(processor.getScInputRMSdB(0) + processor.scGainUI->get());
         v2bDiffSlider.setValue(processor.v2bDiff[0]);
     }
