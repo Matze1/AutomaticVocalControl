@@ -41,8 +41,8 @@ As in this study the same basic idea is realized with a independent approach it 
 
 \section{Optimization}
 
-For the comparison in chapter \ref{chapter:comparison} optimization methods were used to find parameters for the study plug-in to get to similar results as the 'Vocal Rider' does. Therefore the scipy\cite{scipy} methods scipy.optimize.brute and scipy.optimize.minimize were used.\\
+For the comparison in chapter \ref{chapter:comparison} optimization methods were used to find parameters for the study plug-in to get to similar results as the 'Vocal Rider' does. Therefore the scipy\cite{scipy} methods scipy.optimize.brute and scipy.optimize.minimize were chosen.\\
 Previously a function had to be written which returns the current problem as a number. Thereby a smaller number equals a smaller problem.\\
-The '\textit{brute}' optimization algorithm '\textit{computes the function’s value at each point of a multidimensional grid of points, to find the global minimum of the function}'\cite{scipyB}. The according '\textit{grid}' is therefore previously defined for the current optimization problem. This is done by initializing a set of user defined bounds and step sizes for each of the parameters which a transferred to the function to be optimized.\\
+The '\textit{brute}' optimization algorithm '\textit{computes the function’s value at each point of a multidimensional grid of points, to find the global minimum of the function}'\cite{scipyB}. The according '\textit{grid}' is therefore previously defined for the current optimization problem. This is done by initializing a set of user defined bounds and step sizes for each of the parameters which is transferred to the function to be optimized.\\
 The '\textit{minimize}' optimization algorithm per default '\textit{uses the L-BFGS-B algorithm ... for bound constrained minimization}'\cite{scipyM}. This algorithm is able to compute faster and more selective but needs a good inital parameter guess to get to a proper result.\\
 
