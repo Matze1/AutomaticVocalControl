@@ -1,3 +1,4 @@
+\backcite {VR}{{ii}{(document)}{Doc-Start}}
 \backcite {wikiLoud}{{v}{(document)}{Doc-Start}}
 \backcite {vocalRiderM}{{v}{(document)}{Doc-Start}}
 \backcite {ITUalgo}{{2}{1.2}{section.1.2}}
@@ -6,7 +7,7 @@
 \backcite {ITUalgo}{{3}{2.1}{figure.caption.6}}
 \backcite {ITUalgo}{{4}{2.1}{figure.caption.6}}
 \backcite {masterHA}{{4}{2.1}{figure.caption.7}}
-\backcite {ITUalgo}{{4}{1}{Hfootnote.3}}
+\backcite {ITUalgo}{{4}{1}{Hfootnote.2}}
 \backcite {vocalRiderM}{{5}{2.3}{figure.caption.8}}
 \backcite {vocalRiderM}{{5}{2.2}{figure.caption.8}}
 \backcite {scipy}{{6}{2.3}{section.2.3}}
@@ -23,7 +24,8 @@
 \backcite {MPlot}{{31}{6.2}{section.6.2}}
 \backcite {numpy}{{31}{6.2}{section.6.2}}
 \backcite {scipy}{{31}{6.2}{section.6.2}}
-\backcite {MultiT}{{41}{6.4}{section.6.4}}
-\backcite {MultiT}{{43}{7.1}{section.7.1}}
-\backcite {beaqleJS}{{44}{7.1}{section.7.1}}
-\backcite {ITUalgo}{{48}{8}{chapter.8}}
+\backcite {MultiT}{{40}{6.4}{section.6.4}}
+\backcite {MultiT}{{42}{7.1}{section.7.1}}
+\backcite {beaqleJS}{{43}{7.1}{section.7.1}}
+\backcite {ITUalgo}{{47}{8}{chapter.8}}
+\backcite {VR}{{48}{9}{chapter.9}}
