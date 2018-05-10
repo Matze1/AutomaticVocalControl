@@ -310,7 +310,8 @@ double AutoVocalCtrlAudioProcessor::getScInputRMSdB(int j = -1)
     double sum = 0;
     for (int i = 0; i < numSCChannels; ++i)
         sum += scRms2[i];
-    return 10 * log10(sum / numSCChannels + 1e-10);
+    const double scIn = 10 * log10(sum / numSCChannels + 1e-10);
+    return (scIn != scIn) ? -60.0:scIn;
 }
 
 // Returns current output level in dB (average of all channels)
