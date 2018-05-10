@@ -4,6 +4,8 @@
     This file was auto-generated!
 
     It contains the basic framework code for a JUCE plugin processor.
+ 
+    Edited by Nils Heine
 
   ==============================================================================
 */
@@ -61,9 +63,7 @@ public:
     void updateExpandTCo();
     void updateCompressTCo();
     void updateAlphaCo();
-    void updateBetaCo();
     void updateTimeConstants();
-    void updatePrivateParameter();
     void updateVectors();
     void updateClipRange();
     void updateDelay();
@@ -115,26 +115,17 @@ private:
     AudioSampleBuffer delayBuffer;
     int delayBufferLength;
     int delayReadPos, delayWritePos;
-    double maxDelayInSec = 1.0; // kann dann später auch weg ;-) wenn nicht mehr änderbar
-    double expandTime;
-    double compressTime;
     double delayLength;
-    double alpha;
     double newGate;
     int count;
     int count2;
     int detCount;
     int bDetCount;
     int numSCChannels;
-    bool upBefore;
-    double lastGain;
-    double gainAtPoint;
     AutoVocalCtrlFilter lowcut;
     AutoVocalCtrlFilter highshelf;
     AutoVocalCtrlFilter scLowcut;
     AutoVocalCtrlFilter scHighshelf;
-    AutoVocalCtrlFilter scfLowcut;
-    AutoVocalCtrlFilter scfHighshelf;
     AutoVocalCtrlFilter oLowcut;
     AutoVocalCtrlFilter oHighshelf;
     AutoVocalCtrlFilter iLowcut;
@@ -145,12 +136,11 @@ private:
     double currentSampleRate;
     double rmsCo;
     double scRmsCo;
-    double scRmsCoFast;
-    double expandTCo;
+    double ampTCo;
     double compressTCo;
     double alphaCo;
-    double betaCo;
     double scGain;
+    double gainAtPoint;
     int lastNumInputChannels = 0;
     int maxIdleSamples;
     int scMaxIdleSamples;
@@ -161,7 +151,6 @@ private:
     std::vector<double> rms2;
     std::vector<double> iRms2;
     std::vector<double> scRms2;
-    std::vector<double> scRms2Fast;
     std::vector<double> oRms2;
     std::vector<double> alphaGain;
     std::vector<double> betaGain;

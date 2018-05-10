@@ -4,6 +4,8 @@
     This file was auto-generated!
 
     It contains the basic framework code for a JUCE plugin editor.
+ 
+    Edited by Nils Heine
 
   ==============================================================================
 */
@@ -30,9 +32,10 @@ public:
     void resized() override;
 
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
+    // This reference for editor to access the processor object that created it.
     AutoVocalCtrlAudioProcessor& processor;
+    
+    newLookAndFeel newLookAndFeel;
     
     void sliderValueChanged (Slider* slider) override;
     void buttonClicked(Button* button) override;
@@ -50,7 +53,7 @@ private:
     Slider outputSlider;
     Slider outputGainSlider;
     
-    TextButton readButton; //verschiedene loudness goal modi in dropdown menü? detect (-> extra button kommt in UI) / SC / selbst einstellen
+    TextButton readButton;
     TextButton scButton;
     TextButton detectButton;
     TextButton scDetectButton;
@@ -60,12 +63,11 @@ private:
     Label detectLabel;
     Label scDetectLabel;
     
-    float oldGainRange = 6.0;
-    std::stringstream stream;
+    float oldGainRange;
     
     bool a;
     
-    newLookAndFeel newLookAndFeel;
+    std::stringstream stream;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AutoVocalCtrlAudioProcessorEditor)
 };

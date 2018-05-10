@@ -4,6 +4,8 @@
     This file was auto-generated!
 
     It contains the basic framework code for a JUCE plugin editor.
+ 
+    Edited by Nils Heine
 
   ==============================================================================
 */
@@ -16,10 +18,9 @@
 AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalCtrlAudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p)
 {
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
     setSize (400, 400);
     
+    // Initialization of UI Sliders
     loudnessGoalSlider.setRange(processor.loudnessGoal->range.start, processor.loudnessGoal->range.end, 1.0f);
     loudnessGoalSlider.setSliderStyle(Slider::LinearVertical);
     loudnessGoalSlider.setTextValueSuffix(" dB");
@@ -78,12 +79,14 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     outputGainSlider.setValue(processor.oGain->get());
     outputGainSlider.addListener(this);
     
+    // Initialization of UI Labels
     detectLabel.setColour(juce::Label::backgroundColourId, juce::Colour(0,0,0));
     detectLabel.setJustificationType(Justification::centred);
     
     scDetectLabel.setColour(juce::Label::backgroundColourId, juce::Colour(0,0,0));
     scDetectLabel.setJustificationType(Justification::centred);
     
+    // Initialization of UI Buttons
     readButton.addListener(this);
     readButton.setToggleState(processor.read->get(), dontSendNotification);
     
@@ -96,13 +99,13 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     scButton.addListener(this);
     scButton.setToggleState(processor.sc->get(), dontSendNotification);
     
+    // Add the initialized components to the plug-in UI
     addAndMakeVisible(readButton);
     addAndMakeVisible(detectButton);
     addAndMakeVisible(detectLabel);
     addAndMakeVisible(scDetectButton);
     addAndMakeVisible(scDetectLabel);
     addAndMakeVisible(scButton);
-    
     addAndMakeVisible(loudnessGoalSlider);
     addAndMakeVisible(gainRangeSlider);
     addAndMakeVisible(gainRangeSlider2);
@@ -114,38 +117,36 @@ AutoVocalCtrlAudioProcessorEditor::AutoVocalCtrlAudioProcessorEditor (AutoVocalC
     addAndMakeVisible(scGainSlider);
     addAndMakeVisible(v2bDiffSlider);
     
-    startTimer(40);
-    
+    // Set new LookAndFeel and declare exceptions
     setLookAndFeel(&newLookAndFeel);
     scInputGSlider.setColour(Slider::textBoxOutlineColourId, Colours::black);
     inputSlider.setColour(Slider::textBoxOutlineColourId, Colours::black);
     outputSlider.setColour(Slider::textBoxOutlineColourId, Colours::black);
     v2bDiffSlider.setColour(Slider::textBoxOutlineColourId, Colours::black);
     gainControlSlider.setColour(Slider::textBoxOutlineColourId, Colours::black);
+    
+    oldGainRange = 6.0;
+    
+    // Start timer and set Callback to 40ms
+    startTimer(40);
 }
 
 AutoVocalCtrlAudioProcessorEditor::~AutoVocalCtrlAudioProcessorEditor()
 {
+    setLookAndFeel(nullptr);
 }
 
 //==============================================================================
 void AutoVocalCtrlAudioProcessorEditor::paint (Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-//    g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
+    // Paint Background
     Image background = ImageCache::getFromMemory(BinaryData::BAPBG09_png, BinaryData::BAPBG09_pngSize);
     g.drawImageAt(background, 0, 0);
-
-    //g.setColour (Colours::white);
-    //g.setFont (15.0f);
-    //g.drawFittedText ("Hello World!", getLocalBounds(), Justification::centred, 1);
 }
 
 void AutoVocalCtrlAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
-    
+    //Positioning of subcomponents
     scButton.setBounds(40, 260, 120, 40);
     readButton.setBounds(40, 320, 120, 40);
     scDetectButton.setBounds(180, 260, 90, 40);
@@ -158,9 +159,7 @@ void AutoVocalCtrlAudioProcessorEditor::resized()
     
     loudnessGoalSlider.setBounds(116, 33, 14, 214);
     inputSlider.setBounds(130, 40, 30, 200);
-    
     outputSlider.setBounds(180, 40, 30, 200);
-    
     outputGainSlider.setBounds(210, 40, 20, 200);
     
     gainRangeSlider.setBounds(256, 33, 14, 114);
@@ -169,54 +168,78 @@ void AutoVocalCtrlAudioProcessorEditor::resized()
     v2bDiffSlider.setBounds(300, 40, 20, 200);
 }
 
+// Called by Button Listener
 void AutoVocalCtrlAudioProcessorEditor::buttonClicked(Button* button)
 {
-    if (button == &readButton) {
+    if (button == &readButton) { // Changes between Read and Write Mode of Plug-In
+        // Change Parameter
         const bool value = processor.read->get();
         processor.read->operator=(!value);
         readButton.setToggleState(!value, dontSendNotification);
+        
         buttonLabel = !value ? "Read":"Write";
         readButton.setButtonText(buttonLabel);
+        
         refreshSliderValues();
         scInputGSlider.setValue(-60.0);
         v2bDiffSlider.setValue(0.0);
-    } else if (button == &detectButton) {
+        
+    } else if (button == &detectButton) { // Starts/Ends detection of best suiting loudness goal
         const bool value = processor.detect->get();
         if (value) {
+            // Process detection results
             processor.updateLoudnessGoal();
+            
+            // Restore previous gain range
             processor.gainRange->operator=(oldGainRange);
             processor.updateClipRange();
+            
             detectButton.setButtonText("Detect LDNS Goal");
             detectLabel.setText("", dontSendNotification);
         } else {
+            // Save current gain range
             oldGainRange = processor.gainRange->get();
+            
+            // Set gain range to maximum
             processor.gainRange->operator=(processor.gainRange->range.end);
             processor.updateClipRange();
-            detectButton.setButtonText("Detecting..."); // SOLLTE NOCH ROT WERDEN ODER SOWAS OK
+            
+            detectButton.setButtonText("Detecting...");
         }
+        // Change parameter
         processor.detect->operator=(!value);
         detectButton.setToggleState(!value, dontSendNotification);
-    } else if (button == &scDetectButton) {
+        
+    } else if (button == &scDetectButton) { // Starts/Ends detection of best suiting side chain input-gain
         const bool value = processor.scDetect->get();
         if (value) {
+            // Process detection results
             processor.updateSCGain();
+            
             scDetectButton.setButtonText("Detect SC Gain");
             scDetectLabel.setText("", dontSendNotification);
         } else {
-            scDetectButton.setButtonText("Detecting..."); // SOLLTE NOCH ROT WERDEN ODER SOWAS OK
+            scDetectButton.setButtonText("Detecting...");
         }
+        // Change parameter
         processor.scDetect->operator=(!value);
         scDetectButton.setToggleState(!value, dontSendNotification);
-    } else if (button == &scButton) {
+        
+    } else if (button == &scButton) { // Toggles Side Chain Feature On and Off
+        // Change parameter
         const bool value = processor.sc->get();
         processor.sc->operator=(!value);
         scButton.setToggleState(!value, dontSendNotification);
+        
         buttonLabel = !value ? "SC ACTV":"SC";
         scButton.setButtonText(buttonLabel);
+        
         if (value) {
+            // Reset sliders
             scInputGSlider.setValue(-60.0);
             v2bDiffSlider.setValue(0.0);
         }
+        // Enable/Disable side chain associated Buttons/Sliders
         scDetectButton.setToggleState(false, sendNotification);
         processor.clearScDetect();
         scDetectButton.setEnabled(!value);
@@ -228,34 +251,43 @@ void AutoVocalCtrlAudioProcessorEditor::buttonClicked(Button* button)
     }
 }
 
+// Called by Slider Listener
 void AutoVocalCtrlAudioProcessorEditor::sliderValueChanged (Slider* slider)
 {
     if (slider == &loudnessGoalSlider) {
         double loudness = loudnessGoalSlider.getValue();
         processor.setLoudnessGoal(loudness);
-    } else if (slider == &gainRangeSlider) {
+        
+    } else if (slider == &gainRangeSlider) { // Acts as reflection of gainRangeSlider2
         const double newValue = gainRangeSlider.getValue();
-        gainRangeSlider2.setValue(-newValue);
+        gainRangeSlider2.setValue(-newValue); // Sets value of gainRangeSlider2
         processor.gainRange->operator=(newValue);
         processor.updateClipRange();
-    } else if (slider == &gainRangeSlider2) {
+    } else if (slider == &gainRangeSlider2) { // Acts as reflection of gainRangeSlider
         const double newValue = gainRangeSlider2.getValue();
-        gainRangeSlider.setValue(-newValue);
+        gainRangeSlider.setValue(-newValue); // Sets value of gainRangeSlider
         processor.gainRange->operator=(-newValue);
         processor.updateClipRange();
-    } else if (slider == &scGainSlider)
+        
+    } else if (slider == &scGainSlider) {
         processor.scGainUI->operator=(scGainSlider.getValue());
-    else if (slider == &outputGainSlider)
+        
+    } else if (slider == &outputGainSlider) {
         processor.oGain->operator=(outputGainSlider.getValue());
+    }
 }
 
+// Refreshes the UI subcomponents (for processor internal changes)
 void AutoVocalCtrlAudioProcessorEditor::refreshSliderValues()
 {
+    // Refresh Sliders
     gainRangeSlider.setValue(processor.gainRange->get());
     gainRangeSlider2.setValue(-processor.gainRange->get());
     outputGainSlider.setValue(processor.oGain->get());
     loudnessGoalSlider.setValue(processor.loudnessGoal->get());
     scGainSlider.setValue(processor.scGainUI->get());
+    
+    // Refresh Buttons
     a = processor.scDetect->get();
     buttonLabel = a ? "Detecting...":"Detect SC Gain";
     scDetectButton.setButtonText(buttonLabel);
@@ -274,27 +306,32 @@ void AutoVocalCtrlAudioProcessorEditor::refreshSliderValues()
     readButton.setButtonText(buttonLabel);
 }
 
+// Refreshes permanent changing subcomponents 25 times per second
 void AutoVocalCtrlAudioProcessorEditor::timerCallback()
 {
     if (processor.detect->get()) {
-        stream.str("");
+        // Displays the current loudness goal detection results (dB difference to previous loudness goal)
+        stream.str(std::string());
         const double d = round(processor.getAlphaGain() * 100) / 100;
         stream << std::setprecision(2) << d;
         detectLabel.setText(stream.str(), dontSendNotification);
     }
     if (processor.scDetect->get()) {
-        stream.str("");
+        // Displays the current side chain input-gain detection results (dB difference to previous input gain)
+        stream.str(std::string());
         const double d = round(processor.getBetaGain() * 100) / 100;
         stream << std::setprecision(2) << d;
         scDetectLabel.setText(stream.str(), dontSendNotification);
     }
     if (processor.sc->get() && !processor.read->get()) {
+        // Refreshes side chain associated sliders when this feature is enabled
         scInputGSlider.setValue(processor.getScInputRMSdB(0) + processor.scGainUI->get());
         v2bDiffSlider.setValue(processor.v2bDiff[0]);
     }
     inputSlider.setValue(processor.getInputRMSdB());
     outputSlider.setValue(processor.getOutputdB());
     gainControlSlider.setValue(processor.getCurrentGainControl());
+    
     if (processor.refresh) {
         refreshSliderValues();
         processor.refresh = false;

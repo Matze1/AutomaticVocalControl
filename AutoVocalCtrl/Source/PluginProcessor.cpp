@@ -4,6 +4,8 @@
     This file was auto-generated!
 
     It contains the basic framework code for a JUCE plugin processor.
+ 
+    Edited by Nils Heine
 
   ==============================================================================
 */
@@ -15,17 +17,14 @@
 
 //==============================================================================
 AutoVocalCtrlAudioProcessor::AutoVocalCtrlAudioProcessor()
-#ifndef JucePlugin_PreferredChannelConfigurations
+#ifndef JucePlugin_PreferredChannelConfigurations // I/O Ports
      : AudioProcessor (BusesProperties().withInput  ("Input",  AudioChannelSet::stereo(), true)
                                         .withOutput ("Output", AudioChannelSet::stereo(), true)
                                         .withInput  ("Sidechain", AudioChannelSet::stereo(), true)
                        )
 #endif
 {
-    expandTime = 1500.0;
-    compressTime = 600.0;
-    delayLength = 50.0;
-    alpha = 1600.0;
+    // Initialization of parameters accessible at the UI
     addParameter(loudnessGoal = new AudioParameterFloat ("loudnessGoal", "LoudnessGoal", -60.0f, 0.0f, -20.0f));
     addParameter(gainRange = new AudioParameterFloat ("gainRange", "GainRange", 0.0f, 10.0f, 6.0f));
     addParameter(automationGain = new AudioParameterFloat ("automationGain", "AutomationGain", -15.0f, 15.0f, 0.0f));
@@ -35,6 +34,8 @@ AutoVocalCtrlAudioProcessor::AutoVocalCtrlAudioProcessor()
     addParameter(detect = new AudioParameterBool("detect","Detect",false));
     addParameter(scDetect = new AudioParameterBool("scDetect","SCDetect",false));
     addParameter(sc = new AudioParameterBool("sc","SC",false));
+    
+    // Initialization of remaining parameters
     clipRange = Range<double>(-*gainRange, *gainRange);
     scClipRange = Range<double>(-10.0, 10.0);
     finalClipRange = Range<double>(0.0, 6.0);
@@ -44,7 +45,8 @@ AutoVocalCtrlAudioProcessor::AutoVocalCtrlAudioProcessor()
     delayWritePos = 0;
     count = 0;
     detCount = 0;
-    upBefore = false;
+    gainAtPoint = 0.0;
+    delayLength = 50.0;
     refresh = true;
 }
 
@@ -92,8 +94,7 @@ double AutoVocalCtrlAudioProcessor::getTailLengthSeconds() const
 
 int AutoVocalCtrlAudioProcessor::getNumPrograms()
 {
-    return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
-                // so this should be at least 1, even if you're not really implementing programs.
+    return 1;
 }
 
 int AutoVocalCtrlAudioProcessor::getCurrentProgram()
@@ -114,16 +115,28 @@ void AutoVocalCtrlAudioProcessor::changeProgramName (int index, const String& ne
 {
 }
 
-// calculates time constants by current sample rate and miliseconds "ms"
+/*
+ Calculates time constants for adaption processes by current sample rate and duration in miliseconds "ms"
+ 
+ Calculations based on Digital Audio Signal Processing by Udo Zölzer, John Wiley & Sons Lid., 2008
+ 
+ @param ms : duration of adaption process by using the resulting time constant (in ms)
+ @return : the time constant
+*/
 float AutoVocalCtrlAudioProcessor::getTimeConstant(float ms)
 {
-    // Calculation is based on the Book: Digital Audio Signal Processing by Udo Zölzer
     if (ms > 0.f)
         return 1.f - exp(-2.2*(1./currentSampleRate)/(ms/1000.));
     else
         return 1.f;
 }
 
+/*
+ Returns total number of samples in a time window depending on current sample rate
+ 
+ @param ms : length of time window in ms
+ @return : total number of samples
+*/
 int AutoVocalCtrlAudioProcessor::msToSamples(float ms)
 {
     return (int) ((currentSampleRate * (ms / 1000)) + 0.5);
@@ -131,12 +144,12 @@ int AutoVocalCtrlAudioProcessor::msToSamples(float ms)
 
 void AutoVocalCtrlAudioProcessor::updateCompressTCo()
 {
-    compressTCo = getTimeConstant(compressTime);
+    compressTCo = getTimeConstant(600.0);
 }
 
 void AutoVocalCtrlAudioProcessor::updateExpandTCo()
 {
-    expandTCo = getTimeConstant(expandTime);
+    ampTCo = getTimeConstant(1500.0);
 }
 
 void AutoVocalCtrlAudioProcessor::updateRmsCo()
@@ -146,13 +159,7 @@ void AutoVocalCtrlAudioProcessor::updateRmsCo()
 
 void AutoVocalCtrlAudioProcessor::updateAlphaCo()
 {
-    alphaCo = getTimeConstant(alpha);
-}
-
-void AutoVocalCtrlAudioProcessor::updateBetaCo()
-{
-    double sec = (alpha / 1000.);
-    betaCo = 1.f - exp(-2.2*(1./sec)/5.);
+    alphaCo = getTimeConstant(1600.0);
 }
 
 void AutoVocalCtrlAudioProcessor::updateTimeConstants()
@@ -161,15 +168,9 @@ void AutoVocalCtrlAudioProcessor::updateTimeConstants()
     updateExpandTCo();
     updateCompressTCo();
     updateAlphaCo();
-    updateBetaCo();
 }
 
-void AutoVocalCtrlAudioProcessor::updatePrivateParameter()
-{
-    updateTimeConstants();
-//    updateMaxIdleSamples();
-}
-
+// Increases or decreases the dimension of all vectors according to the number of input channels
 void AutoVocalCtrlAudioProcessor::updateVectors()
 {
     int diff = getMainBusNumInputChannels() - lastNumInputChannels;
@@ -178,7 +179,6 @@ void AutoVocalCtrlAudioProcessor::updateVectors()
             rms2.push_back(0.0);
             iRms2.push_back(0.0);
             scRms2.push_back(0.0);
-            scRms2Fast.push_back(0.0);
             oRms2.push_back(0.0);
             gain.push_back(0.0);
             alphaGain.push_back(0.0);
@@ -190,7 +190,6 @@ void AutoVocalCtrlAudioProcessor::updateVectors()
             rms2.pop_back();
             iRms2.pop_back();
             scRms2.pop_back();
-            scRms2Fast.pop_back();
             oRms2.pop_back();
             gain.pop_back();
             alphaGain.pop_back();
@@ -202,18 +201,20 @@ void AutoVocalCtrlAudioProcessor::updateVectors()
     lastNumInputChannels = getMainBusNumInputChannels();
 }
 
+// Updates the allowed range for the gain adaption and informs the UI about a change
 void AutoVocalCtrlAudioProcessor::updateClipRange()
 {
     clipRange = Range<double>(-*gainRange, *gainRange);
     refresh = true;
 }
 
-
+// This function is called when the number od input channels is changed
 void AutoVocalCtrlAudioProcessor::numChannelsChanged()
 {
     updateVectors();
 }
 
+// Initializes the pointers on the delay buffer and informs the DAW about the resulting latency
 void AutoVocalCtrlAudioProcessor::updateDelay()
 {
     int delayInSamples = msToSamples(delayLength);
@@ -222,36 +223,41 @@ void AutoVocalCtrlAudioProcessor::updateDelay()
 }
 
 //==============================================================================
+// Called at every startup
 void AutoVocalCtrlAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     currentSampleRate = sampleRate;
-    updatePrivateParameter();
+    updateTimeConstants();
     updateVectors();
+    
+    // Filter initialization
     lowcut.setCoefficients(38.0, sampleRate, (1.0/2.0));
-    highshelf.setCoefficientsShelf(1681.0, sampleRate, 4.0); // so oft das selbe? einfacher machen..
+    highshelf.setCoefficientsShelf(1681.0, sampleRate, 4.0);
     scLowcut.setCoefficients(38.0, sampleRate, (1.0/2.0));
     scHighshelf.setCoefficientsShelf(1681.0, sampleRate, 4.0);
-    scfLowcut.setCoefficients(38.0, sampleRate, (1.0/2.0));
-    scfHighshelf.setCoefficientsShelf(1681.0, sampleRate, 4.0);
     oLowcut.setCoefficients(38.0, sampleRate, (1.0/2.0));
     oHighshelf.setCoefficientsShelf(1681.0, sampleRate, 4.0);
     iLowcut.setCoefficients(38.0, sampleRate, (1.0/2.0));
     iHighshelf.setCoefficientsShelf(1681.0, sampleRate, 4.0);
-    delayBufferLength = (int)(maxDelayInSec*sampleRate);
+    
+    // Delay initialization
+    delayBufferLength = (int)(sampleRate);
     if(delayBufferLength < 1)
         delayBufferLength = 1;
     delayBuffer.setSize(2, delayBufferLength);
     delayBuffer.clear();
     updateDelay();
+    
+    // Initializes idle time
     maxIdleSamples = sampleRate/2;
     scMaxIdleSamples = sampleRate*2;
+    
     refresh = true;
 }
 
 void AutoVocalCtrlAudioProcessor::releaseResources()
 {
-    // When playback stops, you can use this as an opportunity to free up any
-    // spare memory, etc.
+    
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -261,14 +267,10 @@ bool AutoVocalCtrlAudioProcessor::isBusesLayoutSupported (const BusesLayout& lay
     ignoreUnused (layouts);
     return true;
   #else
-    // This is the place where you check if the layout is supported.
-    // In this template code we only support mono or stereo.
+    // Allowed I/O Layouts
     if (layouts.getMainOutputChannelSet() != AudioChannelSet::mono()
         && layouts.getMainOutputChannelSet() != AudioChannelSet::stereo())
         return false;
-    
-//    if (layouts.getChannelSet(true, 1) != AudioChannelSet::stereo())
-//        return false;
     
     // This checks if the input layout matches the output layout
    #if ! JucePlugin_IsSynth
@@ -281,51 +283,17 @@ bool AutoVocalCtrlAudioProcessor::isBusesLayoutSupported (const BusesLayout& lay
 }
 #endif
 
-double AutoVocalCtrlAudioProcessor::updateFilterSample(double sample, AutoVocalCtrlFilter hs, AutoVocalCtrlFilter lc)
+// Returns current adapted gain in dB (average of all channels)
+double AutoVocalCtrlAudioProcessor::getCurrentGainControl()
 {
-    return hs.process(lc.process(sample)); //eingehen darauf das sich über die zeit selbst zurückstezen?? wie lange dauert?
-}
-
-double AutoVocalCtrlAudioProcessor::updateRMS2(double sample, double last)
-{
-    return (1. - rmsCo) * last + rmsCo * (sample * sample);
-    // RMS Calculation based on Book: Digital Audio Signal Processing by Udo Zölzer
-}
-
-double AutoVocalCtrlAudioProcessor::updateGate(double rms2, double gate = -33.0, double gain = 0.0)
-{
-    const double currentRMS = 10.0 * std::log10(rms2 + 1e-10) + gain; //in text ändern zumindest bei sc part
-    if (currentRMS < gate)
-        return *loudnessGoal;
-    else
-        return currentRMS;
-}
-
-void AutoVocalCtrlAudioProcessor::automateCurrentGain()
-{
-//    *currentGain = getCurrentGainControl();
-    beginParameterChangeGesture(automationGain->getParameterIndex());
-    endParameterChangeGesture(automationGain->getParameterIndex());
-}
-
-void AutoVocalCtrlAudioProcessor::updateAutomation()
-{
-    const double currGain = getCurrentGainControl();
-//    const bool up = lastGain < currGain;
-//    const bool dChange = up != upBefore;
-    const bool jump = 0.1 < abs(gainAtPoint - currGain);
-    const bool waited = count > (currentSampleRate * 0.08);
-    *automationGain = getCurrentGainControl() + v2bDiff[0];
-    if (waited && jump) {
-        automateCurrentGain();
-//        upBefore = up;
-        gainAtPoint = currGain;
-        count = 0;
+    double gainControl = 0.0;
+    for (int i = 0; i < getMainBusNumInputChannels(); i++) {
+        gainControl += gain[i];
     }
-    ++count;
-    lastGain = currGain;
+    return gainControl / getMainBusNumInputChannels();
 }
 
+// Returns current input level in dB (average of all channels)
 double AutoVocalCtrlAudioProcessor::getInputRMSdB()
 {
     double sum = 0.0;
@@ -334,6 +302,7 @@ double AutoVocalCtrlAudioProcessor::getInputRMSdB()
     return 10 * log10(sum / getMainBusNumInputChannels() + 1e-10);
 }
 
+// Returns current side chain input level in dB (average of all channels)
 double AutoVocalCtrlAudioProcessor::getScInputRMSdB(int j = -1)
 {
     if (j >= 0 && j < numSCChannels)
@@ -344,6 +313,7 @@ double AutoVocalCtrlAudioProcessor::getScInputRMSdB(int j = -1)
     return 10 * log10(sum / numSCChannels + 1e-10);
 }
 
+// Returns current output level in dB (average of all channels)
 double AutoVocalCtrlAudioProcessor::getOutputdB()
 {
     double sum = 0;
@@ -352,6 +322,7 @@ double AutoVocalCtrlAudioProcessor::getOutputdB()
     return 10 * log10(sum / getMainBusNumInputChannels() + 1e-10);
 }
 
+// Returns the current loudness goal detection results (dB difference to previous loudness goal)
 double AutoVocalCtrlAudioProcessor::getAlphaGain()
 {
     if (detCount == 0)
@@ -363,12 +334,14 @@ double AutoVocalCtrlAudioProcessor::getAlphaGain()
     return med / getMainBusNumInputChannels();
 }
 
+// Resets side chain input-gain detection
 void AutoVocalCtrlAudioProcessor::clearScDetect()
 {
     betaGain[0] = 0.0;
     bDetCount = 0;
 }
 
+// Returns the current side chain input-gain detection results (dB difference to previous input gain)
 double AutoVocalCtrlAudioProcessor::getBetaGain()
 {
     if (bDetCount == 0)
@@ -376,12 +349,18 @@ double AutoVocalCtrlAudioProcessor::getBetaGain()
     return betaGain[0] / (bDetCount/getMainBusNumInputChannels());
 }
 
+/*
+ Changes the LoudnessGoal and adjusts the gate
+ 
+ @param newGoal : the new LoudnessGoal
+*/
 void AutoVocalCtrlAudioProcessor::setLoudnessGoal(double newGoal)
 {
     *loudnessGoal = newGoal;
     newGate = *loudnessGoal - *gainRange;
 }
 
+// Applies loudnessGoal detection results
 void AutoVocalCtrlAudioProcessor::updateLoudnessGoal()
 {
     double med = getAlphaGain();
@@ -391,6 +370,7 @@ void AutoVocalCtrlAudioProcessor::updateLoudnessGoal()
     refresh = true;
 }
 
+// Applies side chain input-gain detection results
 void AutoVocalCtrlAudioProcessor::updateSCGain()
 {
     double med = getBetaGain();
@@ -400,6 +380,83 @@ void AutoVocalCtrlAudioProcessor::updateSCGain()
     refresh = true;
 }
 
+/*
+ A sample is processed by two filters.
+ 
+ @param sample : the sample to be processed
+ @param lc : the first filter (in this case lowcut)
+ @param hs : the second filter (in this case highshelf)
+ @return : the processed sample
+*/
+double AutoVocalCtrlAudioProcessor::updateFilterSample(double sample, AutoVocalCtrlFilter hs, AutoVocalCtrlFilter lc)
+{
+    return hs.process(lc.process(sample));
+}
+
+/*
+ Calculates a squared root mean square value of the transferred samples (= RMS^2)
+ 
+ Calculations based on Digital Audio Signal Processing by Udo Zölzer, John Wiley & Sons Lid., 2008
+ 
+ @param sample : the current sample to be processed
+ @param last : the last determined RMS^2 value
+ @return : the RMS^2
+*/
+double AutoVocalCtrlAudioProcessor::updateRMS2(double sample, double last)
+{
+    return (1. - rmsCo) * last + rmsCo * (sample * sample);
+}
+
+/*
+ Converts the transferred sample from linear number space into logarithmic dB.
+ Subsequently it replaces all samples below the 'gate' threshold with the current loudnessGoal.
+ 
+ @param rms2 : a squared, rms averaged sample
+ @param gate : the threshold of the gate
+ @param gain : a gain which can be applied to the sample in dB
+ @return : the gated RMS value in dB
+*/
+double AutoVocalCtrlAudioProcessor::updateGate(double rms2, double gate = -33.0, double gain = 0.0)
+{
+    const double currentRMS = 10.0 * std::log10(rms2 + 1e-10) + gain; // Final RMS value is determined in dB
+    if (currentRMS < gate)
+        return *loudnessGoal;
+    else
+        return currentRMS;
+}
+
+// Informs the DAW of a change in the automationGain parameter
+void AutoVocalCtrlAudioProcessor::automateCurrentGain()
+{
+    beginParameterChangeGesture(automationGain->getParameterIndex());
+    endParameterChangeGesture(automationGain->getParameterIndex());
+}
+
+// Updates the automationGain
+void AutoVocalCtrlAudioProcessor::updateAutomation()
+{
+    const double currGain = getCurrentGainControl();
+    const bool jump = 0.1 < abs(gainAtPoint - currGain);
+    const bool waited = count > (currentSampleRate * 0.08);
+    *automationGain = getCurrentGainControl() + v2bDiff[0];
+    if (waited && jump) { // Write automation into DAW after 80ms and a adapted gain change > 0.1 dB
+        automateCurrentGain();
+        gainAtPoint = currGain;
+        count = 0;
+    }
+    ++count;
+}
+
+/*
+ Calculates the final gain adaption. Stops the adaption for the duration of the idle time,
+ while there is no singal above the gate (sample == loudnessGoal).
+ Gain decreasments are adapted faster than increasments (different time coefficients for calculation).
+ The resulting gain is clipped at the currently allowed gainRange.
+ 
+ @param sample : a rms averaged and gated sample in dB
+ @param lastGn : the last determined gain
+ @return : the final gain (to be multiplied with the input signal)
+*/
 double AutoVocalCtrlAudioProcessor::updateGain(double sample, double lastGn)
 {
     if (sample != *loudnessGoal) {
@@ -409,16 +466,25 @@ double AutoVocalCtrlAudioProcessor::updateGain(double sample, double lastGn)
         return lastGn;
     }
     double g = *loudnessGoal - sample;
-//    const double co = g < lastGn ? compressTCo:expandTCo;
     double co;
     if (g < lastGn) {
-        g = g * 0.66;
+        g = g * 0.66; // Additional compression slope
         co = compressTCo;
     } else
-        co = expandTCo;
+        co = ampTCo;
     return clipRange.clipValue((1 - co) * lastGn + co * g);
 }
 
+/*
+ Calculates the gain difference between side chain input and loudnessGoal.
+ Stops the adaption for the duration of the side chain idle time,
+ while there is no singal above the gate (sample == loudnessGoal).
+ The resulting gain is clipped at the allowed side chain gainRange.
+ 
+ @param sample : a rms averaged and gated side chain sample in dB
+ @param lastGn : the last determined gain
+ @return : the resulting gain
+*/
 double AutoVocalCtrlAudioProcessor::updateV2BDiff(double sample, double lastGn)
 {
     if (sample != *loudnessGoal) {
@@ -430,6 +496,7 @@ double AutoVocalCtrlAudioProcessor::updateV2BDiff(double sample, double lastGn)
     return scClipRange.clipValue((1 - alphaCo) * lastGn + alphaCo * (sample - *loudnessGoal));
 }
 
+// Processes the input signal blockwise
 void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
     AudioSampleBuffer mainInputOutput = getBusBuffer(buffer, true, 0);
@@ -458,58 +525,66 @@ void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
         dpw = delayWritePos;
         
         for (int sample = 0; sample < mainInputOutput.getNumSamples(); ++sample) {
-            if (*read) {
+            
+            if (*read) { // Bypass main calculations in read-mode
                 gain[channel] = *automationGain;
                 double g = pow(10, gain[channel]/20);
                 const double fg = finalClipRange.clipValue(g * pow(10, *oGain/20));
+                
+                // Update I/O Metering for UI
                 iRms2[channel] = updateRMS2(updateFilterSample(channelData[sample], iHighshelf, iLowcut), iRms2[channel]);
                 oRms2[channel] = updateRMS2(updateFilterSample(channelData[sample] * fg, oHighshelf, oLowcut), oRms2[channel]);
-                channelData[sample] = channelData[sample] * fg; //HIER NOCH CLIPPEN!?
-            } else {
-                if (*sc) {
-                    scRms2[channel] = updateRMS2(updateFilterSample(sideChainData[sample], scHighshelf, scLowcut),
-                                                 scRms2[scChannel]);
-                }
+                
+                channelData[sample] = channelData[sample] * fg;
+                
+            } else { // Write-mode
+                // Main Calculations
                 rms2[channel] = updateRMS2(updateFilterSample(channelData[sample], highshelf, lowcut), rms2[channel]);
                 gain[channel] = updateGain(updateGate(rms2[channel], newGate), gain[channel]);
                 double g = pow(10, gain[channel]/20);
                 delayData[dpw] = channelData[sample];
-                if (*sc) {
+                
+                if (*sc) { // Side chain calculations
+                    scRms2[channel] = updateRMS2(updateFilterSample(sideChainData[sample], scHighshelf, scLowcut),
+                                                 scRms2[scChannel]);
                     const double scGated = updateGate(scRms2[scChannel], *loudnessGoal - 6.0, *scGainUI);
                     v2bDiff[channel] = updateV2BDiff(scGated, v2bDiff[channel]);
-                    g = g * pow(10, v2bDiff[scChannel]/20); //sinnvoll oder mittelwert aus beiden seiten? auch für zeile darüber?
+                    g = g * pow(10, v2bDiff[scChannel]/20);
                 }
-                if (*detect) {
+                if (*detect) { // loudnessGoal Detection
                     if (abs(gain[channel]) > 0.1) {
                         alphaGain[channel] += gain[channel];
                         detCount++;
                     }
                     g = 1.0;
                 }
-                if (*scDetect) {
+                if (*scDetect) { // Side chain input-gain Detection
                     if (abs(v2bDiff[channel]) > 0.1) {
                         betaGain[channel] += v2bDiff[channel];
                         bDetCount++;
                     }
                     g = 1.0;
                 }
+                
                 const double fg = finalClipRange.clipValue(g * pow(10, *oGain/20));
                 const double o = delayData[dpr] * fg;
+                
+                // Update I/O Metering for UI
                 iRms2[channel] = updateRMS2(updateFilterSample(delayData[dpr], iHighshelf, iLowcut), iRms2[channel]);
                 oRms2[channel] = updateRMS2(updateFilterSample(o, oHighshelf, oLowcut), oRms2[channel]);
+                
                 channelData[sample] = o;
                 
+                // Update pointers on delay buffer
                 if (++dpr >= delayBufferLength)
                     dpr = 0;
                 if (++dpw >= delayBufferLength)
                     dpw = 0;
                 
-                //neue position auch im text ändern:
                 updateAutomation();
             }
         }
     }
-    
     delayReadPos = dpr;
     delayWritePos = dpw;
 }
@@ -517,7 +592,7 @@ void AutoVocalCtrlAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
 //==============================================================================
 bool AutoVocalCtrlAudioProcessor::hasEditor() const
 {
-    return true; // (change this to false if you choose to not supply an editor)
+    return true;
 }
 
 AudioProcessorEditor* AutoVocalCtrlAudioProcessor::createEditor()
@@ -526,6 +601,7 @@ AudioProcessorEditor* AutoVocalCtrlAudioProcessor::createEditor()
 }
 
 //==============================================================================
+// Saves current parameter setting in an xml file
 void AutoVocalCtrlAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
     ScopedPointer<XmlElement> xml (new XmlElement ("AutoVocalCtrl"));
@@ -540,6 +616,7 @@ void AutoVocalCtrlAudioProcessor::getStateInformation (MemoryBlock& destData)
     copyXmlToBinary (*xml, destData);
 }
 
+// Retrieves parameter setting from xml file, communicates change to UI
 void AutoVocalCtrlAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     ScopedPointer<XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
@@ -565,13 +642,4 @@ void AutoVocalCtrlAudioProcessor::setStateInformation (const void* data, int siz
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new AutoVocalCtrlAudioProcessor();
-}
-
-double AutoVocalCtrlAudioProcessor::getCurrentGainControl()
-{
-    double gainControl = 0.0;
-    for (int i = 0; i < getMainBusNumInputChannels(); i++) {
-        gainControl += gain[i];
-    }
-    return gainControl / getMainBusNumInputChannels();
 }

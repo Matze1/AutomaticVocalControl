@@ -3,7 +3,7 @@
 
     Filter.h
     Created: 10 Feb 2018 4:08:37pm
-    Author:  Nils Matze Heine
+    Author:  Nils Heine
 
   ==============================================================================
 */
@@ -18,7 +18,7 @@ class AutoVocalCtrlFilter
     ~AutoVocalCtrlFilter();
     
     //==============================================================================
-    void printCoefficients(); //oder string
+    void printCoefficients();
     void resetCoefficients();
     void resetTimeBuffer();
     

@@ -3,7 +3,7 @@
 
     Filter.cpp
     Created: 10 Feb 2018 4:08:29pm
-    Author:  Nils Matze Heine
+    Author:  Nils Heine
 
   ==============================================================================
 */
@@ -42,6 +42,13 @@ void AutoVocalCtrlFilter::resetTimeBuffer()
     z_2 = 0.0;
 }
 
+/*
+ Processing a sample through the biquad architecture of the
+ current filter.
+ 
+ @param sample : the transferred sample
+ @return : the processed sample
+*/
 double AutoVocalCtrlFilter::process(double sample)
 {
     const double mid = sample - a1 * z_1 - a2 * z_2;
@@ -62,6 +69,18 @@ void AutoVocalCtrlFilter::setCoefficientsDirect(double b_0, double b_1, double b
     a2 = a_2;
 }
 
+/*
+ Setting the coefficients for a requested first order filter.
+ 
+ Calculations based on DAFX: Digital Audio Effects edited by Udo Zölzer, John Wiley & Sons Lid., 2011
+ 
+ @param cutOff : the cutoff frequency of the resulting filter
+ @param sampleRate : the current samplerate
+ @param type : type of the requested filter:
+    0 = highpass / lowcut
+    1 = highcut / lowpass
+    2 = allpass
+*/
 void AutoVocalCtrlFilter::setCoefficients(double cutOff, double sampleRate, int type)
 {
     const double k = tan(M_PI * cutOff / sampleRate);
@@ -82,6 +101,21 @@ void AutoVocalCtrlFilter::setCoefficients(double cutOff, double sampleRate, int 
     a2 = 0.0;
 }
 
+/*
+ Setting the coefficients for a requested second order filter.
+ 
+ Calculations based on DAFX: Digital Audio Effects edited by Udo Zölzer, John Wiley & Sons Lid., 2011
+ 
+ @param cutOff : the cutoff frequency of the resulting filter
+ @param sampleRate : the current samplerate
+ @param q : changes height of resonance / bandwith (depending on type)
+ @param type : type of the requested filter:
+    0 = highpass / lowcut
+    1 = highcut / lowpass
+    2 = allpass
+    3 = bandpass
+    4 = bandreject
+*/
 void AutoVocalCtrlFilter::setCoefficients(double cutOff, double sampleRate, double q, int type)
 {
     const double k = tan(M_PI * cutOff / sampleRate);
@@ -119,6 +153,18 @@ void AutoVocalCtrlFilter::setCoefficients(double cutOff, double sampleRate, doub
     a2 = zm / z;
 }
 
+/*
+ Setting the coefficients for a requested second order shelving filter.
+ 
+ Calculations based on DAFX: Digital Audio Effects edited by Udo Zölzer, John Wiley & Sons Lid., 2011
+ 
+ @param cutOff : the center frequency of the resulting filter
+ @param sampleRate : the current samplerate
+ @param gain : the gain boost applied by the filter
+ @param type : type of the requested filter:
+    5 = lowshelf
+    6 = highshelf
+*/
 void AutoVocalCtrlFilter::setCoefficientsShelf(double cutOff, double sampleRate, double gain, int type)
 {
     const double k = tan(M_PI * cutOff / sampleRate);
